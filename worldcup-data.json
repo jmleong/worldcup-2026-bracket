@@ -1,6 +1,6 @@
 {
   "title": "FIFA World Cup 2026 Bracket Tracker",
-  "lastUpdated": "June 15, 2026 — source snapshot; times converted to PDT",
+  "lastUpdated": "Automated refresh: June 15, 2026 4:15 PM PDT",
   "updateTarget": "Daily 10:30 PM PDT",
   "apiEndpoint": "https://worldcup26.ir/get/games",
   "teams": {
