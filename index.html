@@ -3,165 +3,2312 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>FIFA World Cup 2026 Bracket Tracker</title>
-  <meta name="description" content="World Cup 2026 tracker with flags, all matches by date, standings, knockout bracket, live score refreshes, team views, venue views, print views and sharing." />
-  <link rel="stylesheet" href="styles.css" />
+  <title>FIFA World Cup 2026 Live Bracket Tracker</title>
+  <meta name="description" content="World Cup 2026 bracket tracker with all matches, flags, PDT kickoff times, live score refreshes, group standings, and knockout bracket." />
+  <link rel="stylesheet" href="styles.css?v=20260616-livefix4" />
 </head>
 <body>
   <div class="wrap">
     <header class="hero" id="top">
-      <div class="hero-card">
+      <div>
         <div class="eyebrow">World Cup 2026 · Live Bracket Tracker</div>
         <h1>Road to the Final</h1>
-        <p class="subtitle">A full tournament tracker with country flags, group fixtures, knockout bracket, group standings, third-place race, date-organized schedules, daily matchday snapshot, live score refreshes, team filters, venue views, print tools, and every kickoff shown in PDT by default.</p>
-        <div class="meta-grid">
-          <div class="stat"><b id="statPlayed">—</b><span>completed matches</span></div>
-          <div class="stat"><b id="statLive">—</b><span>live / active-window matches</span></div>
-          <div class="stat"><b id="statRemaining">—</b><span>scheduled matches remaining</span></div>
-          <div class="stat"><b>104</b><span>total matches</span></div>
+        <p class="lead">A full tournament tracker with country flags, group fixtures, knockout bracket, group standings, third-place race, date-organized schedules, daily matchday snapshot, live score refreshes, team filters, venue views, print tools, and every kickoff shown in PDT by default.</p>
+        <div class="stat-grid">
+          <div class="stat"><b id="completedStat">—</b><span>completed matches</span></div>
+          <div class="stat"><b id="liveStat">—</b><span>live / active-window</span></div>
+          <div class="stat"><b id="scheduledStat">—</b><span>scheduled remaining</span></div>
+          <div class="stat"><b id="totalStat">104</b><span>total matches</span></div>
         </div>
+        <nav class="nav-pills" aria-label="Page navigation">
+          <a href="#dailySnapshot">Snapshot</a><a href="#knockout">Knockout</a><a href="#groups">Group fixtures</a><a href="#standings">Standings</a><a href="#thirdplace">Third-place race</a><a href="#teams">Teams</a><a href="#venues">Venues</a><a href="#allmatches">All matches</a><a href="#updates">Updates</a><a href="#sources">Sources</a>
+        </nav>
       </div>
-      <aside class="hero-card side-card">
-        <div class="status-line"><span>Data status</span><span class="pill green" id="dataStatus">Loading data</span></div>
-        <div class="update-mini-grid" id="topStatusCards"></div>
+      <aside class="snapshot-panel" id="dailySnapshot">
+        <div><span id="dataStatusPill" class="status-pill ok">Loading data</span></div>
+        <div class="status-grid">
+          <div class="status-box"><b>Last update</b><span id="lastUpdateBox">Loading</span></div>
+          <div class="status-box"><b>Snapshot</b><span id="snapshotBox">Loading</span></div>
+          <div class="status-box"><b>Validation</b><span id="validationBox">Loading</span></div>
+          <div class="status-box"><b>PDT clock</b><span id="pdtClock">Loading</span></div>
+        </div>
         <div>
           <div class="eyebrow">Daily matchday snapshot</div>
-          <p id="snapshotDate" class="snapshot-caption"></p>
-          <div id="nextMatch" class="snapshot-grid"></div>
+          <h2 id="snapshotTitle">Loading</h2>
+          <p id="snapshotMeta" class="lead">Loading matches for the active PDT matchday.</p>
         </div>
-        <div class="actions">
-          <button id="refreshBtn">Try live refresh</button>
-          <button class="secondary" id="copySnapshotBtn">Copy snapshot</button>
-          <button class="secondary" id="copyLinkBtn">Copy link</button>
-          <button class="secondary" id="downloadCalendarBtn">Download calendar</button>
+        <div id="snapshotList" class="snapshot-list"></div>
+        <div class="button-row">
+          <button id="refreshBtn" type="button">Try live refresh</button>
+          <button id="copySnapshotBtn" type="button">Copy snapshot</button>
+          <button id="copyLinkBtn" type="button">Copy link</button>
+          <button id="downloadCalendarBtn" type="button">Download calendar</button>
         </div>
-        <p class="fine-print">Open-browser refreshes run every 60 seconds during active match windows. GitHub Actions publishes permanent score updates about every 10 minutes during match windows and keeps the 10:30 PM PDT daily snapshot.</p>
+        <p class="lead">The snapshot now uses the browser's PDT clock, so at or after 10:30 PM PDT it moves to the next matchday even if GitHub Actions is delayed.</p>
       </aside>
     </header>
 
-    <nav aria-label="Page sections">
-      <a href="#bracket">Knockout</a>
-      <a href="#group-fixtures">Group fixtures</a>
-      <a href="#groups">Standings</a>
-      <a href="#third-place">Third-place race</a>
-      <a href="#teams">Teams</a>
-      <a href="#venues">Venues</a>
-      <a href="#matches">All matches</a>
-      <a href="#automation">Updates</a>
-      <a href="#implemented">Implemented</a>
-      <a href="#sources">Sources</a>
-    </nav>
-
-    <section id="controls" class="panel global-controls">
-      <div>
-        <h2>View controls</h2>
-        <p>Use these global controls for spoilers, time zone display, focused print layouts, and quick access to the daily matchday view.</p>
+    <section class="panel controls-panel" id="controls">
+      <div class="section-title"><div><h2>View controls</h2><p>Use these global controls for spoilers, time zone display, team focus, venue filtering, print layouts, and quick access to the next matchday.</p></div></div>
+      <div class="controls-grid">
+        <label>Time display <select id="timeMode"><option value="pdt">PDT</option><option value="venue">Venue local time</option><option value="local">My local time</option></select></label>
+        <label>Team focus <select id="teamFocusSelect"><option>Loading teams</option></select></label>
+        <label>Venue <select id="venueSelect"><option>Loading venues</option></select></label>
+        <label>Search <input id="searchBox" type="search" placeholder="Search teams, venue, date" /></label>
       </div>
-      <div class="control-grid">
-        <label>Time display
-          <select id="timeMode">
-            <option value="pdt">PDT</option>
-            <option value="venue">Venue local time</option>
-            <option value="local">My local time</option>
-          </select>
-        </label>
-        <label>Team focus
-          <select id="teamFilter"><option value="">All teams</option></select>
-        </label>
-        <button class="secondary" id="spoilerBtn" aria-pressed="false">Hide scores</button>
-        <button class="secondary" data-print="all">Print full page</button>
-        <button class="secondary" data-print="bracket">Print bracket</button>
-        <button class="secondary" data-print="snapshot">Print snapshot</button>
-        <button class="secondary" data-print="standings">Print standings</button>
+      <div class="button-row" style="margin-top:14px">
+        <button id="hideScoresBtn" type="button">Hide scores</button>
+        <button id="printFullBtn" type="button">Print full page</button>
+        <button id="printBracketBtn" type="button">Print bracket</button>
+        <button id="printSnapshotBtn" type="button">Print snapshot</button>
+        <button id="printStandingsBtn" type="button">Print standings</button>
       </div>
     </section>
 
-    <section id="bracket">
-      <div class="section-title">
-        <div><h2>Knockout bracket</h2><p>Automatic advancement fills group winners/runners-up once groups are complete and knockout winners/losers after final results. Connector lines and round tabs make the bracket easier to use on desktop and mobile.</p></div>
+    <section class="panel" id="knockout">
+      <div class="section-title"><div><h2>Knockout bracket</h2><p>Automatic advancement fills group winners/runners-up when groups are complete and knockout winners/losers after final results. Connector lines and round tabs make the bracket easier to use on desktop and mobile.</p></div></div>
+      <div id="roundTabs" class="round-tabs"></div>
+      <div class="bracket-scroll"><div id="knockoutBracket" class="bracket"></div></div>
+    </section>
+
+    <section class="panel" id="groups">
+      <div class="section-title"><div><h2>Group-stage fixture bracket</h2><p>All 72 group-stage games grouped by group, with country flags, status, PDT kickoff time by default, venues, scores, and points gained when a result is final.</p></div></div>
+      <div id="groupFixtures" class="group-grid"></div>
+    </section>
+
+    <section class="panel" id="standings">
+      <div class="section-title"><div><h2>Group standings</h2><p>Full standings show P, W, D, L, GF, GA, GD, Pts, and qualification status.</p></div></div>
+      <div id="standingsGrid" class="standings-grid"></div>
+    </section>
+
+    <section class="panel" id="thirdplace">
+      <div class="section-title"><div><h2>Best third-place qualifiers</h2><p>The top eight third-place teams are ranked here so the Round of 32 wildcard paths are easier to understand.</p></div></div>
+      <div id="thirdPlaceTable" class="table-wrap"></div>
+    </section>
+
+    <section class="panel" id="teams">
+      <div class="section-title"><div><h2>Team focus</h2><p>Click any country name or choose a team to see that country's fixtures, record, group position, and possible knockout path.</p></div></div>
+      <div id="teamFocusPanel"></div>
+    </section>
+
+    <section class="panel" id="venues">
+      <div class="section-title"><div><h2>Venue view</h2><p>Filter by host stadium or city, then see every match scheduled there.</p></div></div>
+      <div id="venuePanel"></div>
+    </section>
+
+    <section class="panel" id="allmatches">
+      <div class="section-title"><div><h2>All matches by date · PDT calendar</h2><p>Every World Cup game is grouped by PDT calendar date and sorted by kickoff time. The default quick filter is Next matchday.</p></div></div>
+      <div id="quickFilters" class="quick-filters"></div>
+      <div class="controls-grid" style="margin-top:14px">
+        <label>Stage <select id="stageFilter"></select></label>
+        <label>Group <select id="groupFilter"></select></label>
+        <label>Date <select id="dateFilter"></select></label>
+        <label>Snapshot rule <input type="text" id="snapshotRuleBox" readonly /></label>
       </div>
-      <div class="panel bracket-shell">
-        <div class="round-tabs" id="roundTabs"></div>
-        <div class="bracket-grid connector-lines" id="bracketGrid"></div>
+      <div id="allMatches"></div>
+    </section>
+
+    <section class="panel" id="updates">
+      <div class="section-title"><div><h2>Live updates and daily snapshot</h2><p>The automation keeps the nightly snapshot, checks during/after matches, avoids unnecessary deploys, and stops after the final cutoff.</p></div></div>
+      <div class="info-grid">
+        <div><b>Active windows</b><span id="activeWindowsBox">Loading</span></div>
+        <div><b>Deploy rule</b><span id="deployRuleBox">Loading</span></div>
+        <div><b>Static cutoff</b><span id="staticCutoff">Loading</span></div>
+      </div>
+      <h3>Changes since the last update</h3>
+      <ol id="changesList" class="changes"></ol>
+      <h3>Automation details</h3>
+      <div id="automationDetails"></div>
+      <h3>Validation details</h3>
+      <div id="validationDetails"></div>
+    </section>
+
+    <section class="panel" id="implemented">
+      <div class="section-title"><div><h2>Implemented improvements</h2><p>The original 20 improvement suggestions and 4 score-update rules are implemented as working features in this page and package.</p></div></div>
+      <div class="info-grid">
+        <div><b>Snapshot</b><span>Browser-computed next matchday after 10:30 PM PDT.</span></div>
+        <div><b>All matches</b><span>Date-grouped schedule, quick filters, search, stage, group, date, team, and venue filters.</span></div>
+        <div><b>Scores</b><span>Browser live refresh plus GitHub Actions polling during match windows.</span></div>
+        <div><b>Static ending</b><span>All refresh behavior stops after the July 20, 2026 noon PDT cutoff.</span></div>
       </div>
     </section>
 
-    <section id="group-fixtures">
-      <div class="section-title">
-        <div><h2>Group-stage fixture bracket</h2><p>All 72 group-stage games grouped by group, with country flags, status, PDT kickoff time by default, venues, scores, and points gained when a result is final.</p></div>
-      </div>
-      <div class="group-fixture-map" id="groupFixtures"></div>
-    </section>
-
-    <section id="groups">
-      <div class="section-title">
-        <div><h2>Group standings</h2><p>Full standings show P, W, D, L, GF, GA, GD, Pts, and a live qualification status.</p></div>
-      </div>
-      <div class="groups" id="groupsGrid"></div>
-    </section>
-
-    <section id="third-place">
-      <div class="section-title">
-        <div><h2>Best third-place qualifiers</h2><p>The top eight third-place teams are ranked here so the Round of 32 wildcard paths are easier to understand.</p></div>
-      </div>
-      <div class="panel" id="thirdPlaceTable"></div>
-    </section>
-
-    <section id="teams">
-      <div class="section-title">
-        <div><h2>Team focus</h2><p>Click any country name or choose a team to see that country’s fixtures, record, group position, and possible knockout path.</p></div>
-      </div>
-      <div class="panel" id="teamExplorer"></div>
-    </section>
-
-    <section id="venues">
-      <div class="section-title">
-        <div><h2>Venue view</h2><p>Filter by host stadium or city, then see every match scheduled there.</p></div>
-      </div>
-      <div class="panel venue-panel">
-        <div class="schedule-tools"><select id="venueFilter"><option value="all">All venues</option></select></div>
-        <div id="venueView"></div>
-      </div>
-    </section>
-
-    <section id="matches">
-      <div class="section-title">
-        <div><h2>All matches by date · PDT calendar</h2><p>Every World Cup game is grouped by PDT calendar date and sorted by kickoff time. Use quick buttons, search, stage, group, date, venue, and team filters.</p></div>
-      </div>
-      <div class="panel">
-        <div class="quick-filters" id="quickFilters" aria-label="Quick match filters"></div>
-        <div class="schedule-tools">
-          <input id="search" type="search" placeholder="Search teams, venue, date…" />
-          <select id="stageFilter"><option value="all">All stages</option></select>
-          <select id="groupFilter"><option value="all">All groups</option></select>
-          <select id="dateFilter"><option value="all">All dates</option></select>
-        </div>
-        <div class="active-filter-line" id="activeFilterLine"></div>
-        <div class="date-schedule" id="matchList"></div>
-      </div>
-    </section>
-
-    <section id="automation">
-      <div class="section-title"><div><h2>Live updates and daily snapshot</h2><p>The automation keeps the nightly snapshot, checks after/during matches, avoids unnecessary deploys, and stops after the final cutoff.</p></div></div>
-      <div class="panel status-panel">
-        <div class="status-card-grid" id="updateStatusBox"></div>
-        <div class="changes-box"><h3>Changes since the last update</h3><div id="changesList"></div></div>
-      </div>
-    </section>
-
-    <section id="implemented">
-      <div class="section-title"><div><h2>Implemented improvements</h2><p>The original 20 improvement suggestions and 4 score-update rules are now represented as working features in this page and package.</p></div></div>
-      <div class="panel implemented-panel" id="implementedList"></div>
-    </section>
-
-    <section id="sources">
+    <section class="panel" id="sources">
       <div class="section-title"><div><h2>Sources and data notes</h2><p>Schedule, score, and automation references used by the tracker.</p></div></div>
-      <div class="sources" id="sourcesList"></div>
+      <div id="sourcesGrid" class="source-grid"></div>
     </section>
-
-    <footer>Built as a static GitHub Pages tracker. The default displayed time zone is PDT; use the time display control for venue or local time.</footer>
   </div>
-  <div id="toast" class="toast" role="status" aria-live="polite"></div>
-  <script src="app.js"></script>
+  <div id="toast" role="status" aria-live="polite"></div>
+  <script id="embedded-data" type="application/json">{
+  "title": "FIFA World Cup 2026 Bracket Tracker",
+  "lastUpdated": "June 15, 2026 09:31 PM PDT",
+  "updateTarget": "Daily 10:30 PM PDT plus match-window polling and browser live refresh.",
+  "apiEndpoint": "https://worldcup26.ir/get/games",
+  "teams": {
+    "Mexico": {
+      "flag": "🇲🇽",
+      "group": "A",
+      "flagCode": "mx"
+    },
+    "South Africa": {
+      "flag": "🇿🇦",
+      "group": "A",
+      "flagCode": "za"
+    },
+    "Korea Republic": {
+      "flag": "🇰🇷",
+      "group": "A",
+      "flagCode": "kr"
+    },
+    "Czechia": {
+      "flag": "🇨🇿",
+      "group": "A",
+      "flagCode": "cz"
+    },
+    "Canada": {
+      "flag": "🇨🇦",
+      "group": "B",
+      "flagCode": "ca"
+    },
+    "Bosnia and Herzegovina": {
+      "flag": "🇧🇦",
+      "group": "B",
+      "flagCode": "ba"
+    },
+    "Qatar": {
+      "flag": "🇶🇦",
+      "group": "B",
+      "flagCode": "qa"
+    },
+    "Switzerland": {
+      "flag": "🇨🇭",
+      "group": "B",
+      "flagCode": "ch"
+    },
+    "Brazil": {
+      "flag": "🇧🇷",
+      "group": "C",
+      "flagCode": "br"
+    },
+    "Morocco": {
+      "flag": "🇲🇦",
+      "group": "C",
+      "flagCode": "ma"
+    },
+    "Haiti": {
+      "flag": "🇭🇹",
+      "group": "C",
+      "flagCode": "ht"
+    },
+    "Scotland": {
+      "flag": "🏴",
+      "group": "C",
+      "flagCode": "gb-sct"
+    },
+    "USA": {
+      "flag": "🇺🇸",
+      "group": "D",
+      "display": "United States",
+      "flagCode": "us"
+    },
+    "Paraguay": {
+      "flag": "🇵🇾",
+      "group": "D",
+      "flagCode": "py"
+    },
+    "Australia": {
+      "flag": "🇦🇺",
+      "group": "D",
+      "flagCode": "au"
+    },
+    "Türkiye": {
+      "flag": "🇹🇷",
+      "group": "D",
+      "flagCode": "tr"
+    },
+    "Germany": {
+      "flag": "🇩🇪",
+      "group": "E",
+      "flagCode": "de"
+    },
+    "Curaçao": {
+      "flag": "🇨🇼",
+      "group": "E",
+      "flagCode": "cw"
+    },
+    "Côte d'Ivoire": {
+      "flag": "🇨🇮",
+      "group": "E",
+      "flagCode": "ci"
+    },
+    "Ecuador": {
+      "flag": "🇪🇨",
+      "group": "E",
+      "flagCode": "ec"
+    },
+    "Netherlands": {
+      "flag": "🇳🇱",
+      "group": "F",
+      "flagCode": "nl"
+    },
+    "Japan": {
+      "flag": "🇯🇵",
+      "group": "F",
+      "flagCode": "jp"
+    },
+    "Sweden": {
+      "flag": "🇸🇪",
+      "group": "F",
+      "flagCode": "se"
+    },
+    "Tunisia": {
+      "flag": "🇹🇳",
+      "group": "F",
+      "flagCode": "tn"
+    },
+    "Belgium": {
+      "flag": "🇧🇪",
+      "group": "G",
+      "flagCode": "be"
+    },
+    "Egypt": {
+      "flag": "🇪🇬",
+      "group": "G",
+      "flagCode": "eg"
+    },
+    "IR Iran": {
+      "flag": "🇮🇷",
+      "group": "G",
+      "display": "Iran",
+      "flagCode": "ir"
+    },
+    "New Zealand": {
+      "flag": "🇳🇿",
+      "group": "G",
+      "flagCode": "nz"
+    },
+    "Spain": {
+      "flag": "🇪🇸",
+      "group": "H",
+      "flagCode": "es"
+    },
+    "Cabo Verde": {
+      "flag": "🇨🇻",
+      "group": "H",
+      "flagCode": "cv"
+    },
+    "Saudi Arabia": {
+      "flag": "🇸🇦",
+      "group": "H",
+      "flagCode": "sa"
+    },
+    "Uruguay": {
+      "flag": "🇺🇾",
+      "group": "H",
+      "flagCode": "uy"
+    },
+    "France": {
+      "flag": "🇫🇷",
+      "group": "I",
+      "flagCode": "fr"
+    },
+    "Senegal": {
+      "flag": "🇸🇳",
+      "group": "I",
+      "flagCode": "sn"
+    },
+    "Iraq": {
+      "flag": "🇮🇶",
+      "group": "I",
+      "flagCode": "iq"
+    },
+    "Norway": {
+      "flag": "🇳🇴",
+      "group": "I",
+      "flagCode": "no"
+    },
+    "Argentina": {
+      "flag": "🇦🇷",
+      "group": "J",
+      "flagCode": "ar"
+    },
+    "Algeria": {
+      "flag": "🇩🇿",
+      "group": "J",
+      "flagCode": "dz"
+    },
+    "Austria": {
+      "flag": "🇦🇹",
+      "group": "J",
+      "flagCode": "at"
+    },
+    "Jordan": {
+      "flag": "🇯🇴",
+      "group": "J",
+      "flagCode": "jo"
+    },
+    "Portugal": {
+      "flag": "🇵🇹",
+      "group": "K",
+      "flagCode": "pt"
+    },
+    "Congo DR": {
+      "flag": "🇨🇩",
+      "group": "K",
+      "display": "DR Congo",
+      "flagCode": "cd"
+    },
+    "Uzbekistan": {
+      "flag": "🇺🇿",
+      "group": "K",
+      "flagCode": "uz"
+    },
+    "Colombia": {
+      "flag": "🇨🇴",
+      "group": "K",
+      "flagCode": "co"
+    },
+    "England": {
+      "flag": "🏴",
+      "group": "L",
+      "flagCode": "gb-eng"
+    },
+    "Croatia": {
+      "flag": "🇭🇷",
+      "group": "L",
+      "flagCode": "hr"
+    },
+    "Ghana": {
+      "flag": "🇬🇭",
+      "group": "L",
+      "flagCode": "gh"
+    },
+    "Panama": {
+      "flag": "🇵🇦",
+      "group": "L",
+      "flagCode": "pa"
+    }
+  },
+  "matches": [
+    {
+      "number": 1,
+      "stage": "Group Stage",
+      "group": "A",
+      "home": "Mexico",
+      "away": "South Africa",
+      "venue": "Mexico City Stadium, Mexico City",
+      "status": "final",
+      "homeScore": 2,
+      "awayScore": 0,
+      "pdt": {
+        "date": "2026-06-11",
+        "dateLabel": "Thu, Jun 11",
+        "time": "12:00 PM PDT",
+        "iso": "2026-06-11T12:00:00-07:00",
+        "etLabel": "Thu, Jun 11, 3:00 PM ET"
+      }
+    },
+    {
+      "number": 2,
+      "stage": "Group Stage",
+      "group": "A",
+      "home": "Korea Republic",
+      "away": "Czechia",
+      "venue": "Estadio Guadalajara, Guadalajara",
+      "status": "final",
+      "homeScore": 2,
+      "awayScore": 1,
+      "pdt": {
+        "date": "2026-06-11",
+        "dateLabel": "Thu, Jun 11",
+        "time": "7:00 PM PDT",
+        "iso": "2026-06-11T19:00:00-07:00",
+        "etLabel": "Thu, Jun 11, 10:00 PM ET"
+      }
+    },
+    {
+      "number": 3,
+      "stage": "Group Stage",
+      "group": "B",
+      "home": "Canada",
+      "away": "Bosnia and Herzegovina",
+      "venue": "Toronto Stadium, Toronto",
+      "status": "final",
+      "homeScore": 1,
+      "awayScore": 1,
+      "pdt": {
+        "date": "2026-06-12",
+        "dateLabel": "Fri, Jun 12",
+        "time": "12:00 PM PDT",
+        "iso": "2026-06-12T12:00:00-07:00",
+        "etLabel": "Fri, Jun 12, 3:00 PM ET"
+      }
+    },
+    {
+      "number": 4,
+      "stage": "Group Stage",
+      "group": "D",
+      "home": "USA",
+      "away": "Paraguay",
+      "venue": "Los Angeles Stadium, Los Angeles",
+      "status": "final",
+      "homeScore": 4,
+      "awayScore": 1,
+      "pdt": {
+        "date": "2026-06-12",
+        "dateLabel": "Fri, Jun 12",
+        "time": "6:00 PM PDT",
+        "iso": "2026-06-12T18:00:00-07:00",
+        "etLabel": "Fri, Jun 12, 9:00 PM ET"
+      }
+    },
+    {
+      "number": 5,
+      "stage": "Group Stage",
+      "group": "C",
+      "home": "Haiti",
+      "away": "Scotland",
+      "venue": "Boston Stadium, Boston",
+      "status": "final",
+      "homeScore": 0,
+      "awayScore": 1,
+      "pdt": {
+        "date": "2026-06-13",
+        "dateLabel": "Sat, Jun 13",
+        "time": "12:00 PM PDT",
+        "iso": "2026-06-13T12:00:00-07:00",
+        "etLabel": "Sat, Jun 13, 3:00 PM ET"
+      }
+    },
+    {
+      "number": 6,
+      "stage": "Group Stage",
+      "group": "C",
+      "home": "Brazil",
+      "away": "Morocco",
+      "venue": "New York New Jersey Stadium, East Rutherford",
+      "status": "final",
+      "homeScore": 1,
+      "awayScore": 1,
+      "pdt": {
+        "date": "2026-06-13",
+        "dateLabel": "Sat, Jun 13",
+        "time": "3:00 PM PDT",
+        "iso": "2026-06-13T15:00:00-07:00",
+        "etLabel": "Sat, Jun 13, 6:00 PM ET"
+      }
+    },
+    {
+      "number": 7,
+      "stage": "Group Stage",
+      "group": "B",
+      "home": "Qatar",
+      "away": "Switzerland",
+      "venue": "San Francisco Bay Area Stadium, Santa Clara",
+      "status": "final",
+      "homeScore": 1,
+      "awayScore": 1,
+      "pdt": {
+        "date": "2026-06-13",
+        "dateLabel": "Sat, Jun 13",
+        "time": "6:00 PM PDT",
+        "iso": "2026-06-13T18:00:00-07:00",
+        "etLabel": "Sat, Jun 13, 9:00 PM ET"
+      }
+    },
+    {
+      "number": 8,
+      "stage": "Group Stage",
+      "group": "D",
+      "home": "Australia",
+      "away": "Türkiye",
+      "venue": "BC Place Vancouver, Vancouver",
+      "status": "final",
+      "homeScore": 2,
+      "awayScore": 0,
+      "pdt": {
+        "date": "2026-06-13",
+        "dateLabel": "Sat, Jun 13",
+        "time": "9:00 PM PDT",
+        "iso": "2026-06-13T21:00:00-07:00",
+        "etLabel": "Sun, Jun 14, 12:00 AM ET"
+      }
+    },
+    {
+      "number": 9,
+      "stage": "Group Stage",
+      "group": "E",
+      "home": "Germany",
+      "away": "Curaçao",
+      "venue": "Houston Stadium, Houston",
+      "status": "final",
+      "homeScore": 7,
+      "awayScore": 1,
+      "pdt": {
+        "date": "2026-06-14",
+        "dateLabel": "Sun, Jun 14",
+        "time": "10:00 AM PDT",
+        "iso": "2026-06-14T10:00:00-07:00",
+        "etLabel": "Sun, Jun 14, 1:00 PM ET"
+      }
+    },
+    {
+      "number": 10,
+      "stage": "Group Stage",
+      "group": "F",
+      "home": "Netherlands",
+      "away": "Japan",
+      "venue": "Dallas Stadium, Arlington",
+      "status": "final",
+      "homeScore": 2,
+      "awayScore": 2,
+      "pdt": {
+        "date": "2026-06-14",
+        "dateLabel": "Sun, Jun 14",
+        "time": "1:00 PM PDT",
+        "iso": "2026-06-14T13:00:00-07:00",
+        "etLabel": "Sun, Jun 14, 4:00 PM ET"
+      }
+    },
+    {
+      "number": 11,
+      "stage": "Group Stage",
+      "group": "E",
+      "home": "Côte d'Ivoire",
+      "away": "Ecuador",
+      "venue": "Philadelphia Stadium, Philadelphia",
+      "status": "final",
+      "homeScore": 1,
+      "awayScore": 0,
+      "pdt": {
+        "date": "2026-06-14",
+        "dateLabel": "Sun, Jun 14",
+        "time": "4:00 PM PDT",
+        "iso": "2026-06-14T16:00:00-07:00",
+        "etLabel": "Sun, Jun 14, 7:00 PM ET"
+      }
+    },
+    {
+      "number": 12,
+      "stage": "Group Stage",
+      "group": "F",
+      "home": "Sweden",
+      "away": "Tunisia",
+      "venue": "Estadio Monterrey, Guadalupe",
+      "status": "final",
+      "homeScore": 5,
+      "awayScore": 1,
+      "pdt": {
+        "date": "2026-06-14",
+        "dateLabel": "Sun, Jun 14",
+        "time": "7:00 PM PDT",
+        "iso": "2026-06-14T19:00:00-07:00",
+        "etLabel": "Sun, Jun 14, 10:00 PM ET"
+      }
+    },
+    {
+      "number": 13,
+      "stage": "Group Stage",
+      "group": "H",
+      "home": "Spain",
+      "away": "Cabo Verde",
+      "venue": "Atlanta Stadium, Atlanta",
+      "status": "final",
+      "homeScore": 0,
+      "awayScore": 0,
+      "pdt": {
+        "date": "2026-06-15",
+        "dateLabel": "Mon, Jun 15",
+        "time": "9:00 AM PDT",
+        "iso": "2026-06-15T09:00:00-07:00",
+        "etLabel": "Mon, Jun 15, 12:00 PM ET"
+      }
+    },
+    {
+      "number": 14,
+      "stage": "Group Stage",
+      "group": "G",
+      "home": "Belgium",
+      "away": "Egypt",
+      "venue": "Seattle Stadium, Seattle",
+      "status": "final",
+      "homeScore": 1,
+      "awayScore": 1,
+      "pdt": {
+        "date": "2026-06-15",
+        "dateLabel": "Mon, Jun 15",
+        "time": "12:00 PM PDT",
+        "iso": "2026-06-15T12:00:00-07:00",
+        "etLabel": "Mon, Jun 15, 3:00 PM ET"
+      }
+    },
+    {
+      "number": 15,
+      "stage": "Group Stage",
+      "group": "H",
+      "home": "Saudi Arabia",
+      "away": "Uruguay",
+      "venue": "Miami Stadium, Miami",
+      "status": "scheduled",
+      "homeScore": null,
+      "awayScore": null,
+      "pdt": {
+        "date": "2026-06-15",
+        "dateLabel": "Mon, Jun 15",
+        "time": "3:00 PM PDT",
+        "iso": "2026-06-15T15:00:00-07:00",
+        "etLabel": "Mon, Jun 15, 6:00 PM ET"
+      }
+    },
+    {
+      "number": 16,
+      "stage": "Group Stage",
+      "group": "G",
+      "home": "IR Iran",
+      "away": "New Zealand",
+      "venue": "Los Angeles Stadium, Los Angeles",
+      "status": "scheduled",
+      "homeScore": null,
+      "awayScore": null,
+      "pdt": {
+        "date": "2026-06-15",
+        "dateLabel": "Mon, Jun 15",
+        "time": "6:00 PM PDT",
+        "iso": "2026-06-15T18:00:00-07:00",
+        "etLabel": "Mon, Jun 15, 9:00 PM ET"
+      }
+    },
+    {
+      "number": 17,
+      "stage": "Group Stage",
+      "group": "I",
+      "home": "France",
+      "away": "Senegal",
+      "venue": "New York New Jersey Stadium, East Rutherford",
+      "status": "scheduled",
+      "homeScore": null,
+      "awayScore": null,
+      "pdt": {
+        "date": "2026-06-16",
+        "dateLabel": "Tue, Jun 16",
+        "time": "12:00 PM PDT",
+        "iso": "2026-06-16T12:00:00-07:00",
+        "etLabel": "Tue, Jun 16, 3:00 PM ET"
+      }
+    },
+    {
+      "number": 18,
+      "stage": "Group Stage",
+      "group": "I",
+      "home": "Iraq",
+      "away": "Norway",
+      "venue": "Boston Stadium, Boston",
+      "status": "scheduled",
+      "homeScore": null,
+      "awayScore": null,
+      "pdt": {
+        "date": "2026-06-16",
+        "dateLabel": "Tue, Jun 16",
+        "time": "3:00 PM PDT",
+        "iso": "2026-06-16T15:00:00-07:00",
+        "etLabel": "Tue, Jun 16, 6:00 PM ET"
+      }
+    },
+    {
+      "number": 19,
+      "stage": "Group Stage",
+      "group": "J",
+      "home": "Argentina",
+      "away": "Algeria",
+      "venue": "Kansas City Stadium, Kansas City",
+      "status": "scheduled",
+      "homeScore": null,
+      "awayScore": null,
+      "pdt": {
+        "date": "2026-06-16",
+        "dateLabel": "Tue, Jun 16",
+        "time": "6:00 PM PDT",
+        "iso": "2026-06-16T18:00:00-07:00",
+        "etLabel": "Tue, Jun 16, 9:00 PM ET"
+      }
+    },
+    {
+      "number": 20,
+      "stage": "Group Stage",
+      "group": "J",
+      "home": "Austria",
+      "away": "Jordan",
+      "venue": "San Francisco Bay Area Stadium, Santa Clara",
+      "status": "scheduled",
+      "homeScore": null,
+      "awayScore": null,
+      "pdt": {
+        "date": "2026-06-16",
+        "dateLabel": "Tue, Jun 16",
+        "time": "9:00 PM PDT",
+        "iso": "2026-06-16T21:00:00-07:00",
+        "etLabel": "Wed, Jun 17, 12:00 AM ET"
+      }
+    },
+    {
+      "number": 21,
+      "stage": "Group Stage",
+      "group": "K",
+      "home": "Portugal",
+      "away": "Congo DR",
+      "venue": "Houston Stadium, Houston",
+      "status": "scheduled",
+      "homeScore": null,
+      "awayScore": null,
+      "pdt": {
+        "date": "2026-06-17",
+        "dateLabel": "Wed, Jun 17",
+        "time": "10:00 AM PDT",
+        "iso": "2026-06-17T10:00:00-07:00",
+        "etLabel": "Wed, Jun 17, 1:00 PM ET"
+      }
+    },
+    {
+      "number": 22,
+      "stage": "Group Stage",
+      "group": "L",
+      "home": "England",
+      "away": "Croatia",
+      "venue": "Dallas Stadium, Arlington",
+      "status": "scheduled",
+      "homeScore": null,
+      "awayScore": null,
+      "pdt": {
+        "date": "2026-06-17",
+        "dateLabel": "Wed, Jun 17",
+        "time": "1:00 PM PDT",
+        "iso": "2026-06-17T13:00:00-07:00",
+        "etLabel": "Wed, Jun 17, 4:00 PM ET"
+      }
+    },
+    {
+      "number": 23,
+      "stage": "Group Stage",
+      "group": "L",
+      "home": "Ghana",
+      "away": "Panama",
+      "venue": "Toronto Stadium, Toronto",
+      "status": "scheduled",
+      "homeScore": null,
+      "awayScore": null,
+      "pdt": {
+        "date": "2026-06-17",
+        "dateLabel": "Wed, Jun 17",
+        "time": "4:00 PM PDT",
+        "iso": "2026-06-17T16:00:00-07:00",
+        "etLabel": "Wed, Jun 17, 7:00 PM ET"
+      }
+    },
+    {
+      "number": 24,
+      "stage": "Group Stage",
+      "group": "K",
+      "home": "Uzbekistan",
+      "away": "Colombia",
+      "venue": "Mexico City Stadium, Mexico City",
+      "status": "scheduled",
+      "homeScore": null,
+      "awayScore": null,
+      "pdt": {
+        "date": "2026-06-17",
+        "dateLabel": "Wed, Jun 17",
+        "time": "7:00 PM PDT",
+        "iso": "2026-06-17T19:00:00-07:00",
+        "etLabel": "Wed, Jun 17, 10:00 PM ET"
+      }
+    },
+    {
+      "number": 25,
+      "stage": "Group Stage",
+      "group": "A",
+      "home": "Czechia",
+      "away": "South Africa",
+      "venue": "Atlanta Stadium, Atlanta",
+      "status": "scheduled",
+      "homeScore": null,
+      "awayScore": null,
+      "pdt": {
+        "date": "2026-06-18",
+        "dateLabel": "Thu, Jun 18",
+        "time": "9:00 AM PDT",
+        "iso": "2026-06-18T09:00:00-07:00",
+        "etLabel": "Thu, Jun 18, 12:00 PM ET"
+      }
+    },
+    {
+      "number": 26,
+      "stage": "Group Stage",
+      "group": "B",
+      "home": "Switzerland",
+      "away": "Bosnia and Herzegovina",
+      "venue": "Los Angeles Stadium, Los Angeles",
+      "status": "scheduled",
+      "homeScore": null,
+      "awayScore": null,
+      "pdt": {
+        "date": "2026-06-18",
+        "dateLabel": "Thu, Jun 18",
+        "time": "12:00 PM PDT",
+        "iso": "2026-06-18T12:00:00-07:00",
+        "etLabel": "Thu, Jun 18, 3:00 PM ET"
+      }
+    },
+    {
+      "number": 27,
+      "stage": "Group Stage",
+      "group": "B",
+      "home": "Canada",
+      "away": "Qatar",
+      "venue": "BC Place Vancouver, Vancouver",
+      "status": "scheduled",
+      "homeScore": null,
+      "awayScore": null,
+      "pdt": {
+        "date": "2026-06-18",
+        "dateLabel": "Thu, Jun 18",
+        "time": "3:00 PM PDT",
+        "iso": "2026-06-18T15:00:00-07:00",
+        "etLabel": "Thu, Jun 18, 6:00 PM ET"
+      }
+    },
+    {
+      "number": 28,
+      "stage": "Group Stage",
+      "group": "A",
+      "home": "Mexico",
+      "away": "Korea Republic",
+      "venue": "Estadio Guadalajara, Guadalajara",
+      "status": "scheduled",
+      "homeScore": null,
+      "awayScore": null,
+      "pdt": {
+        "date": "2026-06-18",
+        "dateLabel": "Thu, Jun 18",
+        "time": "6:00 PM PDT",
+        "iso": "2026-06-18T18:00:00-07:00",
+        "etLabel": "Thu, Jun 18, 9:00 PM ET"
+      }
+    },
+    {
+      "number": 29,
+      "stage": "Group Stage",
+      "group": "D",
+      "home": "USA",
+      "away": "Australia",
+      "venue": "Seattle Stadium, Seattle",
+      "status": "scheduled",
+      "homeScore": null,
+      "awayScore": null,
+      "pdt": {
+        "date": "2026-06-19",
+        "dateLabel": "Fri, Jun 19",
+        "time": "12:00 PM PDT",
+        "iso": "2026-06-19T12:00:00-07:00",
+        "etLabel": "Fri, Jun 19, 3:00 PM ET"
+      }
+    },
+    {
+      "number": 30,
+      "stage": "Group Stage",
+      "group": "C",
+      "home": "Scotland",
+      "away": "Morocco",
+      "venue": "Boston Stadium, Boston",
+      "status": "scheduled",
+      "homeScore": null,
+      "awayScore": null,
+      "pdt": {
+        "date": "2026-06-19",
+        "dateLabel": "Fri, Jun 19",
+        "time": "3:00 PM PDT",
+        "iso": "2026-06-19T15:00:00-07:00",
+        "etLabel": "Fri, Jun 19, 6:00 PM ET"
+      }
+    },
+    {
+      "number": 31,
+      "stage": "Group Stage",
+      "group": "C",
+      "home": "Brazil",
+      "away": "Haiti",
+      "venue": "Philadelphia Stadium, Philadelphia",
+      "status": "scheduled",
+      "homeScore": null,
+      "awayScore": null,
+      "pdt": {
+        "date": "2026-06-19",
+        "dateLabel": "Fri, Jun 19",
+        "time": "6:00 PM PDT",
+        "iso": "2026-06-19T18:00:00-07:00",
+        "etLabel": "Fri, Jun 19, 9:00 PM ET"
+      }
+    },
+    {
+      "number": 32,
+      "stage": "Group Stage",
+      "group": "D",
+      "home": "Türkiye",
+      "away": "Paraguay",
+      "venue": "San Francisco Bay Area Stadium, Santa Clara",
+      "status": "scheduled",
+      "homeScore": null,
+      "awayScore": null,
+      "pdt": {
+        "date": "2026-06-19",
+        "dateLabel": "Fri, Jun 19",
+        "time": "9:00 PM PDT",
+        "iso": "2026-06-19T21:00:00-07:00",
+        "etLabel": "Sat, Jun 20, 12:00 AM ET"
+      }
+    },
+    {
+      "number": 33,
+      "stage": "Group Stage",
+      "group": "F",
+      "home": "Netherlands",
+      "away": "Sweden",
+      "venue": "Houston Stadium, Houston",
+      "status": "scheduled",
+      "homeScore": null,
+      "awayScore": null,
+      "pdt": {
+        "date": "2026-06-20",
+        "dateLabel": "Sat, Jun 20",
+        "time": "10:00 AM PDT",
+        "iso": "2026-06-20T10:00:00-07:00",
+        "etLabel": "Sat, Jun 20, 1:00 PM ET"
+      }
+    },
+    {
+      "number": 34,
+      "stage": "Group Stage",
+      "group": "E",
+      "home": "Germany",
+      "away": "Côte d'Ivoire",
+      "venue": "Toronto Stadium, Toronto",
+      "status": "scheduled",
+      "homeScore": null,
+      "awayScore": null,
+      "pdt": {
+        "date": "2026-06-20",
+        "dateLabel": "Sat, Jun 20",
+        "time": "1:00 PM PDT",
+        "iso": "2026-06-20T13:00:00-07:00",
+        "etLabel": "Sat, Jun 20, 4:00 PM ET"
+      }
+    },
+    {
+      "number": 35,
+      "stage": "Group Stage",
+      "group": "E",
+      "home": "Ecuador",
+      "away": "Curaçao",
+      "venue": "Kansas City Stadium, Kansas City",
+      "status": "scheduled",
+      "homeScore": null,
+      "awayScore": null,
+      "pdt": {
+        "date": "2026-06-20",
+        "dateLabel": "Sat, Jun 20",
+        "time": "5:00 PM PDT",
+        "iso": "2026-06-20T17:00:00-07:00",
+        "etLabel": "Sat, Jun 20, 8:00 PM ET"
+      }
+    },
+    {
+      "number": 36,
+      "stage": "Group Stage",
+      "group": "F",
+      "home": "Tunisia",
+      "away": "Japan",
+      "venue": "Estadio Monterrey, Guadalupe",
+      "status": "scheduled",
+      "homeScore": null,
+      "awayScore": null,
+      "pdt": {
+        "date": "2026-06-20",
+        "dateLabel": "Sat, Jun 20",
+        "time": "9:00 PM PDT",
+        "iso": "2026-06-20T21:00:00-07:00",
+        "etLabel": "Sun, Jun 21, 12:00 AM ET"
+      }
+    },
+    {
+      "number": 37,
+      "stage": "Group Stage",
+      "group": "H",
+      "home": "Spain",
+      "away": "Saudi Arabia",
+      "venue": "Atlanta Stadium, Atlanta",
+      "status": "scheduled",
+      "homeScore": null,
+      "awayScore": null,
+      "pdt": {
+        "date": "2026-06-21",
+        "dateLabel": "Sun, Jun 21",
+        "time": "9:00 AM PDT",
+        "iso": "2026-06-21T09:00:00-07:00",
+        "etLabel": "Sun, Jun 21, 12:00 PM ET"
+      }
+    },
+    {
+      "number": 38,
+      "stage": "Group Stage",
+      "group": "G",
+      "home": "Belgium",
+      "away": "IR Iran",
+      "venue": "Los Angeles Stadium, Los Angeles",
+      "status": "scheduled",
+      "homeScore": null,
+      "awayScore": null,
+      "pdt": {
+        "date": "2026-06-21",
+        "dateLabel": "Sun, Jun 21",
+        "time": "12:00 PM PDT",
+        "iso": "2026-06-21T12:00:00-07:00",
+        "etLabel": "Sun, Jun 21, 3:00 PM ET"
+      }
+    },
+    {
+      "number": 39,
+      "stage": "Group Stage",
+      "group": "H",
+      "home": "Uruguay",
+      "away": "Cabo Verde",
+      "venue": "Miami Stadium, Miami",
+      "status": "scheduled",
+      "homeScore": null,
+      "awayScore": null,
+      "pdt": {
+        "date": "2026-06-21",
+        "dateLabel": "Sun, Jun 21",
+        "time": "3:00 PM PDT",
+        "iso": "2026-06-21T15:00:00-07:00",
+        "etLabel": "Sun, Jun 21, 6:00 PM ET"
+      }
+    },
+    {
+      "number": 40,
+      "stage": "Group Stage",
+      "group": "G",
+      "home": "New Zealand",
+      "away": "Egypt",
+      "venue": "BC Place Vancouver, Vancouver",
+      "status": "scheduled",
+      "homeScore": null,
+      "awayScore": null,
+      "pdt": {
+        "date": "2026-06-21",
+        "dateLabel": "Sun, Jun 21",
+        "time": "6:00 PM PDT",
+        "iso": "2026-06-21T18:00:00-07:00",
+        "etLabel": "Sun, Jun 21, 9:00 PM ET"
+      }
+    },
+    {
+      "number": 41,
+      "stage": "Group Stage",
+      "group": "J",
+      "home": "Argentina",
+      "away": "Austria",
+      "venue": "Dallas Stadium, Arlington",
+      "status": "scheduled",
+      "homeScore": null,
+      "awayScore": null,
+      "pdt": {
+        "date": "2026-06-22",
+        "dateLabel": "Mon, Jun 22",
+        "time": "10:00 AM PDT",
+        "iso": "2026-06-22T10:00:00-07:00",
+        "etLabel": "Mon, Jun 22, 1:00 PM ET"
+      }
+    },
+    {
+      "number": 42,
+      "stage": "Group Stage",
+      "group": "I",
+      "home": "France",
+      "away": "Iraq",
+      "venue": "Philadelphia Stadium, Philadelphia",
+      "status": "scheduled",
+      "homeScore": null,
+      "awayScore": null,
+      "pdt": {
+        "date": "2026-06-22",
+        "dateLabel": "Mon, Jun 22",
+        "time": "2:00 PM PDT",
+        "iso": "2026-06-22T14:00:00-07:00",
+        "etLabel": "Mon, Jun 22, 5:00 PM ET"
+      }
+    },
+    {
+      "number": 43,
+      "stage": "Group Stage",
+      "group": "I",
+      "home": "Norway",
+      "away": "Senegal",
+      "venue": "New York New Jersey Stadium, East Rutherford",
+      "status": "scheduled",
+      "homeScore": null,
+      "awayScore": null,
+      "pdt": {
+        "date": "2026-06-22",
+        "dateLabel": "Mon, Jun 22",
+        "time": "5:00 PM PDT",
+        "iso": "2026-06-22T17:00:00-07:00",
+        "etLabel": "Mon, Jun 22, 8:00 PM ET"
+      }
+    },
+    {
+      "number": 44,
+      "stage": "Group Stage",
+      "group": "J",
+      "home": "Jordan",
+      "away": "Algeria",
+      "venue": "San Francisco Bay Area Stadium, Santa Clara",
+      "status": "scheduled",
+      "homeScore": null,
+      "awayScore": null,
+      "pdt": {
+        "date": "2026-06-22",
+        "dateLabel": "Mon, Jun 22",
+        "time": "8:00 PM PDT",
+        "iso": "2026-06-22T20:00:00-07:00",
+        "etLabel": "Mon, Jun 22, 11:00 PM ET"
+      }
+    },
+    {
+      "number": 45,
+      "stage": "Group Stage",
+      "group": "K",
+      "home": "Portugal",
+      "away": "Uzbekistan",
+      "venue": "Houston Stadium, Houston",
+      "status": "scheduled",
+      "homeScore": null,
+      "awayScore": null,
+      "pdt": {
+        "date": "2026-06-23",
+        "dateLabel": "Tue, Jun 23",
+        "time": "10:00 AM PDT",
+        "iso": "2026-06-23T10:00:00-07:00",
+        "etLabel": "Tue, Jun 23, 1:00 PM ET"
+      }
+    },
+    {
+      "number": 46,
+      "stage": "Group Stage",
+      "group": "L",
+      "home": "England",
+      "away": "Ghana",
+      "venue": "Boston Stadium, Boston",
+      "status": "scheduled",
+      "homeScore": null,
+      "awayScore": null,
+      "pdt": {
+        "date": "2026-06-23",
+        "dateLabel": "Tue, Jun 23",
+        "time": "1:00 PM PDT",
+        "iso": "2026-06-23T13:00:00-07:00",
+        "etLabel": "Tue, Jun 23, 4:00 PM ET"
+      }
+    },
+    {
+      "number": 47,
+      "stage": "Group Stage",
+      "group": "L",
+      "home": "Panama",
+      "away": "Croatia",
+      "venue": "Toronto Stadium, Toronto",
+      "status": "scheduled",
+      "homeScore": null,
+      "awayScore": null,
+      "pdt": {
+        "date": "2026-06-23",
+        "dateLabel": "Tue, Jun 23",
+        "time": "4:00 PM PDT",
+        "iso": "2026-06-23T16:00:00-07:00",
+        "etLabel": "Tue, Jun 23, 7:00 PM ET"
+      }
+    },
+    {
+      "number": 48,
+      "stage": "Group Stage",
+      "group": "K",
+      "home": "Colombia",
+      "away": "Congo DR",
+      "venue": "Estadio Guadalajara, Guadalajara",
+      "status": "scheduled",
+      "homeScore": null,
+      "awayScore": null,
+      "pdt": {
+        "date": "2026-06-23",
+        "dateLabel": "Tue, Jun 23",
+        "time": "7:00 PM PDT",
+        "iso": "2026-06-23T19:00:00-07:00",
+        "etLabel": "Tue, Jun 23, 10:00 PM ET"
+      }
+    },
+    {
+      "number": 49,
+      "stage": "Group Stage",
+      "group": "B",
+      "home": "Switzerland",
+      "away": "Canada",
+      "venue": "BC Place Vancouver, Vancouver",
+      "status": "scheduled",
+      "homeScore": null,
+      "awayScore": null,
+      "pdt": {
+        "date": "2026-06-24",
+        "dateLabel": "Wed, Jun 24",
+        "time": "12:00 PM PDT",
+        "iso": "2026-06-24T12:00:00-07:00",
+        "etLabel": "Wed, Jun 24, 3:00 PM ET"
+      }
+    },
+    {
+      "number": 50,
+      "stage": "Group Stage",
+      "group": "B",
+      "home": "Bosnia and Herzegovina",
+      "away": "Qatar",
+      "venue": "Seattle Stadium, Seattle",
+      "status": "scheduled",
+      "homeScore": null,
+      "awayScore": null,
+      "pdt": {
+        "date": "2026-06-24",
+        "dateLabel": "Wed, Jun 24",
+        "time": "12:00 PM PDT",
+        "iso": "2026-06-24T12:00:00-07:00",
+        "etLabel": "Wed, Jun 24, 3:00 PM ET"
+      }
+    },
+    {
+      "number": 51,
+      "stage": "Group Stage",
+      "group": "C",
+      "home": "Scotland",
+      "away": "Brazil",
+      "venue": "Miami Stadium, Miami",
+      "status": "scheduled",
+      "homeScore": null,
+      "awayScore": null,
+      "pdt": {
+        "date": "2026-06-24",
+        "dateLabel": "Wed, Jun 24",
+        "time": "3:00 PM PDT",
+        "iso": "2026-06-24T15:00:00-07:00",
+        "etLabel": "Wed, Jun 24, 6:00 PM ET"
+      }
+    },
+    {
+      "number": 52,
+      "stage": "Group Stage",
+      "group": "C",
+      "home": "Morocco",
+      "away": "Haiti",
+      "venue": "Atlanta Stadium, Atlanta",
+      "status": "scheduled",
+      "homeScore": null,
+      "awayScore": null,
+      "pdt": {
+        "date": "2026-06-24",
+        "dateLabel": "Wed, Jun 24",
+        "time": "3:00 PM PDT",
+        "iso": "2026-06-24T15:00:00-07:00",
+        "etLabel": "Wed, Jun 24, 6:00 PM ET"
+      }
+    },
+    {
+      "number": 53,
+      "stage": "Group Stage",
+      "group": "A",
+      "home": "Czechia",
+      "away": "Mexico",
+      "venue": "Mexico City Stadium, Mexico City",
+      "status": "scheduled",
+      "homeScore": null,
+      "awayScore": null,
+      "pdt": {
+        "date": "2026-06-24",
+        "dateLabel": "Wed, Jun 24",
+        "time": "6:00 PM PDT",
+        "iso": "2026-06-24T18:00:00-07:00",
+        "etLabel": "Wed, Jun 24, 9:00 PM ET"
+      }
+    },
+    {
+      "number": 54,
+      "stage": "Group Stage",
+      "group": "A",
+      "home": "South Africa",
+      "away": "Korea Republic",
+      "venue": "Estadio Monterrey, Guadalupe",
+      "status": "scheduled",
+      "homeScore": null,
+      "awayScore": null,
+      "pdt": {
+        "date": "2026-06-24",
+        "dateLabel": "Wed, Jun 24",
+        "time": "6:00 PM PDT",
+        "iso": "2026-06-24T18:00:00-07:00",
+        "etLabel": "Wed, Jun 24, 9:00 PM ET"
+      }
+    },
+    {
+      "number": 55,
+      "stage": "Group Stage",
+      "group": "E",
+      "home": "Ecuador",
+      "away": "Germany",
+      "venue": "New York New Jersey Stadium, East Rutherford",
+      "status": "scheduled",
+      "homeScore": null,
+      "awayScore": null,
+      "pdt": {
+        "date": "2026-06-25",
+        "dateLabel": "Thu, Jun 25",
+        "time": "1:00 PM PDT",
+        "iso": "2026-06-25T13:00:00-07:00",
+        "etLabel": "Thu, Jun 25, 4:00 PM ET"
+      }
+    },
+    {
+      "number": 56,
+      "stage": "Group Stage",
+      "group": "E",
+      "home": "Curaçao",
+      "away": "Côte d'Ivoire",
+      "venue": "Philadelphia Stadium, Philadelphia",
+      "status": "scheduled",
+      "homeScore": null,
+      "awayScore": null,
+      "pdt": {
+        "date": "2026-06-25",
+        "dateLabel": "Thu, Jun 25",
+        "time": "1:00 PM PDT",
+        "iso": "2026-06-25T13:00:00-07:00",
+        "etLabel": "Thu, Jun 25, 4:00 PM ET"
+      }
+    },
+    {
+      "number": 57,
+      "stage": "Group Stage",
+      "group": "F",
+      "home": "Japan",
+      "away": "Sweden",
+      "venue": "Dallas Stadium, Arlington",
+      "status": "scheduled",
+      "homeScore": null,
+      "awayScore": null,
+      "pdt": {
+        "date": "2026-06-25",
+        "dateLabel": "Thu, Jun 25",
+        "time": "4:00 PM PDT",
+        "iso": "2026-06-25T16:00:00-07:00",
+        "etLabel": "Thu, Jun 25, 7:00 PM ET"
+      }
+    },
+    {
+      "number": 58,
+      "stage": "Group Stage",
+      "group": "F",
+      "home": "Tunisia",
+      "away": "Netherlands",
+      "venue": "Kansas City Stadium, Kansas City",
+      "status": "scheduled",
+      "homeScore": null,
+      "awayScore": null,
+      "pdt": {
+        "date": "2026-06-25",
+        "dateLabel": "Thu, Jun 25",
+        "time": "4:00 PM PDT",
+        "iso": "2026-06-25T16:00:00-07:00",
+        "etLabel": "Thu, Jun 25, 7:00 PM ET"
+      }
+    },
+    {
+      "number": 59,
+      "stage": "Group Stage",
+      "group": "D",
+      "home": "Türkiye",
+      "away": "USA",
+      "venue": "Los Angeles Stadium, Los Angeles",
+      "status": "scheduled",
+      "homeScore": null,
+      "awayScore": null,
+      "pdt": {
+        "date": "2026-06-25",
+        "dateLabel": "Thu, Jun 25",
+        "time": "7:00 PM PDT",
+        "iso": "2026-06-25T19:00:00-07:00",
+        "etLabel": "Thu, Jun 25, 10:00 PM ET"
+      }
+    },
+    {
+      "number": 60,
+      "stage": "Group Stage",
+      "group": "D",
+      "home": "Paraguay",
+      "away": "Australia",
+      "venue": "San Francisco Bay Area Stadium, Santa Clara",
+      "status": "scheduled",
+      "homeScore": null,
+      "awayScore": null,
+      "pdt": {
+        "date": "2026-06-25",
+        "dateLabel": "Thu, Jun 25",
+        "time": "7:00 PM PDT",
+        "iso": "2026-06-25T19:00:00-07:00",
+        "etLabel": "Thu, Jun 25, 10:00 PM ET"
+      }
+    },
+    {
+      "number": 61,
+      "stage": "Group Stage",
+      "group": "I",
+      "home": "Norway",
+      "away": "France",
+      "venue": "Boston Stadium, Boston",
+      "status": "scheduled",
+      "homeScore": null,
+      "awayScore": null,
+      "pdt": {
+        "date": "2026-06-26",
+        "dateLabel": "Fri, Jun 26",
+        "time": "12:00 PM PDT",
+        "iso": "2026-06-26T12:00:00-07:00",
+        "etLabel": "Fri, Jun 26, 3:00 PM ET"
+      }
+    },
+    {
+      "number": 62,
+      "stage": "Group Stage",
+      "group": "I",
+      "home": "Senegal",
+      "away": "Iraq",
+      "venue": "Toronto Stadium, Toronto",
+      "status": "scheduled",
+      "homeScore": null,
+      "awayScore": null,
+      "pdt": {
+        "date": "2026-06-26",
+        "dateLabel": "Fri, Jun 26",
+        "time": "12:00 PM PDT",
+        "iso": "2026-06-26T12:00:00-07:00",
+        "etLabel": "Fri, Jun 26, 3:00 PM ET"
+      }
+    },
+    {
+      "number": 63,
+      "stage": "Group Stage",
+      "group": "H",
+      "home": "Cabo Verde",
+      "away": "Saudi Arabia",
+      "venue": "Houston Stadium, Houston",
+      "status": "scheduled",
+      "homeScore": null,
+      "awayScore": null,
+      "pdt": {
+        "date": "2026-06-26",
+        "dateLabel": "Fri, Jun 26",
+        "time": "5:00 PM PDT",
+        "iso": "2026-06-26T17:00:00-07:00",
+        "etLabel": "Fri, Jun 26, 8:00 PM ET"
+      }
+    },
+    {
+      "number": 64,
+      "stage": "Group Stage",
+      "group": "H",
+      "home": "Uruguay",
+      "away": "Spain",
+      "venue": "Estadio Guadalajara, Guadalajara",
+      "status": "scheduled",
+      "homeScore": null,
+      "awayScore": null,
+      "pdt": {
+        "date": "2026-06-26",
+        "dateLabel": "Fri, Jun 26",
+        "time": "5:00 PM PDT",
+        "iso": "2026-06-26T17:00:00-07:00",
+        "etLabel": "Fri, Jun 26, 8:00 PM ET"
+      }
+    },
+    {
+      "number": 65,
+      "stage": "Group Stage",
+      "group": "G",
+      "home": "Egypt",
+      "away": "IR Iran",
+      "venue": "Seattle Stadium, Seattle",
+      "status": "scheduled",
+      "homeScore": null,
+      "awayScore": null,
+      "pdt": {
+        "date": "2026-06-26",
+        "dateLabel": "Fri, Jun 26",
+        "time": "8:00 PM PDT",
+        "iso": "2026-06-26T20:00:00-07:00",
+        "etLabel": "Fri, Jun 26, 11:00 PM ET"
+      }
+    },
+    {
+      "number": 66,
+      "stage": "Group Stage",
+      "group": "G",
+      "home": "New Zealand",
+      "away": "Belgium",
+      "venue": "BC Place Vancouver, Vancouver",
+      "status": "scheduled",
+      "homeScore": null,
+      "awayScore": null,
+      "pdt": {
+        "date": "2026-06-26",
+        "dateLabel": "Fri, Jun 26",
+        "time": "8:00 PM PDT",
+        "iso": "2026-06-26T20:00:00-07:00",
+        "etLabel": "Fri, Jun 26, 11:00 PM ET"
+      }
+    },
+    {
+      "number": 67,
+      "stage": "Group Stage",
+      "group": "L",
+      "home": "Panama",
+      "away": "England",
+      "venue": "New York New Jersey Stadium, East Rutherford",
+      "status": "scheduled",
+      "homeScore": null,
+      "awayScore": null,
+      "pdt": {
+        "date": "2026-06-27",
+        "dateLabel": "Sat, Jun 27",
+        "time": "2:00 PM PDT",
+        "iso": "2026-06-27T14:00:00-07:00",
+        "etLabel": "Sat, Jun 27, 5:00 PM ET"
+      }
+    },
+    {
+      "number": 68,
+      "stage": "Group Stage",
+      "group": "L",
+      "home": "Croatia",
+      "away": "Ghana",
+      "venue": "Philadelphia Stadium, Philadelphia",
+      "status": "scheduled",
+      "homeScore": null,
+      "awayScore": null,
+      "pdt": {
+        "date": "2026-06-27",
+        "dateLabel": "Sat, Jun 27",
+        "time": "2:00 PM PDT",
+        "iso": "2026-06-27T14:00:00-07:00",
+        "etLabel": "Sat, Jun 27, 5:00 PM ET"
+      }
+    },
+    {
+      "number": 69,
+      "stage": "Group Stage",
+      "group": "K",
+      "home": "Colombia",
+      "away": "Portugal",
+      "venue": "Miami Stadium, Miami",
+      "status": "scheduled",
+      "homeScore": null,
+      "awayScore": null,
+      "pdt": {
+        "date": "2026-06-27",
+        "dateLabel": "Sat, Jun 27",
+        "time": "4:30 PM PDT",
+        "iso": "2026-06-27T16:30:00-07:00",
+        "etLabel": "Sat, Jun 27, 7:30 PM ET"
+      }
+    },
+    {
+      "number": 70,
+      "stage": "Group Stage",
+      "group": "K",
+      "home": "Congo DR",
+      "away": "Uzbekistan",
+      "venue": "Atlanta Stadium, Atlanta",
+      "status": "scheduled",
+      "homeScore": null,
+      "awayScore": null,
+      "pdt": {
+        "date": "2026-06-27",
+        "dateLabel": "Sat, Jun 27",
+        "time": "4:30 PM PDT",
+        "iso": "2026-06-27T16:30:00-07:00",
+        "etLabel": "Sat, Jun 27, 7:30 PM ET"
+      }
+    },
+    {
+      "number": 71,
+      "stage": "Group Stage",
+      "group": "J",
+      "home": "Algeria",
+      "away": "Austria",
+      "venue": "Kansas City Stadium, Kansas City",
+      "status": "scheduled",
+      "homeScore": null,
+      "awayScore": null,
+      "pdt": {
+        "date": "2026-06-27",
+        "dateLabel": "Sat, Jun 27",
+        "time": "7:00 PM PDT",
+        "iso": "2026-06-27T19:00:00-07:00",
+        "etLabel": "Sat, Jun 27, 10:00 PM ET"
+      }
+    },
+    {
+      "number": 72,
+      "stage": "Group Stage",
+      "group": "J",
+      "home": "Jordan",
+      "away": "Argentina",
+      "venue": "Dallas Stadium, Arlington",
+      "status": "scheduled",
+      "homeScore": null,
+      "awayScore": null,
+      "pdt": {
+        "date": "2026-06-27",
+        "dateLabel": "Sat, Jun 27",
+        "time": "7:00 PM PDT",
+        "iso": "2026-06-27T19:00:00-07:00",
+        "etLabel": "Sat, Jun 27, 10:00 PM ET"
+      }
+    },
+    {
+      "number": 73,
+      "stage": "Round of 32",
+      "group": null,
+      "home": "Runner-up Group A",
+      "away": "Runner-up Group B",
+      "venue": "Los Angeles Stadium, Los Angeles",
+      "status": "scheduled",
+      "homeScore": null,
+      "awayScore": null,
+      "pdt": {
+        "date": "2026-06-28",
+        "dateLabel": "Sun, Jun 28",
+        "time": "12:00 PM PDT",
+        "iso": "2026-06-28T12:00:00-07:00",
+        "etLabel": "Sun, Jun 28, 3:00 PM ET"
+      }
+    },
+    {
+      "number": 74,
+      "stage": "Round of 32",
+      "group": null,
+      "home": "Winner Group E",
+      "away": "3rd Group A/B/C/D/F",
+      "venue": "Boston Stadium, Boston",
+      "status": "scheduled",
+      "homeScore": null,
+      "awayScore": null,
+      "pdt": {
+        "date": "2026-06-29",
+        "dateLabel": "Mon, Jun 29",
+        "time": "1:30 PM PDT",
+        "iso": "2026-06-29T13:30:00-07:00",
+        "etLabel": "Mon, Jun 29, 4:30 PM ET"
+      }
+    },
+    {
+      "number": 75,
+      "stage": "Round of 32",
+      "group": null,
+      "home": "Winner Group F",
+      "away": "Runner-up Group C",
+      "venue": "Estadio Monterrey, Guadalupe",
+      "status": "scheduled",
+      "homeScore": null,
+      "awayScore": null,
+      "pdt": {
+        "date": "2026-06-29",
+        "dateLabel": "Mon, Jun 29",
+        "time": "6:00 PM PDT",
+        "iso": "2026-06-29T18:00:00-07:00",
+        "etLabel": "Mon, Jun 29, 9:00 PM ET"
+      }
+    },
+    {
+      "number": 76,
+      "stage": "Round of 32",
+      "group": null,
+      "home": "Winner Group C",
+      "away": "Runner-up Group F",
+      "venue": "Houston Stadium, Houston",
+      "status": "scheduled",
+      "homeScore": null,
+      "awayScore": null,
+      "pdt": {
+        "date": "2026-06-29",
+        "dateLabel": "Mon, Jun 29",
+        "time": "10:00 AM PDT",
+        "iso": "2026-06-29T10:00:00-07:00",
+        "etLabel": "Mon, Jun 29, 1:00 PM ET"
+      }
+    },
+    {
+      "number": 77,
+      "stage": "Round of 32",
+      "group": null,
+      "home": "Winner Group I",
+      "away": "3rd Group C/D/F/G/H",
+      "venue": "New York New Jersey Stadium, East Rutherford",
+      "status": "scheduled",
+      "homeScore": null,
+      "awayScore": null,
+      "pdt": {
+        "date": "2026-06-30",
+        "dateLabel": "Tue, Jun 30",
+        "time": "2:00 PM PDT",
+        "iso": "2026-06-30T14:00:00-07:00",
+        "etLabel": "Tue, Jun 30, 5:00 PM ET"
+      }
+    },
+    {
+      "number": 78,
+      "stage": "Round of 32",
+      "group": null,
+      "home": "Runner-up Group E",
+      "away": "Runner-up Group I",
+      "venue": "Dallas Stadium, Arlington",
+      "status": "scheduled",
+      "homeScore": null,
+      "awayScore": null,
+      "pdt": {
+        "date": "2026-06-30",
+        "dateLabel": "Tue, Jun 30",
+        "time": "10:00 AM PDT",
+        "iso": "2026-06-30T10:00:00-07:00",
+        "etLabel": "Tue, Jun 30, 1:00 PM ET"
+      }
+    },
+    {
+      "number": 79,
+      "stage": "Round of 32",
+      "group": null,
+      "home": "Winner Group A",
+      "away": "3rd Group C/E/F/H/I",
+      "venue": "Mexico City Stadium, Mexico City",
+      "status": "scheduled",
+      "homeScore": null,
+      "awayScore": null,
+      "pdt": {
+        "date": "2026-06-30",
+        "dateLabel": "Tue, Jun 30",
+        "time": "6:00 PM PDT",
+        "iso": "2026-06-30T18:00:00-07:00",
+        "etLabel": "Tue, Jun 30, 9:00 PM ET"
+      }
+    },
+    {
+      "number": 80,
+      "stage": "Round of 32",
+      "group": null,
+      "home": "Winner Group L",
+      "away": "3rd Group E/H/I/J/K",
+      "venue": "Atlanta Stadium, Atlanta",
+      "status": "scheduled",
+      "homeScore": null,
+      "awayScore": null,
+      "pdt": {
+        "date": "2026-07-01",
+        "dateLabel": "Wed, Jul 1",
+        "time": "9:00 AM PDT",
+        "iso": "2026-07-01T09:00:00-07:00",
+        "etLabel": "Wed, Jul 1, 12:00 PM ET"
+      }
+    },
+    {
+      "number": 81,
+      "stage": "Round of 32",
+      "group": null,
+      "home": "Winner Group D",
+      "away": "3rd Group B/E/F/I/J",
+      "venue": "San Francisco Bay Area Stadium, Santa Clara",
+      "status": "scheduled",
+      "homeScore": null,
+      "awayScore": null,
+      "pdt": {
+        "date": "2026-07-01",
+        "dateLabel": "Wed, Jul 1",
+        "time": "5:00 PM PDT",
+        "iso": "2026-07-01T17:00:00-07:00",
+        "etLabel": "Wed, Jul 1, 8:00 PM ET"
+      }
+    },
+    {
+      "number": 82,
+      "stage": "Round of 32",
+      "group": null,
+      "home": "Winner Group G",
+      "away": "3rd Group A/E/H/I/J",
+      "venue": "Seattle Stadium, Seattle",
+      "status": "scheduled",
+      "homeScore": null,
+      "awayScore": null,
+      "pdt": {
+        "date": "2026-07-01",
+        "dateLabel": "Wed, Jul 1",
+        "time": "1:00 PM PDT",
+        "iso": "2026-07-01T13:00:00-07:00",
+        "etLabel": "Wed, Jul 1, 4:00 PM ET"
+      }
+    },
+    {
+      "number": 83,
+      "stage": "Round of 32",
+      "group": null,
+      "home": "Runner-up Group K",
+      "away": "Runner-up Group L",
+      "venue": "Toronto Stadium, Toronto",
+      "status": "scheduled",
+      "homeScore": null,
+      "awayScore": null,
+      "pdt": {
+        "date": "2026-07-02",
+        "dateLabel": "Thu, Jul 2",
+        "time": "4:00 PM PDT",
+        "iso": "2026-07-02T16:00:00-07:00",
+        "etLabel": "Thu, Jul 2, 7:00 PM ET"
+      }
+    },
+    {
+      "number": 84,
+      "stage": "Round of 32",
+      "group": null,
+      "home": "Winner Group H",
+      "away": "Runner-up Group J",
+      "venue": "Los Angeles Stadium, Los Angeles",
+      "status": "scheduled",
+      "homeScore": null,
+      "awayScore": null,
+      "pdt": {
+        "date": "2026-07-02",
+        "dateLabel": "Thu, Jul 2",
+        "time": "12:00 PM PDT",
+        "iso": "2026-07-02T12:00:00-07:00",
+        "etLabel": "Thu, Jul 2, 3:00 PM ET"
+      }
+    },
+    {
+      "number": 85,
+      "stage": "Round of 32",
+      "group": null,
+      "home": "Winner Group B",
+      "away": "3rd Group E/F/G/I/J",
+      "venue": "BC Place Vancouver, Vancouver",
+      "status": "scheduled",
+      "homeScore": null,
+      "awayScore": null,
+      "pdt": {
+        "date": "2026-07-02",
+        "dateLabel": "Thu, Jul 2",
+        "time": "8:00 PM PDT",
+        "iso": "2026-07-02T20:00:00-07:00",
+        "etLabel": "Thu, Jul 2, 11:00 PM ET"
+      }
+    },
+    {
+      "number": 86,
+      "stage": "Round of 32",
+      "group": null,
+      "home": "Winner Group J",
+      "away": "Runner-up Group H",
+      "venue": "Miami Stadium, Miami",
+      "status": "scheduled",
+      "homeScore": null,
+      "awayScore": null,
+      "pdt": {
+        "date": "2026-07-03",
+        "dateLabel": "Fri, Jul 3",
+        "time": "3:00 PM PDT",
+        "iso": "2026-07-03T15:00:00-07:00",
+        "etLabel": "Fri, Jul 3, 6:00 PM ET"
+      }
+    },
+    {
+      "number": 87,
+      "stage": "Round of 32",
+      "group": null,
+      "home": "Winner Group K",
+      "away": "3rd Group D/E/I/J/L",
+      "venue": "Kansas City Stadium, Kansas City",
+      "status": "scheduled",
+      "homeScore": null,
+      "awayScore": null,
+      "pdt": {
+        "date": "2026-07-03",
+        "dateLabel": "Fri, Jul 3",
+        "time": "6:30 PM PDT",
+        "iso": "2026-07-03T18:30:00-07:00",
+        "etLabel": "Fri, Jul 3, 9:30 PM ET"
+      }
+    },
+    {
+      "number": 88,
+      "stage": "Round of 32",
+      "group": null,
+      "home": "Runner-up Group D",
+      "away": "Runner-up Group G",
+      "venue": "Dallas Stadium, Arlington",
+      "status": "scheduled",
+      "homeScore": null,
+      "awayScore": null,
+      "pdt": {
+        "date": "2026-07-03",
+        "dateLabel": "Fri, Jul 3",
+        "time": "11:00 AM PDT",
+        "iso": "2026-07-03T11:00:00-07:00",
+        "etLabel": "Fri, Jul 3, 2:00 PM ET"
+      }
+    },
+    {
+      "number": 89,
+      "stage": "Round of 16",
+      "group": null,
+      "home": "Winner Match 74",
+      "away": "Winner Match 77",
+      "venue": "Philadelphia Stadium, Philadelphia",
+      "status": "scheduled",
+      "homeScore": null,
+      "awayScore": null,
+      "pdt": {
+        "date": "2026-07-04",
+        "dateLabel": "Sat, Jul 4",
+        "time": "2:00 PM PDT",
+        "iso": "2026-07-04T14:00:00-07:00",
+        "etLabel": "Sat, Jul 4, 5:00 PM ET"
+      }
+    },
+    {
+      "number": 90,
+      "stage": "Round of 16",
+      "group": null,
+      "home": "Winner Match 73",
+      "away": "Winner Match 75",
+      "venue": "Houston Stadium, Houston",
+      "status": "scheduled",
+      "homeScore": null,
+      "awayScore": null,
+      "pdt": {
+        "date": "2026-07-04",
+        "dateLabel": "Sat, Jul 4",
+        "time": "10:00 AM PDT",
+        "iso": "2026-07-04T10:00:00-07:00",
+        "etLabel": "Sat, Jul 4, 1:00 PM ET"
+      }
+    },
+    {
+      "number": 91,
+      "stage": "Round of 16",
+      "group": null,
+      "home": "Winner Match 76",
+      "away": "Winner Match 78",
+      "venue": "New York New Jersey Stadium, East Rutherford",
+      "status": "scheduled",
+      "homeScore": null,
+      "awayScore": null,
+      "pdt": {
+        "date": "2026-07-05",
+        "dateLabel": "Sun, Jul 5",
+        "time": "1:00 PM PDT",
+        "iso": "2026-07-05T13:00:00-07:00",
+        "etLabel": "Sun, Jul 5, 4:00 PM ET"
+      }
+    },
+    {
+      "number": 92,
+      "stage": "Round of 16",
+      "group": null,
+      "home": "Winner Match 79",
+      "away": "Winner Match 80",
+      "venue": "Mexico City Stadium, Mexico City",
+      "status": "scheduled",
+      "homeScore": null,
+      "awayScore": null,
+      "pdt": {
+        "date": "2026-07-05",
+        "dateLabel": "Sun, Jul 5",
+        "time": "5:00 PM PDT",
+        "iso": "2026-07-05T17:00:00-07:00",
+        "etLabel": "Sun, Jul 5, 8:00 PM ET"
+      }
+    },
+    {
+      "number": 93,
+      "stage": "Round of 16",
+      "group": null,
+      "home": "Winner Match 83",
+      "away": "Winner Match 84",
+      "venue": "Dallas Stadium, Arlington",
+      "status": "scheduled",
+      "homeScore": null,
+      "awayScore": null,
+      "pdt": {
+        "date": "2026-07-06",
+        "dateLabel": "Mon, Jul 6",
+        "time": "12:00 PM PDT",
+        "iso": "2026-07-06T12:00:00-07:00",
+        "etLabel": "Mon, Jul 6, 3:00 PM ET"
+      }
+    },
+    {
+      "number": 94,
+      "stage": "Round of 16",
+      "group": null,
+      "home": "Winner Match 81",
+      "away": "Winner Match 82",
+      "venue": "Seattle Stadium, Seattle",
+      "status": "scheduled",
+      "homeScore": null,
+      "awayScore": null,
+      "pdt": {
+        "date": "2026-07-06",
+        "dateLabel": "Mon, Jul 6",
+        "time": "5:00 PM PDT",
+        "iso": "2026-07-06T17:00:00-07:00",
+        "etLabel": "Mon, Jul 6, 8:00 PM ET"
+      }
+    },
+    {
+      "number": 95,
+      "stage": "Round of 16",
+      "group": null,
+      "home": "Winner Match 86",
+      "away": "Winner Match 88",
+      "venue": "Atlanta Stadium, Atlanta",
+      "status": "scheduled",
+      "homeScore": null,
+      "awayScore": null,
+      "pdt": {
+        "date": "2026-07-07",
+        "dateLabel": "Tue, Jul 7",
+        "time": "9:00 AM PDT",
+        "iso": "2026-07-07T09:00:00-07:00",
+        "etLabel": "Tue, Jul 7, 12:00 PM ET"
+      }
+    },
+    {
+      "number": 96,
+      "stage": "Round of 16",
+      "group": null,
+      "home": "Winner Match 85",
+      "away": "Winner Match 87",
+      "venue": "BC Place Vancouver, Vancouver",
+      "status": "scheduled",
+      "homeScore": null,
+      "awayScore": null,
+      "pdt": {
+        "date": "2026-07-07",
+        "dateLabel": "Tue, Jul 7",
+        "time": "1:00 PM PDT",
+        "iso": "2026-07-07T13:00:00-07:00",
+        "etLabel": "Tue, Jul 7, 4:00 PM ET"
+      }
+    },
+    {
+      "number": 97,
+      "stage": "Quarter-finals",
+      "group": null,
+      "home": "Winner Match 89",
+      "away": "Winner Match 90",
+      "venue": "Boston Stadium, Boston",
+      "status": "scheduled",
+      "homeScore": null,
+      "awayScore": null,
+      "pdt": {
+        "date": "2026-07-09",
+        "dateLabel": "Thu, Jul 9",
+        "time": "1:00 PM PDT",
+        "iso": "2026-07-09T13:00:00-07:00",
+        "etLabel": "Thu, Jul 9, 4:00 PM ET"
+      }
+    },
+    {
+      "number": 98,
+      "stage": "Quarter-finals",
+      "group": null,
+      "home": "Winner Match 93",
+      "away": "Winner Match 94",
+      "venue": "Los Angeles Stadium, Los Angeles",
+      "status": "scheduled",
+      "homeScore": null,
+      "awayScore": null,
+      "pdt": {
+        "date": "2026-07-10",
+        "dateLabel": "Fri, Jul 10",
+        "time": "12:00 PM PDT",
+        "iso": "2026-07-10T12:00:00-07:00",
+        "etLabel": "Fri, Jul 10, 3:00 PM ET"
+      }
+    },
+    {
+      "number": 99,
+      "stage": "Quarter-finals",
+      "group": null,
+      "home": "Winner Match 91",
+      "away": "Winner Match 92",
+      "venue": "Miami Stadium, Miami",
+      "status": "scheduled",
+      "homeScore": null,
+      "awayScore": null,
+      "pdt": {
+        "date": "2026-07-11",
+        "dateLabel": "Sat, Jul 11",
+        "time": "2:00 PM PDT",
+        "iso": "2026-07-11T14:00:00-07:00",
+        "etLabel": "Sat, Jul 11, 5:00 PM ET"
+      }
+    },
+    {
+      "number": 100,
+      "stage": "Quarter-finals",
+      "group": null,
+      "home": "Winner Match 95",
+      "away": "Winner Match 96",
+      "venue": "Kansas City Stadium, Kansas City",
+      "status": "scheduled",
+      "homeScore": null,
+      "awayScore": null,
+      "pdt": {
+        "date": "2026-07-11",
+        "dateLabel": "Sat, Jul 11",
+        "time": "6:00 PM PDT",
+        "iso": "2026-07-11T18:00:00-07:00",
+        "etLabel": "Sat, Jul 11, 9:00 PM ET"
+      }
+    },
+    {
+      "number": 101,
+      "stage": "Semi-finals",
+      "group": null,
+      "home": "Winner Match 97",
+      "away": "Winner Match 98",
+      "venue": "Dallas Stadium, Arlington",
+      "status": "scheduled",
+      "homeScore": null,
+      "awayScore": null,
+      "pdt": {
+        "date": "2026-07-14",
+        "dateLabel": "Tue, Jul 14",
+        "time": "12:00 PM PDT",
+        "iso": "2026-07-14T12:00:00-07:00",
+        "etLabel": "Tue, Jul 14, 3:00 PM ET"
+      }
+    },
+    {
+      "number": 102,
+      "stage": "Semi-finals",
+      "group": null,
+      "home": "Winner Match 99",
+      "away": "Winner Match 100",
+      "venue": "Atlanta Stadium, Atlanta",
+      "status": "scheduled",
+      "homeScore": null,
+      "awayScore": null,
+      "pdt": {
+        "date": "2026-07-15",
+        "dateLabel": "Wed, Jul 15",
+        "time": "12:00 PM PDT",
+        "iso": "2026-07-15T12:00:00-07:00",
+        "etLabel": "Wed, Jul 15, 3:00 PM ET"
+      }
+    },
+    {
+      "number": 103,
+      "stage": "Third Place",
+      "group": null,
+      "home": "Loser Match 101",
+      "away": "Loser Match 102",
+      "venue": "Miami Stadium, Miami",
+      "status": "scheduled",
+      "homeScore": null,
+      "awayScore": null,
+      "pdt": {
+        "date": "2026-07-18",
+        "dateLabel": "Sat, Jul 18",
+        "time": "2:00 PM PDT",
+        "iso": "2026-07-18T14:00:00-07:00",
+        "etLabel": "Sat, Jul 18, 5:00 PM ET"
+      }
+    },
+    {
+      "number": 104,
+      "stage": "Final",
+      "group": null,
+      "home": "Winner Match 101",
+      "away": "Winner Match 102",
+      "venue": "New York New Jersey Stadium, East Rutherford",
+      "status": "scheduled",
+      "homeScore": null,
+      "awayScore": null,
+      "pdt": {
+        "date": "2026-07-19",
+        "dateLabel": "Sun, Jul 19",
+        "time": "12:00 PM PDT",
+        "iso": "2026-07-19T12:00:00-07:00",
+        "etLabel": "Sun, Jul 19, 3:00 PM ET"
+      }
+    }
+  ],
+  "notes": [
+    "Group-stage scores are included for matches whose final score was available in the sources at generation time.",
+    "Saudi Arabia vs Uruguay and IR Iran vs New Zealand were not final in the accessible source snapshot and are shown as scheduled.",
+    "Knockout teams remain placeholders until the group stage produces official qualifiers."
+  ],
+  "sources": [
+    {
+      "label": "FIFA official match schedule and venues",
+      "url": "https://www.fifa.com/en/tournaments/mens/worldcup/canadamexicousa2026/articles/match-schedule-fixtures-results-teams-stadiums"
+    },
+    {
+      "label": "NBC Sports schedule, kickoff times and current results",
+      "url": "https://www.nbcsports.com/soccer/news/2026-world-cup-schedule-kick-off-times-stadiums-dates-groups-how-to-watch-live-bracket"
+    },
+    {
+      "label": "CBS Sports schedule times",
+      "url": "https://www.cbssports.com/soccer/news/world-cup-2026-schedule-times-dates/"
+    },
+    {
+      "label": "GMA standings/results snapshot",
+      "url": "https://www.gmanetwork.com/news/sports/football/991493/2026-fifa-world-cup-updates-and-results-june-15-2026/story/"
+    },
+    {
+      "label": "Sporting News results snapshot",
+      "url": "https://www.sportingnews.com/us/soccer/news/world-cup-results-2026-updated-scores-today-yesterday-2026/0aac196507c2f55a95cff893"
+    },
+    {
+      "label": "Open-source World Cup 2026 API project",
+      "url": "https://github.com/rezarahiminia/worldcup2026"
+    }
+  ],
+  "version": "2026.06.16-live-fix-v4",
+  "staticAfter": "2026-07-20T12:00:00-07:00",
+  "snapshotRule": "Before 10:30 PM PDT, the browser shows the current PDT matchday. At/after 10:30 PM PDT, it shows the next PDT matchday, even if GitHub Actions is late.",
+  "lastUpdateIso": "2026-06-15T21:31:00-07:00",
+  "updateReason": "Seed data packaged with live-update client and Actions fixes.",
+  "changesSinceLastUpdate": [],
+  "automation": {
+    "nightlyUpdate": "10:30 PM PDT, with retry schedules at 10:35 PM and 10:45 PM PDT",
+    "matchWindowPolling": "GitHub Actions polls about every 10 minutes during match windows and extended post-match windows.",
+    "browserRefresh": "The browser checks every 60 seconds during active/recent match windows and also re-renders the 10:30 PM snapshot rule locally.",
+    "deployRule": "The workflow deploys only when worldcup-data.json changes, except manual runs can force a deployment.",
+    "staticCutoff": "2026-07-20T12:00:00-07:00"
+  },
+  "snapshotDate": "2026-06-15"
+}</script>
+  <script src="app.js?v=20260616-livefix4" defer></script>
 </body>
 </html>

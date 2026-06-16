@@ -1,7 +1,7 @@
 {
   "title": "FIFA World Cup 2026 Bracket Tracker",
-  "lastUpdated": "Automated manual refresh: June 16, 2026 04:30 AM PDT",
-  "updateTarget": "Daily 10:30 PM PDT plus during-match live score checks",
+  "lastUpdated": "June 15, 2026 09:31 PM PDT",
+  "updateTarget": "Daily 10:30 PM PDT plus match-window polling and browser live refresh.",
   "apiEndpoint": "https://worldcup26.ir/get/games",
   "teams": {
     "Mexico": {
@@ -60,7 +60,7 @@
       "flagCode": "ht"
     },
     "Scotland": {
-      "flag": "🏴󠁧󠁢󠁳󠁣󠁴󠁿",
+      "flag": "🏴",
       "group": "C",
       "flagCode": "gb-sct"
     },
@@ -228,7 +228,7 @@
       "flagCode": "co"
     },
     "England": {
-      "flag": "🏴󠁧󠁢󠁥󠁮󠁧󠁿",
+      "flag": "🏴",
       "group": "L",
       "flagCode": "gb-eng"
     },
@@ -2125,15 +2125,7 @@
   "notes": [
     "Group-stage scores are included for matches whose final score was available in the sources at generation time.",
     "Saudi Arabia vs Uruguay and IR Iran vs New Zealand were not final in the accessible source snapshot and are shown as scheduled.",
-    "Knockout teams remain placeholders until the group stage produces official qualifiers.",
-    "The All Matches section is grouped by PDT date and includes all 104 tournament games.",
-    "The snapshot panel shows every match on the selected PDT matchday; after a 10:30 PM PDT update it targets the next tournament date.",
-    "The snapshot panel shows every match on the active PDT matchday; after a 10:30 PM PDT update it targets the next tournament date.",
-    "Every real team has an explicit flag-code mapping; the page loads flag images with emoji or drawn fallbacks for reliable display.",
-    "During match windows, GitHub Actions can check the public score API about every 10 minutes and publish only when worldcup-data.json changes.",
-    "When the page is open during an active match window, the browser tries a live API refresh every 60 seconds so visible scores can update without waiting for a site redeploy.",
-    "All automated refreshes stop after 2026-07-20 12:00 PM PDT, which is 24 hours after the scheduled July 19 final kickoff.",
-    "The HTML now includes a Roadmap section with 20 improvement ideas and 4 live-score update behavior rules."
+    "Knockout teams remain placeholders until the group stage produces official qualifiers."
   ],
   "sources": [
     {
@@ -2161,314 +2153,18 @@
       "url": "https://github.com/rezarahiminia/worldcup2026"
     }
   ],
-  "snapshotDate": "2026-06-16",
-  "snapshotRule": "Before 10:30 PM PDT, show today's matchday; after 10:30 PM PDT, show the next PDT matchday. After the final matchday, keep the final matchday as the snapshot.",
+  "version": "2026.06.16-live-fix-v4",
   "staticAfter": "2026-07-20T12:00:00-07:00",
-  "liveRefreshRule": "GitHub Actions checks during match windows; open browsers check live scores every 60 seconds during active match windows. Both stop after staticAfter.",
-  "liveRefresh": {
-    "browserPollSeconds": 60,
-    "githubActionPollMinutes": 10,
-    "startMinutesBeforeKickoff": 15,
-    "groupStageWindowMinutes": 210,
-    "knockoutWindowMinutes": 330,
-    "staticAfter": "2026-07-20T12:00:00-07:00"
+  "snapshotRule": "Before 10:30 PM PDT, the browser shows the current PDT matchday. At/after 10:30 PM PDT, it shows the next PDT matchday, even if GitHub Actions is late.",
+  "lastUpdateIso": "2026-06-15T21:31:00-07:00",
+  "updateReason": "Seed data packaged with live-update client and Actions fixes.",
+  "changesSinceLastUpdate": [],
+  "automation": {
+    "nightlyUpdate": "10:30 PM PDT, with retry schedules at 10:35 PM and 10:45 PM PDT",
+    "matchWindowPolling": "GitHub Actions polls about every 10 minutes during match windows and extended post-match windows.",
+    "browserRefresh": "The browser checks every 60 seconds during active/recent match windows and also re-renders the 10:30 PM snapshot rule locally.",
+    "deployRule": "The workflow deploys only when worldcup-data.json changes, except manual runs can force a deployment.",
+    "staticCutoff": "2026-07-20T12:00:00-07:00"
   },
-  "improvementRoadmap": [
-    {
-      "number": 1,
-      "title": "Make the daily snapshot the main daily-view feature",
-      "summary": "Keep the hero focused on all matches for the active or next PDT matchday, not only a single next match.",
-      "status": "implemented",
-      "implementedAs": "Implemented as a full matchday snapshot in the hero card."
-    },
-    {
-      "number": 2,
-      "title": "Organize All Matches with date headers and sticky day sections",
-      "summary": "Keep all 104 matches grouped by PDT date and sorted by kickoff time so each matchday is easy to scan.",
-      "status": "implemented",
-      "implementedAs": "Implemented with date-grouped matchday sections and sticky day headers."
-    },
-    {
-      "number": 3,
-      "title": "Add Today, Tomorrow, and Upcoming Only buttons",
-      "summary": "Add quick filters for the most common views instead of relying only on dropdown filters.",
-      "status": "implemented",
-      "implementedAs": "Implemented as quick filters for Today, Tomorrow, Next Matchday, Upcoming Only, Completed, and All."
-    },
-    {
-      "number": 4,
-      "title": "Make flags more reliable than emoji alone",
-      "summary": "Use explicit flag image mappings with emoji or drawn fallbacks so every country renders consistently.",
-      "status": "implemented",
-      "implementedAs": "Implemented with flag image codes, drawn England/Scotland flags, and emoji fallback."
-    },
-    {
-      "number": 5,
-      "title": "Improve the group standings table",
-      "summary": "Expand standings to include P, W, D, L, GF, GA, GD, and Pts with clearer qualification states.",
-      "status": "implemented",
-      "implementedAs": "Implemented with P, W, D, L, GF, GA, GD, Pts, and qualification status."
-    },
-    {
-      "number": 6,
-      "title": "Add a third-place qualifiers table",
-      "summary": "Track the best third-place teams separately so Round-of-32 wildcard paths are easier to understand.",
-      "status": "implemented",
-      "implementedAs": "Implemented with a ranked third-place table and projected/confirmed status labels."
-    },
-    {
-      "number": 7,
-      "title": "Add automatic knockout advancement",
-      "summary": "Fill knockout placeholders automatically after group placements and knockout winners are official.",
-      "status": "implemented",
-      "implementedAs": "Implemented for group winners/runners-up after groups complete and for knockout winners/losers after final results; third-place auto-fill is resolved when unambiguous or shown as a clear placeholder."
-    },
-    {
-      "number": 8,
-      "title": "Add bracket connector lines",
-      "summary": "Use CSS or SVG connector lines so the knockout rounds look more like a poster-style tournament bracket.",
-      "status": "implemented",
-      "implementedAs": "Implemented with CSS connector lines between knockout round cards."
-    },
-    {
-      "number": 9,
-      "title": "Make the mobile layout easier",
-      "summary": "Add round tabs or compact views so the bracket is usable on phones without excessive horizontal scrolling.",
-      "status": "implemented",
-      "implementedAs": "Implemented with round tabs and responsive single-column/mobile bracket views."
-    },
-    {
-      "number": 10,
-      "title": "Add spoiler mode",
-      "summary": "Let users hide scores and reveal completed results only when they choose.",
-      "status": "implemented",
-      "implementedAs": "Implemented with a hide/show scores toggle saved in local storage."
-    },
-    {
-      "number": 11,
-      "title": "Add team pages or team filters",
-      "summary": "Let users click a country to see that team’s fixtures, results, group position, and possible knockout path.",
-      "status": "implemented",
-      "implementedAs": "Implemented with clickable team names and a team focus panel."
-    },
-    {
-      "number": 12,
-      "title": "Add a venue filter and venue view",
-      "summary": "Let users filter by stadium or city and see every match scheduled at that venue.",
-      "status": "implemented",
-      "implementedAs": "Implemented with a venue filter and venue summary cards."
-    },
-    {
-      "number": 13,
-      "title": "Add a local time toggle",
-      "summary": "Keep PDT as the default but add venue local time and user-local time options.",
-      "status": "implemented",
-      "implementedAs": "Implemented with PDT, venue-local, and my-local time modes."
-    },
-    {
-      "number": 14,
-      "title": "Split the code into separate files",
-      "summary": "Move CSS, JavaScript, JSON data, and flag assets into separate files for easier long-term editing.",
-      "status": "implemented",
-      "implementedAs": "Implemented in the GitHub package as index.html, styles.css, app.js, and worldcup-data.json; a bundled standalone HTML is also provided."
-    },
-    {
-      "number": 15,
-      "title": "Improve update reliability checks",
-      "summary": "Validate that match counts, dates, venues, flags, scores, and snapshot data are complete before publishing.",
-      "status": "implemented",
-      "implementedAs": "Implemented in update_data.py and in the browser with validation checks before/after data loads."
-    },
-    {
-      "number": 16,
-      "title": "Add an update status box",
-      "summary": "Show last successful update, active snapshot date, data source, and next scheduled update in one place.",
-      "status": "implemented",
-      "implementedAs": "Implemented with status cards for last update, snapshot date, validation, next update, active match windows, and static cutoff."
-    },
-    {
-      "number": 17,
-      "title": "Add a changes-since-last-update section",
-      "summary": "Summarize newly final scores, standings changes, and snapshot changes after each refresh.",
-      "status": "implemented",
-      "implementedAs": "Implemented with recent score/status/team-name changes written by the updater and displayed on the page."
-    },
-    {
-      "number": 18,
-      "title": "Improve source display",
-      "summary": "Show cleaner source labels and last-checked information without cluttering the page.",
-      "status": "implemented",
-      "implementedAs": "Implemented with compact source cards and last-checked/source labels."
-    },
-    {
-      "number": 19,
-      "title": "Add print-friendly views",
-      "summary": "Create print layouts for the full bracket, daily matches, and group standings.",
-      "status": "implemented",
-      "implementedAs": "Implemented with print buttons for full page, bracket, daily snapshot, and standings."
-    },
-    {
-      "number": 20,
-      "title": "Add sharing features",
-      "summary": "Add copy/share actions for today’s matches, the bracket link, and possibly calendar exports.",
-      "status": "implemented",
-      "implementedAs": "Implemented with copy snapshot, copy page link, and download calendar buttons."
-    }
-  ],
-  "scoreUpdateBehavior": [
-    {
-      "number": 1,
-      "title": "Keep the 10:30 PM PDT daily update",
-      "summary": "Configured: the nightly workflow keeps rolling the snapshot to the next PDT matchday.",
-      "status": "configured"
-    },
-    {
-      "number": 2,
-      "title": "Add match-window GitHub Actions polling",
-      "summary": "Configured: the workflow checks during tournament match windows about every 10 minutes.",
-      "status": "configured"
-    },
-    {
-      "number": 3,
-      "title": "Add browser-side live refresh",
-      "summary": "Configured: an open browser checks the live score API every 60 seconds during active match windows.",
-      "status": "configured"
-    },
-    {
-      "number": 4,
-      "title": "Only deploy when worldcup-data.json actually changes",
-      "summary": "Configured: scheduled runs publish only when scores, status, teams, metadata, snapshot, or validation data changes.",
-      "status": "configured"
-    }
-  ],
-  "implementedFeatures": [
-    {
-      "number": 1,
-      "title": "Make the daily snapshot the main daily-view feature",
-      "summary": "Implemented as a full matchday snapshot in the hero card.",
-      "status": "implemented"
-    },
-    {
-      "number": 2,
-      "title": "Organize All Matches with date headers and sticky day sections",
-      "summary": "Implemented with date-grouped matchday sections and sticky day headers.",
-      "status": "implemented"
-    },
-    {
-      "number": 3,
-      "title": "Add Today, Tomorrow, and Upcoming Only buttons",
-      "summary": "Implemented as quick filters for Today, Tomorrow, Next Matchday, Upcoming Only, Completed, and All.",
-      "status": "implemented"
-    },
-    {
-      "number": 4,
-      "title": "Make flags more reliable than emoji alone",
-      "summary": "Implemented with flag image codes, drawn England/Scotland flags, and emoji fallback.",
-      "status": "implemented"
-    },
-    {
-      "number": 5,
-      "title": "Improve the group standings table",
-      "summary": "Implemented with P, W, D, L, GF, GA, GD, Pts, and qualification status.",
-      "status": "implemented"
-    },
-    {
-      "number": 6,
-      "title": "Add a third-place qualifiers table",
-      "summary": "Implemented with a ranked third-place table and projected/confirmed status labels.",
-      "status": "implemented"
-    },
-    {
-      "number": 7,
-      "title": "Add automatic knockout advancement",
-      "summary": "Implemented for group winners/runners-up after groups complete and for knockout winners/losers after final results; third-place auto-fill is resolved when unambiguous or shown as a clear placeholder.",
-      "status": "implemented"
-    },
-    {
-      "number": 8,
-      "title": "Add bracket connector lines",
-      "summary": "Implemented with CSS connector lines between knockout round cards.",
-      "status": "implemented"
-    },
-    {
-      "number": 9,
-      "title": "Make the mobile layout easier",
-      "summary": "Implemented with round tabs and responsive single-column/mobile bracket views.",
-      "status": "implemented"
-    },
-    {
-      "number": 10,
-      "title": "Add spoiler mode",
-      "summary": "Implemented with a hide/show scores toggle saved in local storage.",
-      "status": "implemented"
-    },
-    {
-      "number": 11,
-      "title": "Add team pages or team filters",
-      "summary": "Implemented with clickable team names and a team focus panel.",
-      "status": "implemented"
-    },
-    {
-      "number": 12,
-      "title": "Add a venue filter and venue view",
-      "summary": "Implemented with a venue filter and venue summary cards.",
-      "status": "implemented"
-    },
-    {
-      "number": 13,
-      "title": "Add a local time toggle",
-      "summary": "Implemented with PDT, venue-local, and my-local time modes.",
-      "status": "implemented"
-    },
-    {
-      "number": 14,
-      "title": "Split the code into separate files",
-      "summary": "Implemented in the GitHub package as index.html, styles.css, app.js, and worldcup-data.json; a bundled standalone HTML is also provided.",
-      "status": "implemented"
-    },
-    {
-      "number": 15,
-      "title": "Improve update reliability checks",
-      "summary": "Implemented in update_data.py and in the browser with validation checks before/after data loads.",
-      "status": "implemented"
-    },
-    {
-      "number": 16,
-      "title": "Add an update status box",
-      "summary": "Implemented with status cards for last update, snapshot date, validation, next update, active match windows, and static cutoff.",
-      "status": "implemented"
-    },
-    {
-      "number": 17,
-      "title": "Add a changes-since-last-update section",
-      "summary": "Implemented with recent score/status/team-name changes written by the updater and displayed on the page.",
-      "status": "implemented"
-    },
-    {
-      "number": 18,
-      "title": "Improve source display",
-      "summary": "Implemented with compact source cards and last-checked/source labels.",
-      "status": "implemented"
-    },
-    {
-      "number": 19,
-      "title": "Add print-friendly views",
-      "summary": "Implemented with print buttons for full page, bracket, daily snapshot, and standings.",
-      "status": "implemented"
-    },
-    {
-      "number": 20,
-      "title": "Add sharing features",
-      "summary": "Implemented with copy snapshot, copy page link, and download calendar buttons.",
-      "status": "implemented"
-    }
-  ],
-  "recentChanges": [],
-  "validation": {
-    "ok": true,
-    "errors": [],
-    "warnings": [],
-    "checkedBy": "update_data.py validation"
-  },
-  "lastSuccessfulUpdate": "June 16, 2026 04:30 AM PDT"
+  "snapshotDate": "2026-06-15"
 }
