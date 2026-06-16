@@ -1,6 +1,6 @@
 {
   "title": "FIFA World Cup 2026 Bracket Tracker",
-  "lastUpdated": "June 15, 2026 — source snapshot; times converted to PDT",
+  "lastUpdated": "Automated manual refresh: June 16, 2026 02:58 PM PDT",
   "updateTarget": "Daily 10:30 PM PDT plus during-match live score checks",
   "apiEndpoint": "https://worldcup26.ir/get/games",
   "teams": {
@@ -2161,7 +2161,7 @@
       "url": "https://github.com/rezarahiminia/worldcup2026"
     }
   ],
-  "snapshotDate": "2026-06-15",
+  "snapshotDate": "2026-06-16",
   "snapshotRule": "Before 10:30 PM PDT, show today's matchday; after 10:30 PM PDT, show the next PDT matchday. After the final matchday, keep the final matchday as the snapshot.",
   "staticAfter": "2026-07-20T12:00:00-07:00",
   "liveRefreshRule": "GitHub Actions checks during match windows; open browsers check live scores every 60 seconds during active match windows. Both stop after staticAfter.",
@@ -2463,5 +2463,12 @@
       "status": "implemented"
     }
   ],
-  "recentChanges": []
+  "recentChanges": [],
+  "validation": {
+    "ok": true,
+    "errors": [],
+    "warnings": [],
+    "checkedBy": "update_data.py validation"
+  },
+  "lastSuccessfulUpdate": "June 16, 2026 02:58 PM PDT"
 }
