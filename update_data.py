@@ -26,16 +26,30 @@ from typing import Any
 from zoneinfo import ZoneInfo
 
 DATA_PATH = Path(__file__).with_name("worldcup-data.json")
-API_URL = os.environ.get("WORLD_CUP_API_URL", "https://worldcup26.ir/get/games")
+FIFA_API_URL = os.environ.get("FIFA_API_URL", "https://api.fifa.com/api/v3/calendar/matches?idCompetition=17&idSeason=285023&count=500&language=en")
+FALLBACK_API_URL = os.environ.get("WORLD_CUP_FALLBACK_API_URL", "https://worldcup26.ir/get/games")
+def configured_api_urls() -> list[str]:
+    raw = os.environ.get("WORLD_CUP_API_URLS") or os.environ.get("WORLD_CUP_API_URL")
+    urls = [u.strip() for u in raw.split(",")] if raw else [FIFA_API_URL, FALLBACK_API_URL]
+    seen: set[str] = set()
+    out: list[str] = []
+    for url in urls:
+        if url and url not in seen:
+            seen.add(url)
+            out.append(url)
+    return out
+API_URL = configured_api_urls()[0]
 PT = ZoneInfo("America/Los_Angeles")
 DAILY_CRON_PREFIXES = ("30 5", "35 5", "45 5")
 DEFAULT_STATIC_HOURS_AFTER_LAST_KICKOFF = 24
 LIVE_START_MINUTES_BEFORE = int(os.environ.get("WC_LIVE_START_MINUTES_BEFORE", "15"))
-GROUP_WINDOW_MINUTES = int(os.environ.get("WC_GROUP_WINDOW_MINUTES", "210"))
-KNOCKOUT_WINDOW_MINUTES = int(os.environ.get("WC_KNOCKOUT_WINDOW_MINUTES", "330"))
+GROUP_WINDOW_MINUTES = int(os.environ.get("WC_GROUP_WINDOW_MINUTES", "720"))
+KNOCKOUT_WINDOW_MINUTES = int(os.environ.get("WC_KNOCKOUT_WINDOW_MINUTES", "720"))
+GROUP_EXPECTED_FINAL_MINUTES = int(os.environ.get("WC_GROUP_EXPECTED_FINAL_MINUTES", "165"))
+KNOCKOUT_EXPECTED_FINAL_MINUTES = int(os.environ.get("WC_KNOCKOUT_EXPECTED_FINAL_MINUTES", "330"))
 
 TEAM_ALIASES = {
-    "United States": "USA", "USMNT": "USA", "South Korea": "Korea Republic", "Iran": "IR Iran", "IR Iran": "IR Iran",
+    "United States": "USA", "USMNT": "USA", "South Korea": "Korea Republic", "Iran": "IR Iran", "IR Iran": "IR Iran", "IR Iran ": "IR Iran",
     "Cape Verde": "Cabo Verde", "Czech Republic": "Czechia", "Cote d'Ivoire": "Côte d'Ivoire", "Côte d’Ivoire": "Côte d'Ivoire",
     "Ivory Coast": "Côte d'Ivoire", "Curacao": "Curaçao", "Turkiye": "Türkiye", "Turkey": "Türkiye",
     "Democratic Republic of Congo": "Congo DR", "DR Congo": "Congo DR", "DRC": "Congo DR",
@@ -77,7 +91,7 @@ def unwrap(payload: Any) -> list[dict[str, Any]]:
         return [x for x in payload if isinstance(x, dict)]
     if not isinstance(payload, dict):
         return []
-    for key in ("games", "matches", "fixtures", "results", "data"):
+    for key in ("Results", "results", "games", "matches", "fixtures", "data"):
         value = payload.get(key)
         if isinstance(value, list):
             return [x for x in value if isinstance(x, dict)]
@@ -97,8 +111,68 @@ def to_int(value: Any) -> int | None:
         return None
 
 
+
+def localized(value: Any) -> Any:
+    """Return an English description from FIFA localized arrays, or the value itself."""
+    if isinstance(value, list):
+        for item in value:
+            if isinstance(item, dict) and str(item.get("Locale", "")).lower().startswith("en"):
+                return item.get("Description") or item.get("Value")
+        for item in value:
+            if isinstance(item, dict) and (item.get("Description") or item.get("Value")):
+                return item.get("Description") or item.get("Value")
+        return None
+    if isinstance(value, dict):
+        return value.get("Description") or value.get("Value") or value.get("name")
+    return value
+
+
+def fifa_team_name(team: Any) -> str:
+    if not isinstance(team, dict):
+        return canonical(team)
+    return canonical(
+        localized(team.get("TeamName"))
+        or localized(team.get("Name"))
+        or team.get("ShortClubName")
+        or team.get("Abbreviation")
+        or team.get("IdCountry")
+        or ""
+    )
+
+
+def normalize_status_from_fifa(game: dict[str, Any], home_score: int | None, away_score: int | None) -> str | None:
+    if "MatchStatus" not in game and "Period" not in game:
+        return None
+    status_num = to_int(game.get("MatchStatus"))
+    # FIFA calendar API uses 0 for finished and 1 for not started in the 2026 World Cup API notes.
+    if status_num == 0 and home_score is not None and away_score is not None:
+        return "final"
+    if status_num == 1:
+        return "scheduled"
+    if status_num is not None:
+        return "live"
+    period = to_int(game.get("Period"))
+    if period is not None and period not in (0, 1):
+        return "live"
+    return None
+
 def normalize(game: dict[str, Any]) -> dict[str, Any]:
-    number = to_int(dig(game, ["number", "matchNumber", "match_no", "gameNumber", "id", "match_id"]))
+    # Supports both the official FIFA calendar API and the previous open-source fallback API.
+    number = to_int(dig(game, ["MatchNumber", "number", "matchNumber", "match_no", "gameNumber", "id", "match_id"]))
+    if "Home" in game or "Away" in game or "HomeTeamScore" in game or "AwayTeamScore" in game:
+        home = fifa_team_name(game.get("Home") or game.get("HomeTeam"))
+        away = fifa_team_name(game.get("Away") or game.get("AwayTeam"))
+        home_score = to_int(game.get("HomeTeamScore", None))
+        away_score = to_int(game.get("AwayTeamScore", None))
+        if home_score is None:
+            home_score = to_int(dig(game, ["Home.Score", "HomeTeam.Score", "home.Score"]))
+        if away_score is None:
+            away_score = to_int(dig(game, ["Away.Score", "AwayTeam.Score", "away.Score"]))
+        home_pen = to_int(game.get("HomeTeamPenaltyScore", None))
+        away_pen = to_int(game.get("AwayTeamPenaltyScore", None))
+        status = normalize_status_from_fifa(game, home_score, away_score) or "scheduled"
+        return {"number": number, "home": home, "away": away, "homeScore": home_score, "awayScore": away_score, "homePenalties": home_pen, "awayPenalties": away_pen, "status": status}
+
     home = canonical(dig(game, ["home.name_en", "home.name", "homeTeam.name", "home_team.name", "team1.name", "homeTeam", "home_team", "home", "team1"]))
     away = canonical(dig(game, ["away.name_en", "away.name", "awayTeam.name", "away_team.name", "team2.name", "awayTeam", "away_team", "away", "team2"]))
     home_score = to_int(dig(game, ["homeScore", "home_score", "score.home", "home.score", "goalsHome", "team1_score", "score1"]))
@@ -154,6 +228,10 @@ def match_window_minutes(match: dict[str, Any]) -> int:
     return GROUP_WINDOW_MINUTES if str(match.get("stage") or "") == "Group Stage" else KNOCKOUT_WINDOW_MINUTES
 
 
+def expected_final_minutes(match: dict[str, Any]) -> int:
+    return GROUP_EXPECTED_FINAL_MINUTES if str(match.get("stage") or "") == "Group Stage" else KNOCKOUT_EXPECTED_FINAL_MINUTES
+
+
 def active_match_windows(data: dict[str, Any], now: datetime) -> list[dict[str, Any]]:
     active: list[dict[str, Any]] = []
     for match in data.get("matches", []):
@@ -169,38 +247,51 @@ def active_match_windows(data: dict[str, Any], now: datetime) -> list[dict[str, 
     return active
 
 
-def fetch_games() -> list[dict[str, Any]]:
-    request = urllib.request.Request(API_URL, headers={"User-Agent": "wc2026-bracket-updater/3.0"})
-    with urllib.request.urlopen(request, timeout=30) as response:
-        payload = json.loads(response.read().decode("utf-8"))
-    return [normalize(game) for game in unwrap(payload)]
+def fetch_games() -> tuple[list[dict[str, Any]], str]:
+    last_error: Exception | None = None
+    for url in configured_api_urls():
+        try:
+            request = urllib.request.Request(url, headers={"User-Agent": "wc2026-bracket-updater/4.0 (+GitHub Pages)"})
+            with urllib.request.urlopen(request, timeout=30) as response:
+                payload = json.loads(response.read().decode("utf-8"))
+            games = [normalize(game) for game in unwrap(payload)]
+            games = [game for game in games if game.get("home") and game.get("away")]
+            if games:
+                return games, url
+            last_error = RuntimeError(f"{url} returned no usable games")
+        except Exception as exc:
+            last_error = exc
+            print(f"Data source failed, trying next source if available: {url}: {exc}", file=sys.stderr)
+    raise RuntimeError(f"No live data source returned usable matches. Last error: {last_error}")
 
 
 def is_real_team(data: dict[str, Any], name: object) -> bool:
     return canonical(name) in (data.get("teams") or {})
 
 
+def same_pair(match: dict[str, Any], game: dict[str, Any]) -> bool:
+    mh, ma = canonical(match.get("home")), canonical(match.get("away"))
+    gh, ga = canonical(game.get("home")), canonical(game.get("away"))
+    return bool(gh and ga and ((mh == gh and ma == ga) or (mh == ga and ma == gh)))
+
+
 def find_match(data: dict[str, Any], game: dict[str, Any]) -> tuple[dict[str, Any] | None, bool]:
-    target = None
+    # Pair matching comes first. FIFA MatchNumber can differ from local poster numbering,
+    # so never let a mismatched match number overwrite the wrong game.
+    for match in data.get("matches", []):
+        if same_pair(match, game):
+            reversed_pair = (canonical(match.get("home")), canonical(match.get("away"))) == (canonical(game.get("away")), canonical(game.get("home")))
+            return match, reversed_pair
     if game.get("number") is not None:
         for match in data.get("matches", []):
             try:
                 if int(match.get("number", -1)) == int(game["number"]):
-                    target = match
-                    break
+                    # Only use number fallback for placeholders or when source names are missing.
+                    if not game.get("home") or not game.get("away") or not is_real_team(data, match.get("home")) or not is_real_team(data, match.get("away")):
+                        return match, False
             except Exception:
                 pass
-    if target is None:
-        pair = (game.get("home"), game.get("away"))
-        for match in data.get("matches", []):
-            match_pair = (canonical(match.get("home")), canonical(match.get("away")))
-            if match_pair == pair or match_pair == pair[::-1]:
-                target = match
-                break
-    if target is None:
-        return None, False
-    reversed_pair = (canonical(target.get("home")), canonical(target.get("away"))) == (game.get("away"), game.get("home"))
-    return target, reversed_pair
+    return None, False
 
 
 def infer_status(api_status: str, target: dict[str, Any], now: datetime) -> str:
@@ -210,11 +301,13 @@ def infer_status(api_status: str, target: dict[str, Any], now: datetime) -> str:
     if iso:
         try:
             start = parse_pt(iso)
-            if now <= start + timedelta(minutes=match_window_minutes(target)):
+            if now >= start + timedelta(minutes=expected_final_minutes(target)):
+                return "final"
+            if now >= start - timedelta(minutes=LIVE_START_MINUTES_BEFORE):
                 return "live"
         except Exception:
             pass
-    return "final"
+    return "scheduled"
 
 
 def score_line(match: dict[str, Any]) -> str:
@@ -323,11 +416,12 @@ def update_metadata(data: dict[str, Any], mode: str, now: datetime, score_change
     metadata_changes = 0
     snapshot = compute_snapshot_date(data, now)
     fields: dict[str, Any] = {
-        "apiEndpoint": API_URL,
-        "updateTarget": "Daily 10:30 PM PDT plus during-match live score checks",
+        "apiEndpoint": configured_api_urls()[0],
+        "apiEndpoints": configured_api_urls(),
+        "updateTarget": "Official FIFA score refresh: daily 10:30 PM PDT plus during-match and post-match checks",
         "snapshotRule": "Before 10:30 PM PDT, show today's matchday; after 10:30 PM PDT, show the next PDT matchday. After the final matchday, keep the final matchday as the snapshot.",
         "staticAfter": (static_after(data) or datetime(2026, 7, 20, 12, 0, tzinfo=PT)).isoformat(),
-        "liveRefreshRule": "GitHub Actions checks during match windows; open browsers check live scores every 60 seconds during active match windows. Both stop after staticAfter.",
+        "liveRefreshRule": "GitHub Actions and open browsers use the official FIFA calendar API first, then fallback sources. Browsers check every 60 seconds during same-day active/recent match windows. Both stop after staticAfter.",
         "validation": validate_data(data),
     }
     if snapshot:
@@ -381,13 +475,14 @@ def main() -> int:
     change_records: list[dict[str, str]] = []
     if should_fetch:
         try:
-            games = fetch_games()
+            games, used_url = fetch_games()
+            data["apiEndpoint"] = used_url
         except Exception as exc:
             print(f"API refresh skipped because the data source could not be reached: {exc}", file=sys.stderr)
             emit(changed=False, should_deploy=False, fetched=False, mode=mode, reason="api-error")
             return 0
         score_changes, change_records = apply_games(data, games, now)
-        print(f"Fetched {len(games)} API game records from {API_URL}")
+        print(f"Fetched {len(games)} API game records from {data.get('apiEndpoint', configured_api_urls()[0])}")
     metadata_changes = update_metadata(data, mode, now, score_changes, change_records)
     file_changed = data != original
     if file_changed:

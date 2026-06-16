@@ -4,7 +4,7 @@
 
   const TEAM_ALIASES = {
     'United States': 'USA', 'USMNT': 'USA', 'South Korea': 'Korea Republic', 'Korea Republic': 'Korea Republic',
-    'Iran': 'IR Iran', 'IR Iran': 'IR Iran', 'Cape Verde': 'Cabo Verde', 'Czech Republic': 'Czechia',
+    'Iran': 'IR Iran', 'IR Iran': 'IR Iran', 'IR Iran ': 'IR Iran', 'Cape Verde': 'Cabo Verde', 'Czech Republic': 'Czechia',
     'Côte d’Ivoire': "Côte d'Ivoire", 'Cote d\'Ivoire': "Côte d'Ivoire", 'Ivory Coast': "Côte d'Ivoire",
     'Curacao': 'Curaçao', 'Turkiye': 'Türkiye', 'Turkey': 'Türkiye', 'Democratic Republic of Congo':'Congo DR',
     'DR Congo':'Congo DR', 'DRC':'Congo DR'
@@ -24,16 +24,17 @@
   const STAGES = ['Group Stage','Round of 32','Round of 16','Quarter-finals','Semi-finals','Third Place','Final'];
   const BRACKET_STAGES = ['Round of 32','Round of 16','Quarter-finals','Semi-finals','Final'];
   const HOURGLASS_MATCH_POSITIONS = [
-    [74, 120, 145, 'left-r32'], [77, 120, 275, 'left-r32'], [73, 120, 405, 'left-r32'], [75, 120, 535, 'left-r32'],
-    [83, 120, 845, 'left-r32'], [84, 120, 975, 'left-r32'], [81, 120, 1105, 'left-r32'], [82, 120, 1235, 'left-r32'],
-    [89, 385, 210, 'left-r16'], [90, 385, 470, 'left-r16'], [93, 385, 910, 'left-r16'], [94, 385, 1170, 'left-r16'],
-    [97, 630, 340, 'left-qf'], [98, 630, 1040, 'left-qf'], [101, 815, 690, 'left-sf'],
-    [104, 1125, 690, 'final-node'], [103, 1125, 920, 'third-node'],
-    [102, 1435, 690, 'right-sf'], [99, 1620, 340, 'right-qf'], [100, 1620, 1040, 'right-qf'],
-    [91, 1865, 210, 'right-r16'], [92, 1865, 470, 'right-r16'], [95, 1865, 910, 'right-r16'], [96, 1865, 1170, 'right-r16'],
-    [76, 2130, 145, 'right-r32'], [78, 2130, 275, 'right-r32'], [79, 2130, 405, 'right-r32'], [80, 2130, 535, 'right-r32'],
-    [86, 2130, 845, 'right-r32'], [88, 2130, 975, 'right-r32'], [85, 2130, 1105, 'right-r32'], [87, 2130, 1235, 'right-r32']
-  ];  const HOURGLASS_EDGES = [
+    [74, 120, 95, 'left-r32'], [77, 120, 225, 'left-r32'], [73, 120, 355, 'left-r32'], [75, 120, 485, 'left-r32'],
+    [83, 120, 765, 'left-r32'], [84, 120, 895, 'left-r32'], [81, 120, 1025, 'left-r32'], [82, 120, 1155, 'left-r32'],
+    [89, 340, 160, 'left-r16'], [90, 340, 420, 'left-r16'], [93, 340, 830, 'left-r16'], [94, 340, 1090, 'left-r16'],
+    [97, 550, 290, 'left-qf'], [98, 550, 960, 'left-qf'], [101, 700, 625, 'left-sf'],
+    [104, 950, 625, 'final-node'], [103, 950, 835, 'third-node'],
+    [102, 1200, 625, 'right-sf'], [99, 1350, 290, 'right-qf'], [100, 1350, 960, 'right-qf'],
+    [91, 1560, 160, 'right-r16'], [92, 1560, 420, 'right-r16'], [95, 1560, 830, 'right-r16'], [96, 1560, 1090, 'right-r16'],
+    [76, 1780, 95, 'right-r32'], [78, 1780, 225, 'right-r32'], [79, 1780, 355, 'right-r32'], [80, 1780, 485, 'right-r32'],
+    [86, 1780, 765, 'right-r32'], [88, 1780, 895, 'right-r32'], [85, 1780, 1025, 'right-r32'], [87, 1780, 1155, 'right-r32']
+  ];
+  const HOURGLASS_EDGES = [
     [74,89],[77,89],[73,90],[75,90],[89,97],[90,97],
     [83,93],[84,93],[81,94],[82,94],[93,98],[94,98],[97,101],[98,101],[101,104],
     [76,91],[78,91],[79,92],[80,92],[91,99],[92,99],
@@ -53,23 +54,13 @@
 
   let WC_DATA = null;
   let EMBEDDED_DATA = null;
-  const storage = (() => {
-    try {
-      const key = '__wc2026_storage_test__';
-      window.localStorage.setItem(key, '1');
-      window.localStorage.removeItem(key);
-      return window.localStorage;
-    } catch {
-      return { getItem: () => null, setItem: () => {}, removeItem: () => {}, clear: () => {} };
-    }
-  })();
   const state = {
     quickFilter: 'all',
-    activeRound: storage.getItem('wc2026-active-round') || 'all',
-    timeMode: storage.getItem('wc2026-time-mode') || 'pdt',
-    hideScores: storage.getItem('wc2026-hide-scores') === '1',
-    focusTeam: storage.getItem('wc2026-focus-team') || '',
-    matchTeamFilter: 'all',
+    activeRound: localStorage.getItem('wc2026-active-round') || 'all',
+    timeMode: localStorage.getItem('wc2026-time-mode') || 'pdt',
+    hideScores: localStorage.getItem('wc2026-hide-scores') === '1',
+    selectedTeam: localStorage.getItem('wc2026-selected-team') || '',
+    matchTeam: 'all',
     selectedVenue: 'all'
   };
   let browserLiveTimer = null;
@@ -210,19 +201,6 @@
     return ['eliminated', 'Eliminated'];
   }
 
-  function shortStatusLabel(label) {
-    const text = String(label || '');
-    if (/Projected top 2/i.test(text)) return 'Top 2';
-    if (/Projected 3rd race/i.test(text)) return '3rd race';
-    if (/Advancing as 3rd/i.test(text)) return '3rd adv';
-    if (/Qualified/i.test(text)) return 'Qualified';
-    if (/Eliminated/i.test(text)) return 'Elim';
-    if (/Outside/i.test(text)) return 'Outside';
-    if (/In play/i.test(text)) return 'In play';
-    if (/Advancing/i.test(text)) return 'Adv';
-    return text;
-  }
-
   function resolvePlaceholder(label, byNumber, standings, thirdRows, usedThirdGroups) {
     const name = String(label || '');
     let m = name.match(/^Winner Group ([A-L])$/);
@@ -333,8 +311,7 @@
     const auto = (match.autoBadges || []).slice(0,2).map(note => `<span class="tiny projected">${escapeHtml(note)}</span>`).join('');
     const winnerNote = match.status === 'final' && winnerName(match) ? `<span class="tiny qualified">${escapeHtml(displayTeamName(winnerName(match)))} advances</span>` : '';
     const label = match.group ? `Group ${match.group}` : match.stage;
-    const contextClass = opts.context ? ` ${String(opts.context).replace(/[^a-z0-9_-]/gi, '')}-match` : '';
-    const klass = `match ${match.stage === 'Final' ? 'final-match' : ''}${contextClass}`;
+    const klass = `match ${match.stage === 'Final' ? 'final-match' : ''}`;
     return `<article class="${klass}" data-match="${Number(match.number)}" data-stage="${escapeAttr(match.stage)}" data-date="${escapeAttr(match.pdt?.date)}">
       <div class="match-head"><span>M${Number(match.number)} · ${escapeHtml(label)}</span><span>${status}</span></div>
       <div class="teams">${teamRow(match,'home')}${teamRow(match,'away')}</div>
@@ -343,20 +320,6 @@
       </div>
     </article>`;
   }
-  function snapshotCard(match) {
-    const status = statusLabel(match);
-    const label = match.group ? `Group ${match.group}` : match.stage;
-    const points = match.status === 'final' && match.stage === 'Group Stage'
-      ? `<span class="tiny points-value">${escapeHtml(displayTeamName(match.home))} ${pointsFor(match,'home')}</span><span class="tiny points-value">${escapeHtml(displayTeamName(match.away))} ${pointsFor(match,'away')}</span>`
-      : `<span class="tiny ${escapeAttr(match.status || 'scheduled')}">${status}</span>`;
-    return `<article class="snapshot-match-card" data-match="${Number(match.number)}">
-      <div class="snapshot-match-head"><span>M${Number(match.number)} · ${escapeHtml(label)}</span><span>${escapeHtml(status)}</span></div>
-      <div class="snapshot-teams">${teamRow(match,'home')}${teamRow(match,'away')}</div>
-      <div class="snapshot-meta"><span class="time-label">${escapeHtml(formatKickoff(match, false))}</span><span>${escapeHtml(match.venue || 'Venue TBD')}</span></div>
-      <div class="badge-row">${points}</div>
-    </article>`;
-  }
-
   function fixtureMiniCard(match) {
     const points = match.status === 'final' && match.stage === 'Group Stage'
       ? `<span class="tiny points-value">${escapeHtml(displayTeamName(match.home))} ${pointsFor(match,'home')}</span><span class="tiny points-value">${escapeHtml(displayTeamName(match.away))} ${pointsFor(match,'away')}</span>`
@@ -381,7 +344,7 @@
     $('snapshotDate').textContent = snap.date && snap.matches.length
       ? `${fullDateLabel(snap.date)} · ${snap.matches.length} match${snap.matches.length === 1 ? '' : 'es'} on this PDT date`
       : 'No remaining matchday found.';
-    $('nextMatch').innerHTML = snap.matches.length ? snap.matches.map(snapshotCard).join('') : '<p class="fine-print">No upcoming matches.</p>';
+    $('nextMatch').innerHTML = snap.matches.length ? snap.matches.map(m => matchCard(m, { compactTime:false })).join('') : '<p class="fine-print">No upcoming matches.</p>';
     $('topStatusCards').innerHTML = topStatusCards().join('');
   }
   function topStatusCards() {
@@ -408,7 +371,7 @@
     }
 
     root.innerHTML = renderHourglassBracket(byNumber);
-    requestAnimationFrame(drawBracketLines); setTimeout(drawBracketLines, 180);
+    requestAnimationFrame(drawBracketLines);
   }
 
   function renderHourglassBracket(byNumber) {
@@ -431,29 +394,8 @@
     </div>`;
   }
 
-  function bracketCompactCard(match, number) {
-    if (!match) return `<article class="match bracket-match"><div class="match-head"><span>M${Number(number)}</span><span>Scheduled</span></div><div class="teams"><div class="team"><span>Placeholder</span><span class="score">—</span></div><div class="team"><span>Placeholder</span><span class="score">—</span></div></div></article>`;
-    const status = statusLabel(match);
-    const label = match.group ? `Group ${match.group}` : match.stage;
-    const auto = (match.autoBadges || []).length ? `<span class="bracket-auto">auto</span>` : '';
-    return `<article class="match bracket-match ${match.stage === 'Final' ? 'final-match' : ''}" data-match="${Number(match.number)}" data-stage="${escapeAttr(match.stage)}" data-date="${escapeAttr(match.pdt?.date)}">
-      <div class="match-head"><span>M${Number(match.number)} · ${escapeHtml(label)}</span><span>${escapeHtml(status)}</span></div>
-      <div class="teams">${teamRow(match,'home')}${teamRow(match,'away')}</div>
-      <div class="bracket-kickoff"><span>${escapeHtml(shortKickoff(match))}</span>${auto}</div>
-    </article>`;
-  }
-
-  function shortKickoff(match) {
-    const base = match?.pdt?.iso ? new Date(match.pdt.iso) : null;
-    const date = base && !Number.isNaN(base.getTime())
-      ? base.toLocaleString('en-US', { timeZone: 'America/Los_Angeles', month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit' }).replace(',', '') + ' PDT'
-      : formatKickoff(match, true);
-    const city = String(match.venue || '').split(',').at(-1)?.trim() || '';
-    return city ? `${date} · ${city}` : date;
-  }
-
   function renderBracketNode(match, number, x, y, klass) {
-    const content = bracketCompactCard(match, number);
+    const content = match ? matchCard(match) : `<article class="match"><div class="match-head"><span>M${Number(number)}</span><span>Scheduled</span></div><div class="teams"><div class="team"><span>Placeholder</span><span class="score">—</span></div></div></article>`;
     return `<div class="bracket-node ${escapeAttr(klass)}" data-node-match="${Number(number)}" style="--x:${Number(x)}px;--y:${Number(y)}px">${content}</div>`;
   }
 
@@ -505,8 +447,8 @@
     const thirdRows = computeThirdPlaces(standings);
     $('groupsGrid').innerHTML = GROUPS.map(g => `
       <div class="panel group-card"><h3><span>Group ${g}</span><span class="pill">${groupIsComplete(g) ? 'Complete' : 'In play'}</span></h3>
-        <div class="table-scroll"><table class="standings-table group-standings-table"><thead><tr><th class="team-col">Team / status</th><th class="num-col">P</th><th class="num-col">W</th><th class="num-col">D</th><th class="num-col">L</th><th class="num-col">GF</th><th class="num-col">GA</th><th class="num-col">GD</th><th class="num-col">Pts</th></tr></thead><tbody>
-          ${standings[g].map(t => { const [klass,label] = standingsStatus(t, thirdRows); return `<tr><td><div class="standing-team"><div class="team-cell">${teamButton(t.name)}</div><span class="tiny ${klass}" title="${escapeAttr(label)}">${escapeHtml(shortStatusLabel(label))}</span></div></td><td>${t.P}</td><td>${t.W}</td><td>${t.D}</td><td>${t.L}</td><td>${t.GF}</td><td>${t.GA}</td><td>${t.GD}</td><td><b>${t.Pts}</b></td></tr>`; }).join('')}
+        <div class="table-scroll"><table class="standings-table"><thead><tr><th>Team / Status</th><th>P</th><th>W</th><th>D</th><th>L</th><th>GF</th><th>GA</th><th>GD</th><th>Pts</th></tr></thead><tbody>
+          ${standings[g].map(t => { const [klass,label] = standingsStatus(t, thirdRows); return `<tr><td><div class="standings-team">${teamButton(t.name)}<span class="tiny ${klass}">${escapeHtml(label)}</span></div></td><td>${t.P}</td><td>${t.W}</td><td>${t.D}</td><td>${t.L}</td><td>${t.GF}</td><td>${t.GA}</td><td>${t.GD}</td><td><b>${t.Pts}</b></td></tr>`; }).join('')}
         </tbody></table></div>
       </div>`).join('');
   }
@@ -516,17 +458,11 @@
       ${rows.map(r => `<tr><td>${r.thirdRank}</td><td><div class="team-cell">${teamButton(r.name)}</div></td><td>${r.group}</td><td>${r.P}</td><td>${r.W}</td><td>${r.D}</td><td>${r.L}</td><td>${r.GF}</td><td>${r.GA}</td><td>${r.GD}</td><td><b>${r.Pts}</b></td><td><span class="tiny ${r.statusClass}">${escapeHtml(r.status)}</span></td></tr>`).join('')}
     </tbody></table></div>`;
   }
-  function teamFocusSelectMarkup(teams, selected='') {
-    return `<div class="section-tools team-focus-tools"><label>Team focus<select id="teamFocusFilter"><option value="">All teams</option>${teams.map(t => `<option value="${escapeAttr(t)}" ${canonical(selected) === canonical(t) ? 'selected' : ''}>${escapeHtml(displayTeamName(t))}</option>`).join('')}</select></label></div>`;
-  }
   function renderTeamExplorer() {
-    const team = state.focusTeam;
+    const team = state.selectedTeam;
     const teams = Object.keys(WC_DATA.teams || {}).sort((a,b) => displayTeamName(a).localeCompare(displayTeamName(b)));
-    const selector = `<div class="team-focus-toolbar"><label>Team focus
-      <select id="teamFocusFilter"><option value="">All teams</option>${teams.map(t => `<option value="${escapeAttr(t)}" ${canonical(team) === canonical(t) ? 'selected' : ''}>${escapeHtml(displayTeamName(t))}</option>`).join('')}</select>
-    </label></div>`;
     if (!team || !isCountry(team)) {
-      $('teamExplorer').innerHTML = `${selector}<p class="fine-print" style="margin:12px 0">Choose a team from this tab or click a country anywhere on the page.</p><div class="team-grid">${teams.map(name => teamButton(name)).join('')}</div>`;
+      $('teamExplorer').innerHTML = `<p class="fine-print" style="margin-bottom:12px">Choose a team below or click a country anywhere on the page.</p><div class="team-grid">${teams.map(name => teamButton(name)).join('')}</div>`;
       return;
     }
     const standings = computeStandings();
@@ -535,8 +471,8 @@
     const row = standings[group]?.find(t => t.name === canonical(team));
     const teamMatches = decoratedMatches().filter(m => canonical(m.home) === canonical(team) || canonical(m.away) === canonical(team)).sort(sortByKickoff);
     const possible = possiblePathForTeam(team, row);
-    $('teamExplorer').innerHTML = `${selector}<div class="team-summary-grid">
-      <div class="team-focus-card"><h3><span>${flagMarkup(team)} ${escapeHtml(displayTeamName(team))}</span><button class="secondary clear-team" type="button">Show all teams</button></h3>
+    $('teamExplorer').innerHTML = `<div class="team-summary-grid">
+      <div class="team-focus-card"><h3><span>${flagMarkup(team)} ${escapeHtml(displayTeamName(team))}</span><button class="secondary clear-team" type="button">Clear</button></h3>
         <p>Group ${escapeHtml(group || '—')} · Current rank: ${row ? row.rank : '—'} · Record: ${row ? `${row.W}-${row.D}-${row.L}` : '—'} · Points: ${row ? row.Pts : '—'}</p>
         <div class="badge-row">${row ? `<span class="tiny">GF ${row.GF}</span><span class="tiny">GA ${row.GA}</span><span class="tiny">GD ${row.GD}</span>` : ''}</div>
         <h3 style="margin-top:16px">Possible knockout path</h3>
@@ -545,7 +481,6 @@
       <div class="team-focus-card"><h3>Matches</h3><div class="fixture-stack">${teamMatches.length ? teamMatches.map(m => fixtureMiniCard(m)).join('') : '<p class="fine-print">No matches found for this team.</p>'}</div></div>
     </div>`;
   }
-
   function possiblePathForTeam(team, row) {
     if (!row) return [];
     const group = row.group;
@@ -562,34 +497,30 @@
   function populateFilters() {
     const matches = WC_DATA.matches;
     const current = {
-      stage: $('stageFilter')?.value || 'all',
-      group: $('groupFilter')?.value || 'all',
-      date: $('dateFilter')?.value || 'all',
-      venue: state.selectedVenue || 'all',
-      team: state.matchTeamFilter || 'all'
+      stage: $('stageFilter')?.value || 'all', group: $('groupFilter')?.value || 'all', date: $('dateFilter')?.value || 'all',
+      venue: state.selectedVenue, team: state.matchTeam, focusTeam: state.selectedTeam
     };
-    const setIf = (id, html) => { const el = $(id); if (el) el.innerHTML = html; };
-    setIf('stageFilter', '<option value="all">All stages</option>' + STAGES.map(st => `<option value="${escapeAttr(st)}">${escapeHtml(st)}</option>`).join(''));
-    setIf('groupFilter', '<option value="all">All groups</option>' + GROUPS.map(g => `<option value="${g}">Group ${g}</option>`).join(''));
+    $('stageFilter').innerHTML = '<option value="all">All stages</option>' + STAGES.map(s => `<option value="${escapeAttr(s)}">${escapeHtml(s)}</option>`).join('');
+    $('groupFilter').innerHTML = '<option value="all">All groups</option>' + GROUPS.map(g => `<option value="${g}">Group ${g}</option>`).join('');
     const dates = [...new Set(matches.map(m => m.pdt?.date).filter(Boolean))].sort();
-    setIf('dateFilter', '<option value="all">All dates</option>' + dates.map(d => `<option value="${d}">${escapeHtml(fullDateLabel(d))}</option>`).join(''));
+    $('dateFilter').innerHTML = '<option value="all">All dates</option>' + dates.map(d => `<option value="${d}">${escapeHtml(fullDateLabel(d))}</option>`).join('');
     const venues = [...new Set(matches.map(m => m.venue).filter(Boolean))].sort();
-    setIf('venueFilter', '<option value="all">All venues</option>' + venues.map(v => `<option value="${escapeAttr(v)}">${escapeHtml(v)}</option>`).join(''));
+    if ($('venueFilter')) $('venueFilter').innerHTML = '<option value="all">All venues</option>' + venues.map(v => `<option value="${escapeAttr(v)}">${escapeHtml(v)}</option>`).join('');
     const teams = Object.keys(WC_DATA.teams || {}).sort((a,b) => displayTeamName(a).localeCompare(displayTeamName(b)));
-    setIf('matchTeamFilter', '<option value="all">All teams</option>' + teams.map(t => `<option value="${escapeAttr(t)}">${escapeHtml(displayTeamName(t))}</option>`).join(''));
-    const restore = (id, value, fallback='all') => { const el = $(id); if (!el) return; el.value = [...el.options].some(o => o.value === value) ? value : fallback; };
-    restore('stageFilter', current.stage);
-    restore('groupFilter', current.group);
-    restore('dateFilter', current.date);
-    restore('venueFilter', current.venue);
-    restore('matchTeamFilter', current.team);
-    if ($('timeMode')) $('timeMode').value = state.timeMode;
-    if ($('quickFilters')) $('quickFilters').innerHTML = QUICK_FILTERS.map(([value,label]) => `<button class="quick-filter ${state.quickFilter === value ? 'active' : ''}" type="button" data-quick="${value}">${escapeHtml(label)}</button>`).join('');
+    const teamOptions = teams.map(t => `<option value="${escapeAttr(t)}">${escapeHtml(displayTeamName(t))}</option>`).join('');
+    if ($('teamFocusFilter')) $('teamFocusFilter').innerHTML = '<option value="">All teams</option>' + teamOptions;
+    if ($('matchTeamFilter')) $('matchTeamFilter').innerHTML = '<option value="all">All teams</option>' + teamOptions;
+    $('stageFilter').value = [...$('stageFilter').options].some(o => o.value === current.stage) ? current.stage : 'all';
+    $('groupFilter').value = [...$('groupFilter').options].some(o => o.value === current.group) ? current.group : 'all';
+    $('dateFilter').value = [...$('dateFilter').options].some(o => o.value === current.date) ? current.date : 'all';
+    if ($('venueFilter')) $('venueFilter').value = [...$('venueFilter').options].some(o => o.value === current.venue) ? current.venue : 'all';
+    if ($('teamFocusFilter')) $('teamFocusFilter').value = state.selectedTeam || '';
+    if ($('matchTeamFilter')) $('matchTeamFilter').value = [...$('matchTeamFilter').options].some(o => o.value === state.matchTeam) ? state.matchTeam : 'all';
+    $('timeMode').value = state.timeMode;
+    $('quickFilters').innerHTML = QUICK_FILTERS.map(([value,label]) => `<button class="quick-filter ${state.quickFilter === value ? 'active' : ''}" type="button" data-quick="${value}">${escapeHtml(label)}</button>`).join('');
     const spoilerBtn = $('spoilerBtn');
-    if (spoilerBtn) {
-      spoilerBtn.textContent = state.hideScores ? 'Show scores' : 'Hide scores';
-      spoilerBtn.setAttribute('aria-pressed', state.hideScores ? 'true' : 'false');
-    }
+    spoilerBtn.textContent = state.hideScores ? 'Show scores' : 'Hide scores';
+    spoilerBtn.setAttribute('aria-pressed', state.hideScores ? 'true' : 'false');
   }
   function quickDateFor(value) {
     if (value === 'today') return todayKeyPT();
@@ -603,7 +534,6 @@
     const group = $('groupFilter')?.value || 'all';
     const date = state.quickFilter !== 'all' ? 'all' : ($('dateFilter')?.value || 'all');
     const venue = state.selectedVenue || 'all';
-    const matchTeam = state.matchTeamFilter || 'all';
     const quickDate = quickDateFor(state.quickFilter);
     return matches.filter(m => {
       const text = `${displayTeamName(m.home)} ${displayTeamName(m.away)} ${m.venue || ''} ${m.stage || ''} ${m.group || ''} ${m.pdt?.dateLabel || ''}`.toLowerCase();
@@ -613,7 +543,7 @@
       if (date !== 'all' && m.pdt?.date !== date) return false;
       if (quickDate && m.pdt?.date !== quickDate) return false;
       if (venue !== 'all' && m.venue !== venue) return false;
-      if (matchTeam !== 'all' && canonical(m.home) !== canonical(matchTeam) && canonical(m.away) !== canonical(matchTeam)) return false;
+      if (state.matchTeam && state.matchTeam !== 'all' && canonical(m.home) !== canonical(state.matchTeam) && canonical(m.away) !== canonical(state.matchTeam)) return false;
       if (state.quickFilter === 'upcoming' && m.status === 'final') return false;
       if (state.quickFilter === 'completed' && m.status !== 'final') return false;
       return true;
@@ -624,10 +554,9 @@
     const filtered = filterMatches(matches).sort(sortByKickoff);
     const activeBits = [];
     if (state.quickFilter !== 'all') activeBits.push(QUICK_FILTERS.find(([v]) => v === state.quickFilter)?.[1]);
-    if (state.matchTeamFilter && state.matchTeamFilter !== 'all') activeBits.push(`Team: ${displayTeamName(state.matchTeamFilter)}`);
+    if (state.matchTeam && state.matchTeam !== 'all') activeBits.push(`Team: ${displayTeamName(state.matchTeam)}`);
     if (state.selectedVenue !== 'all') activeBits.push(`Venue: ${state.selectedVenue}`);
     $('activeFilterLine').innerHTML = activeBits.length ? `Active filters: ${activeBits.map(escapeHtml).join(' · ')} <button class="secondary" type="button" id="clearFiltersBtn">Clear filters</button>` : '';
-    renderMatchExplorerSummary(filtered);
     if (!filtered.length) { $('matchList').innerHTML = '<p class="fine-print">No matches match the selected filters.</p>'; return; }
     const byDate = new Map();
     filtered.forEach(m => { const k = m.pdt?.date || 'unscheduled'; if (!byDate.has(k)) byDate.set(k, []); byDate.get(k).push(m); });
@@ -636,23 +565,8 @@
       return `<section class="match-day" aria-label="${escapeAttr(fullDateLabel(date))}"><div class="day-head"><h3>${escapeHtml(fullDateLabel(date))}</h3><span class="pill">${ms.length} match${ms.length === 1 ? '' : 'es'} · ${escapeHtml(groups)}</span></div><div class="day-grid">${ms.map(m => matchCard(m)).join('')}</div></section>`;
     }).join('');
   }
-  function renderMatchExplorerSummary(filtered) {
-    const box = $('matchExplorerSummary');
-    if (!box) return;
-    const bits = [];
-    if (state.matchTeamFilter && state.matchTeamFilter !== 'all') {
-      const teamMatches = decoratedMatches().filter(m => canonical(m.home) === canonical(state.matchTeamFilter) || canonical(m.away) === canonical(state.matchTeamFilter));
-      bits.push(`<div class="summary-chip"><b>${flagMarkup(state.matchTeamFilter)} ${escapeHtml(displayTeamName(state.matchTeamFilter))}</b><span>${teamMatches.length} total matches in this tracker</span></div>`);
-    }
-    if (state.selectedVenue && state.selectedVenue !== 'all') {
-      const venueMatches = decoratedMatches().filter(m => m.venue === state.selectedVenue);
-      bits.push(`<div class="summary-chip"><b>${escapeHtml(state.selectedVenue)}</b><span>${venueMatches.length} total matches at this venue</span></div>`);
-    }
-    bits.push(`<div class="summary-chip"><b>${filtered.length}</b><span>matches shown with current filters</span></div>`);
-    box.innerHTML = bits.join('');
-  }
-
   function renderVenues() {
+    if (!$('venueView')) return;
     const matches = decoratedMatches();
     const selected = state.selectedVenue || 'all';
     if (selected !== 'all') {
@@ -743,14 +657,19 @@
     renderGroups();
     renderThirdPlace();
     renderTeamExplorer();
+    renderVenues();
     renderMatches();
     renderAutomation();
     renderImplemented();
     renderSources();
     renderDataStatus();
-    if (state.activeRound === 'all') setTimeout(drawBracketLines, 420);
   }
 
+
+  function cacheBustUrl(url) {
+    const sep = String(url).includes('?') ? '&' : '?';
+    return `${url}${sep}_=${Date.now()}`;
+  }
 
   async function fetchJsonWithTimeout(url, options={}, timeoutMs=10000) {
     const controller = new AbortController();
@@ -766,7 +685,7 @@
 
   function unwrapGames(payload) {
     if (Array.isArray(payload)) return payload;
-    for (const key of ['games','matches','data','results','fixtures']) {
+    for (const key of ['Results','results','games','matches','data','fixtures']) {
       if (Array.isArray(payload?.[key])) return payload[key];
       if (Array.isArray(payload?.data?.[key])) return payload.data[key];
     }
@@ -780,8 +699,48 @@
     }
     return null;
   }
+  function localizedName(value) {
+    if (Array.isArray(value)) {
+      const en = value.find(x => String(x?.Locale || '').toLowerCase().startsWith('en')) || value[0];
+      return en?.Description || en?.Value || '';
+    }
+    if (value && typeof value === 'object') return value.Description || value.Value || value.name || '';
+    return value || '';
+  }
+  function fifaTeamName(team) {
+    if (!team || typeof team !== 'object') return canonical(team);
+    return canonical(localizedName(team.TeamName) || localizedName(team.Name) || team.ShortClubName || team.Abbreviation || team.IdCountry || '');
+  }
+  function fifaStatus(g, hs, as) {
+    if (!('MatchStatus' in g) && !('Period' in g)) return null;
+    const statusNum = Number(g.MatchStatus);
+    if (statusNum === 0 && hs != null && as != null) return 'final';
+    if (statusNum === 1) return 'scheduled';
+    if (Number.isFinite(statusNum)) return 'live';
+    const period = Number(g.Period);
+    if (Number.isFinite(period) && ![0,1].includes(period)) return 'live';
+    return null;
+  }
   function normalizeExternalGame(g) {
-    const n = Number(getByPaths(g, ['number','matchNumber','match_no','gameNumber','id','match_id']));
+    const n = Number(getByPaths(g, ['MatchNumber','number','matchNumber','match_no','gameNumber','id','match_id']));
+    if ('Home' in g || 'Away' in g || 'HomeTeamScore' in g || 'AwayTeamScore' in g) {
+      const hsRaw = g.HomeTeamScore ?? getByPaths(g, ['Home.Score','HomeTeam.Score']);
+      const asRaw = g.AwayTeamScore ?? getByPaths(g, ['Away.Score','AwayTeam.Score']);
+      const hpRaw = g.HomeTeamPenaltyScore;
+      const apRaw = g.AwayTeamPenaltyScore;
+      const hs = hsRaw == null ? null : Number(hsRaw);
+      const as = asRaw == null ? null : Number(asRaw);
+      return {
+        n,
+        home: fifaTeamName(g.Home || g.HomeTeam),
+        away: fifaTeamName(g.Away || g.AwayTeam),
+        hs: Number.isNaN(hs) ? null : hs,
+        as: Number.isNaN(as) ? null : as,
+        hp: hpRaw == null ? null : Number(hpRaw),
+        ap: apRaw == null ? null : Number(apRaw),
+        status: fifaStatus(g, hs, as) || 'scheduled'
+      };
+    }
     const home = canonical(String(getByPaths(g, ['home.name_en','home.name','homeTeam.name','home_team.name','team1.name','homeTeam','home_team','home','team1']) || '').trim());
     const away = canonical(String(getByPaths(g, ['away.name_en','away.name','awayTeam.name','away_team.name','team2.name','awayTeam','away_team','away','team2']) || '').trim());
     const hs = getByPaths(g, ['homeScore','home_score','score.home','home.score','goalsHome','team1_score','score1']);
@@ -792,6 +751,38 @@
     const status = statusRaw.includes('finish') || statusRaw.includes('final') || statusRaw.includes('complete') || ['ft','aet','pen'].includes(statusRaw) ? 'final' : (statusRaw.includes('live') || statusRaw.includes('progress') || statusRaw.includes('half') ? 'live' : 'scheduled');
     return { n, home, away, hs: hs == null ? null : Number(hs), as: as == null ? null : Number(as), hp: hp == null ? null : Number(hp), ap: ap == null ? null : Number(ap), status };
   }
+  function liveEndpoints() {
+    const defaults = ['https://api.fifa.com/api/v3/calendar/matches?idCompetition=17&idSeason=285023&count=500&language=en'];
+    const configured = Array.isArray(WC_DATA?.apiEndpoints) ? WC_DATA.apiEndpoints : [];
+    if (WC_DATA?.apiEndpoint) configured.unshift(WC_DATA.apiEndpoint);
+    const out = [];
+    [...defaults, ...configured, 'worldcup-data.json', 'https://worldcup26.ir/get/games'].forEach(url => { if (url && !out.includes(url)) out.push(url); });
+    return out;
+  }
+  async function fetchLiveGames() {
+    let lastError = null;
+    for (const endpoint of liveEndpoints()) {
+      try {
+        const games = unwrapGames(await fetchJsonWithTimeout(cacheBustUrl(endpoint), { cache: 'no-store' }, 12000)).map(normalizeExternalGame).filter(g => g.home && g.away);
+        if (games.length) return { games, endpoint };
+        lastError = new Error(`${endpoint} returned no usable games`);
+      } catch (err) {
+        lastError = err;
+        console.warn('Live score source failed:', endpoint, err);
+      }
+    }
+    throw lastError || new Error('No live score source returned usable matches.');
+  }
+  function pairMatchesExternal(match, game) {
+    const mh = canonical(match.home), ma = canonical(match.away), gh = canonical(game.home), ga = canonical(game.away);
+    return Boolean(gh && ga && ((mh === gh && ma === ga) || (mh === ga && ma === gh)));
+  }
+  function findExternalTarget(game) {
+    const byPair = WC_DATA.matches.find(m => pairMatchesExternal(m, game));
+    if (byPair) return byPair;
+    if (game.n && (!game.home || !game.away)) return WC_DATA.matches.find(m => Number(m.number) === Number(game.n)) || null;
+    return null;
+  }
   function staticCutoffDate() {
     const configured = WC_DATA?.staticAfter || WC_DATA?.liveRefresh?.staticAfter;
     const parsed = configured ? new Date(configured) : null;
@@ -800,7 +791,8 @@
     return starts.length ? new Date(starts.at(-1).getTime() + 24*60*60*1000) : null;
   }
   function isPastStaticCutoff(now = new Date()) { const cutoff = staticCutoffDate(); return Boolean(cutoff && now >= cutoff); }
-  function liveWindowMinutes(match) { return match.stage === 'Group Stage' ? (WC_DATA.liveRefresh?.groupStageWindowMinutes || 210) : (WC_DATA.liveRefresh?.knockoutWindowMinutes || 330); }
+  function liveWindowMinutes(match) { return match.stage === 'Group Stage' ? (WC_DATA.liveRefresh?.groupStageWindowMinutes || 720) : (WC_DATA.liveRefresh?.knockoutWindowMinutes || 720); }
+  function expectedFinalMinutes(match) { return match.stage === 'Group Stage' ? (WC_DATA.liveRefresh?.groupStageExpectedFinalMinutes || 165) : (WC_DATA.liveRefresh?.knockoutExpectedFinalMinutes || 330); }
   function isInLiveWindow(match, now = new Date()) {
     const kickoff = new Date(match.pdt?.iso);
     if (Number.isNaN(kickoff.getTime())) return false;
@@ -810,20 +802,24 @@
   function activeMatchesForNow(now = new Date()) { return WC_DATA && !isPastStaticCutoff(now) ? WC_DATA.matches.filter(m => isInLiveWindow(m, now)) : []; }
   function inferExternalStatus(game, target) {
     if (game.status === 'final' || game.status === 'live') return game.status;
-    if (game.hs != null && game.as != null) return isInLiveWindow(target) ? 'live' : 'final';
+    if (game.hs != null && game.as != null) {
+      const kickoff = new Date(target.pdt?.iso);
+      if (!Number.isNaN(kickoff.getTime()) && new Date() >= new Date(kickoff.getTime() + expectedFinalMinutes(target) * 60 * 1000)) return 'final';
+      return isInLiveWindow(target) ? 'live' : (target.status || 'scheduled');
+    }
     return target.status || 'scheduled';
   }
   async function tryLiveRefresh(manual=false, silent=false) {
     if (!WC_DATA) return 0;
     if (isPastStaticCutoff()) { renderDataStatus(); if (manual) toast('Refreshes are stopped. The site is static after the final cutoff.'); return 0; }
     if (!manual && !activeMatchesForNow().length) { renderDataStatus(); return 0; }
-    const endpoint = WC_DATA.apiEndpoint;
-    const games = unwrapGames(await fetchJsonWithTimeout(endpoint, { cache: 'no-store' }, 10000));
+    const { games, endpoint } = await fetchLiveGames();
+    WC_DATA.apiEndpoint = endpoint;
     let changed = 0;
     const changes = [];
-    games.map(normalizeExternalGame).forEach(g => {
+    games.forEach(g => {
       if (!g.home || !g.away) return;
-      const target = WC_DATA.matches.find(m => (g.n && Number(m.number) === g.n) || (canonical(m.home) === g.home && canonical(m.away) === g.away) || (canonical(m.home) === g.away && canonical(m.away) === g.home));
+      const target = findExternalTarget(g);
       if (!target) return;
       const reversed = canonical(target.home) === g.away && canonical(target.away) === g.home;
       const newHomeScore = reversed ? g.as : g.hs;
@@ -846,10 +842,10 @@
       }
     });
     if (changed || manual) {
-      WC_DATA.lastUpdated = `Browser live refresh: ${new Date().toLocaleString('en-US', { timeZone:'America/Los_Angeles', dateStyle:'medium', timeStyle:'short' })} PDT`;
+      WC_DATA.lastUpdated = `Browser FIFA refresh: ${new Date().toLocaleString('en-US', { timeZone:'America/Los_Angeles', dateStyle:'medium', timeStyle:'short' })} PDT`;
       WC_DATA.snapshotDate = firstMatchDateOnOrAfter(snapshotBaseDate(new Date()), WC_DATA.matches);
       WC_DATA.recentChanges = [...changes, ...(WC_DATA.recentChanges || [])].slice(0, 20);
-      try { storage.setItem('wc2026-data', JSON.stringify(WC_DATA)); } catch {}
+      try { localStorage.setItem('wc2026-data', JSON.stringify(WC_DATA)); } catch {}
       renderAll();
     } else renderDataStatus();
     if (manual) toast(changed ? `Live refresh complete: ${changed} field update${changed === 1 ? '' : 's'} applied.` : 'Live refresh reached the API, but no score changes were detected.');
@@ -918,9 +914,10 @@
     setTimeout(() => { window.print(); setTimeout(() => document.body.classList.remove('print-bracket','print-snapshot','print-standings'), 250); }, 20);
   }
   function clearAllFilters() {
-    state.quickFilter = 'all'; state.matchTeamFilter = 'all'; state.selectedVenue = 'all';
-    if ($('search')) $('search').value = '';
-    ['stageFilter','groupFilter','dateFilter','matchTeamFilter','venueFilter'].forEach(id => { if ($(id)) $(id).value = 'all'; });
+    state.quickFilter = 'all'; state.matchTeam = 'all'; state.selectedVenue = 'all';
+    $('search').value = ''; $('stageFilter').value = 'all'; $('groupFilter').value = 'all'; $('dateFilter').value = 'all';
+    if ($('matchTeamFilter')) $('matchTeamFilter').value = 'all';
+    if ($('venueFilter')) $('venueFilter').value = 'all';
     renderAll();
   }
   function toast(msg) { const t = $('toast'); if (!t) return; t.textContent = msg; t.classList.add('show'); setTimeout(() => t.classList.remove('show'), 4600); }
@@ -928,14 +925,14 @@
   function wireEvents() {
     document.addEventListener('click', ev => {
       const teamBtn = ev.target.closest('.team-link');
-      if (teamBtn) { state.focusTeam = teamBtn.dataset.team || ''; storage.setItem('wc2026-focus-team', state.focusTeam); renderAll(); location.hash = '#teams'; return; }
+      if (teamBtn) { state.selectedTeam = teamBtn.dataset.team || ''; localStorage.setItem('wc2026-selected-team', state.selectedTeam); renderAll(); location.hash = '#teams'; return; }
       const quick = ev.target.closest('.quick-filter');
       if (quick) { state.quickFilter = quick.dataset.quick || 'all'; renderAll(); return; }
       const round = ev.target.closest('.round-tab');
-      if (round) { state.activeRound = round.dataset.round || 'all'; storage.setItem('wc2026-active-round', state.activeRound); renderAll(); return; }
+      if (round) { state.activeRound = round.dataset.round || 'all'; localStorage.setItem('wc2026-active-round', state.activeRound); renderAll(); return; }
       const venue = ev.target.closest('.venue-link');
       if (venue) { state.selectedVenue = venue.dataset.venue || 'all'; renderAll(); location.hash = '#matches'; return; }
-      if (ev.target.closest('.clear-team')) { state.focusTeam = ''; storage.removeItem('wc2026-focus-team'); renderAll(); return; }
+      if (ev.target.closest('.clear-team')) { state.selectedTeam = ''; localStorage.removeItem('wc2026-selected-team'); renderAll(); return; }
       if (ev.target.id === 'clearFiltersBtn') { clearAllFilters(); return; }
       const print = ev.target.closest('[data-print]');
       if (print) { printView(print.dataset.print); return; }
@@ -944,36 +941,22 @@
     $('copySnapshotBtn').addEventListener('click', () => copyText(snapshotText(), 'Snapshot copied.'));
     $('copyLinkBtn').addEventListener('click', () => copyText(location.href.split('#')[0], 'Bracket link copied.'));
     $('downloadCalendarBtn').addEventListener('click', downloadCalendar);
-    $('spoilerBtn').addEventListener('click', () => { state.hideScores = !state.hideScores; storage.setItem('wc2026-hide-scores', state.hideScores ? '1' : '0'); document.body.classList.toggle('spoilers-hidden', state.hideScores); renderAll(); });
-    $('timeMode').addEventListener('change', ev => { state.timeMode = ev.target.value; storage.setItem('wc2026-time-mode', state.timeMode); renderAll(); });
-    document.addEventListener('change', ev => {
-      if (ev.target?.id === 'teamFocusFilter') {
-        state.focusTeam = ev.target.value || '';
-        state.focusTeam ? storage.setItem('wc2026-focus-team', state.focusTeam) : storage.removeItem('wc2026-focus-team');
-        renderAll();
-      }
-    });
-    const scheduleIds = ['search','stageFilter','groupFilter','dateFilter','matchTeamFilter','venueFilter'];
-    scheduleIds.forEach(id => {
-      const el = $(id);
-      if (!el) return;
-      el.addEventListener(id === 'search' ? 'input' : 'change', () => {
-        if (id === 'dateFilter') state.quickFilter = 'all';
-        if (id === 'matchTeamFilter') state.matchTeamFilter = $('matchTeamFilter')?.value || 'all';
-        if (id === 'venueFilter') state.selectedVenue = $('venueFilter')?.value || 'all';
-        renderMatches(); renderDataStatus(); populateFilters();
-      });
-    });
-    window.addEventListener('resize', () => { if (state.activeRound === 'all') requestAnimationFrame(drawBracketLines); setTimeout(drawBracketLines, 180); });
+    $('spoilerBtn').addEventListener('click', () => { state.hideScores = !state.hideScores; localStorage.setItem('wc2026-hide-scores', state.hideScores ? '1' : '0'); document.body.classList.toggle('spoilers-hidden', state.hideScores); renderAll(); });
+    $('timeMode').addEventListener('change', ev => { state.timeMode = ev.target.value; localStorage.setItem('wc2026-time-mode', state.timeMode); renderAll(); });
+    if ($('teamFocusFilter')) $('teamFocusFilter').addEventListener('change', ev => { state.selectedTeam = ev.target.value; state.selectedTeam ? localStorage.setItem('wc2026-selected-team', state.selectedTeam) : localStorage.removeItem('wc2026-selected-team'); renderAll(); });
+    if ($('matchTeamFilter')) $('matchTeamFilter').addEventListener('change', ev => { state.matchTeam = ev.target.value || 'all'; renderMatches(); renderVenues(); renderDataStatus(); populateFilters(); });
+    if ($('venueFilter')) $('venueFilter').addEventListener('change', ev => { state.selectedVenue = ev.target.value || 'all'; renderMatches(); renderVenues(); renderDataStatus(); populateFilters(); });
+    ['search','stageFilter','groupFilter','dateFilter'].forEach(id => { const el = $(id); if (!el) return; el.addEventListener(id === 'search' ? 'input' : 'change', () => { if (id === 'dateFilter') state.quickFilter = 'all'; renderMatches(); renderVenues(); renderDataStatus(); populateFilters(); }); });
+    window.addEventListener('resize', () => { if (state.activeRound === 'all') requestAnimationFrame(drawBracketLines); });
   }
 
   async function init() {
     wireEvents();
     EMBEDDED_DATA = parseEmbeddedData();
-    const stored = (() => { try { return JSON.parse(storage.getItem('wc2026-data') || 'null'); } catch { return null; } })();
+    const stored = (() => { try { return JSON.parse(localStorage.getItem('wc2026-data') || 'null'); } catch { return null; } })();
     if (EMBEDDED_DATA?.matches?.length) { setData(stored?.matches?.length ? stored : EMBEDDED_DATA); renderAll(); setupBrowserLivePolling(); }
     try {
-      const data = await fetchJsonWithTimeout('worldcup-data.json', { cache:'no-store' }, 6000);
+      const data = await fetchJsonWithTimeout(`worldcup-data.json?_=${Date.now()}`, { cache:'no-store' }, 6000);
       if (data?.matches?.length) { setData(data); renderAll(); setupBrowserLivePolling(); }
     } catch (err) {
       if (!WC_DATA) {

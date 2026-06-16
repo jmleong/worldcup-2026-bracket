@@ -36,30 +36,12 @@ This package now implements the 20 previously suggested HTML improvements as wor
 
 All automatic refresh behavior stops after `2026-07-20 12:00 PM PDT`, which is 24 hours after the scheduled July 19 final kickoff window. After that, the site remains static.
 
-## UX/UI correction pass requested after review
+## Live-score reliability fix — FIFA source
 
-Implemented these fixes in the live package:
-
-1. Daily snapshot cards now use a dedicated snapshot layout so both teams always show, including flags, score placeholders/scores, kickoff time, venue, and status.
-2. The global floating Team Focus dropdown was removed from the top controls.
-3. The Team Focus dropdown now lives inside the Team Focus tab/section.
-4. The Team Focus `All teams` option now clears the focused team and returns to the team grid.
-5. The match explorer now has section-local controls for Dates, Teams, Groups, Venue, Stage, Search, and quick filters.
-6. The team filter inside Match Explorer no longer changes the Team Focus section.
-7. The Venue section was merged into Match Explorer through the Venue dropdown/filter so the controls are local to the section they affect.
-8. Group standings were rebuilt with wider cards, fixed-width columns, shorter readable status badges, and horizontal protection so columns do not overlap.
-9. The hourglass knockout bracket was tightened with compact bracket-only match boxes.
-10. The knockout bracket positions were recalculated so boxes do not overlap and SVG connector lines align to the card centers.
-
-Verification performed before packaging:
-
-- JavaScript syntax check passed with `node --check app.js`.
-- Standalone HTML rendered in headless Chromium using the bundled data.
-- Snapshot contained 4 cards and the first snapshot card contained exactly 2 teams.
-- Top-level `#teamFilter` no longer exists.
-- Team Focus `#teamFocusFilter` exists and `All teams` clears the team focus.
-- Match Explorer `#matchTeamFilter` exists and changing it does not change Team Focus.
-- Removed standalone `#venues` section; venue filtering is in Match Explorer.
-- Group standings table rendered 4 rows per group and no text/column overlap was visible in the checked screenshot.
-- Hourglass bracket rendered 32 nodes and 32 SVG connector lines.
-- Bracket overlap test returned 0 overlapping nodes.
+- Switched live-score refreshes to use the FIFA calendar API behind the FIFA scores/fixtures experience first, with the open-source World Cup API as a fallback.
+- Browser live refresh now tries to fetch the live API every 60 seconds during same-day active/recent match windows and cache-busts every request.
+- GitHub Actions live polling now uses the same FIFA-first source server-side and writes changes to `worldcup-data.json` only when scores/statuses actually change.
+- Match updates now match by team pair first, not by match number, because source numbering can differ from the local poster/bracket numbering.
+- Group-stage active/recent match windows were widened to 12 hours after kickoff so late final score/status changes are still picked up.
+- The seed snapshot has been refreshed with the June 15 final scores and France vs Senegal so the visible page updates immediately after you publish this package; later FIFA refreshes will override/extend it.
+- The Match Explorer filters are local to the Match Explorer section, and Team Focus has its own independent dropdown.

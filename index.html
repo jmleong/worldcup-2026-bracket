@@ -13,7 +13,7 @@
       <div class="hero-card">
         <div class="eyebrow">World Cup 2026 · Live Bracket Tracker</div>
         <h1>Road to the Final</h1>
-        <p class="subtitle">A full tournament tracker with country flags, group fixtures, knockout bracket, group standings, third-place race, date-organized schedules, daily matchday snapshot, live score refreshes, team filters, venue views, print tools, and every kickoff shown in PDT by default.</p>
+        <p class="subtitle">A full tournament tracker with country flags, group fixtures, knockout bracket, group standings, third-place race, date-organized schedules, daily matchday snapshot, live score refreshes, team filters, venue filters, print tools, and every kickoff shown in PDT by default.</p>
         <div class="meta-grid">
           <div class="stat"><b id="statPlayed">—</b><span>completed matches</span></div>
           <div class="stat"><b id="statLive">—</b><span>live / active-window matches</span></div>
@@ -44,8 +44,8 @@
       <a href="#group-fixtures">Group fixtures</a>
       <a href="#groups">Standings</a>
       <a href="#third-place">Third-place race</a>
-      <a href="#teams">Team focus</a>
-      <a href="#matches">Match explorer</a>
+      <a href="#teams">Teams</a>
+      <a href="#matches">All matches</a>
       <a href="#automation">Updates</a>
       <a href="#implemented">Implemented</a>
       <a href="#sources">Sources</a>
@@ -105,39 +105,33 @@
 
     <section id="teams">
       <div class="section-title">
-        <div><h2>Team focus</h2><p>This section has its own team selector. Choosing “All teams” resets the focused team view without changing the match explorer filters.</p></div>
+        <div><h2>Team focus</h2><p>Choose a team here, or click a country anywhere on the page, to see that country’s fixtures, record, group position, and possible knockout path.</p></div>
       </div>
-      <div class="panel" id="teamExplorer"></div>
+      <div class="panel team-focus-panel">
+        <div class="schedule-tools local-controls">
+          <label>Team focus
+            <select id="teamFocusFilter"><option value="">All teams</option></select>
+          </label>
+        </div>
+        <div id="teamExplorer"></div>
+      </div>
     </section>
 
     <section id="matches">
       <div class="section-title">
-        <div><h2>Match explorer · dates, teams, groups, venues</h2><p>Every World Cup game is grouped by PDT calendar date and sorted by kickoff time. The controls below only affect this match explorer.</p></div>
+        <div><h2>Match Explorer · dates, teams, groups, venues</h2><p>Every World Cup game is grouped by PDT calendar date and sorted by kickoff time. Use the filters in this section to switch between date, team, group, venue, and stage views.</p></div>
       </div>
-      <div class="panel match-explorer-panel">
+      <div class="panel">
         <div class="quick-filters" id="quickFilters" aria-label="Quick match filters"></div>
-        <div class="schedule-tools explorer-controls">
-          <label>Search
-            <input id="search" type="search" placeholder="Search teams, venue, date…" />
-          </label>
-          <label>Dates
-            <select id="dateFilter"><option value="all">All dates</option></select>
-          </label>
-          <label>Teams
-            <select id="matchTeamFilter"><option value="all">All teams</option></select>
-          </label>
-          <label>Groups
-            <select id="groupFilter"><option value="all">All groups</option></select>
-          </label>
-          <label>Venue
-            <select id="venueFilter"><option value="all">All venues</option></select>
-          </label>
-          <label>Stage
-            <select id="stageFilter"><option value="all">All stages</option></select>
-          </label>
+        <div class="schedule-tools match-explorer-tools">
+          <input id="search" type="search" placeholder="Search teams, venue, date…" />
+          <label>Dates<select id="dateFilter"><option value="all">All dates</option></select></label>
+          <label>Teams<select id="matchTeamFilter"><option value="all">All teams</option></select></label>
+          <label>Groups<select id="groupFilter"><option value="all">All groups</option></select></label>
+          <label>Venue<select id="venueFilter"><option value="all">All venues</option></select></label>
+          <label>Stage<select id="stageFilter"><option value="all">All stages</option></select></label>
         </div>
         <div class="active-filter-line" id="activeFilterLine"></div>
-        <div class="match-explorer-summary" id="matchExplorerSummary"></div>
         <div class="date-schedule" id="matchList"></div>
       </div>
     </section>
