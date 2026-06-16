@@ -266,7 +266,7 @@
   function addDateKey(dateKey, days) { const d = new Date(`${dateKey}T12:00:00-07:00`); d.setDate(d.getDate() + days); return d.toLocaleDateString('en-CA', { timeZone:'America/Los_Angeles' }); }
   function snapshotBaseDate(now = new Date()) { const p = pacificParts(now); let key = `${p.year}-${p.month}-${p.day}`; if (Number(p.hour) > 22 || (Number(p.hour) === 22 && Number(p.minute) >= 30)) key = addDateKey(key, 1); return key; }
   function firstMatchDateOnOrAfter(dateKey, matches = WC_DATA?.matches || []) { const dates = [...new Set(matches.map(m => m.pdt?.date).filter(Boolean))].sort(); return dates.find(d => d >= dateKey) || dates.at(-1) || null; }
-  function snapshotTargetDate(now = new Date()) { return WC_DATA?.snapshotDate || firstMatchDateOnOrAfter(snapshotBaseDate(now)); }
+  function snapshotTargetDate(now = new Date()) { return firstMatchDateOnOrAfter(snapshotBaseDate(now), WC_DATA?.matches || []) || WC_DATA?.snapshotDate || null; }
   function snapshotMatches(now = new Date()) { const date = snapshotTargetDate(now); return { date, matches: decoratedMatches().filter(m => m.pdt?.date === date).sort(sortByKickoff) }; }
   function sortByKickoff(a,b) { return new Date(a.pdt?.iso || 0) - new Date(b.pdt?.iso || 0) || Number(a.number) - Number(b.number); }
 
