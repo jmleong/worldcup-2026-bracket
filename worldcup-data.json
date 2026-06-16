@@ -1,8 +1,8 @@
 {
   "title": "FIFA World Cup 2026 Bracket Tracker",
-  "lastUpdated": "Automated manual refresh: June 16, 2026 02:39 PM PDT",
-  "updateTarget": "Official FIFA score refresh: daily 10:30 PM PDT plus during-match and post-match checks",
-  "apiEndpoint": "https://api.fifa.com/api/v3/calendar/matches?idCompetition=17&idSeason=285023&count=500&language=en",
+  "lastUpdated": "June 15, 2026 — source snapshot; times converted to PDT",
+  "updateTarget": "Daily 10:30 PM PDT plus during-match live score checks",
+  "apiEndpoint": "https://worldcup26.ir/get/games",
   "teams": {
     "Mexico": {
       "flag": "🇲🇽",
@@ -508,9 +508,9 @@
       "home": "Saudi Arabia",
       "away": "Uruguay",
       "venue": "Miami Stadium, Miami",
-      "status": "final",
-      "homeScore": 1,
-      "awayScore": 1,
+      "status": "scheduled",
+      "homeScore": null,
+      "awayScore": null,
       "pdt": {
         "date": "2026-06-15",
         "dateLabel": "Mon, Jun 15",
@@ -526,9 +526,9 @@
       "home": "IR Iran",
       "away": "New Zealand",
       "venue": "Los Angeles Stadium, Los Angeles",
-      "status": "final",
-      "homeScore": 2,
-      "awayScore": 2,
+      "status": "scheduled",
+      "homeScore": null,
+      "awayScore": null,
       "pdt": {
         "date": "2026-06-15",
         "dateLabel": "Mon, Jun 15",
@@ -544,9 +544,9 @@
       "home": "France",
       "away": "Senegal",
       "venue": "New York New Jersey Stadium, East Rutherford",
-      "status": "final",
-      "homeScore": 3,
-      "awayScore": 1,
+      "status": "scheduled",
+      "homeScore": null,
+      "awayScore": null,
       "pdt": {
         "date": "2026-06-16",
         "dateLabel": "Tue, Jun 16",
@@ -2123,9 +2123,8 @@
     }
   ],
   "notes": [
-    "Live scoring now uses the official FIFA calendar API first. Match updates are matched by team pair before match number to avoid FIFA/local numbering mismatches.",
-    "The seed snapshot includes June 15 final scores and France vs Senegal; GitHub Actions/browser refresh will replace or extend these from FIFA when published.",
     "Group-stage scores are included for matches whose final score was available in the sources at generation time.",
+    "Saudi Arabia vs Uruguay and IR Iran vs New Zealand were not final in the accessible source snapshot and are shown as scheduled.",
     "Knockout teams remain placeholders until the group stage produces official qualifiers.",
     "The All Matches section is grouped by PDT date and includes all 104 tournament games.",
     "The snapshot panel shows every match on the selected PDT matchday; after a 10:30 PM PDT update it targets the next tournament date.",
@@ -2137,14 +2136,6 @@
     "The HTML now includes a Roadmap section with 20 improvement ideas and 4 live-score update behavior rules."
   ],
   "sources": [
-    {
-      "label": "FIFA official calendar API used by the updater",
-      "url": "https://api.fifa.com/api/v3/calendar/matches?idCompetition=17&idSeason=285023&count=500&language=en"
-    },
-    {
-      "label": "FIFA official scores and fixtures page",
-      "url": "https://www.fifa.com/en/tournaments/mens/worldcup/canadamexicousa2026/scores-fixtures?country=US&wtw-filter=ALL"
-    },
     {
       "label": "FIFA official match schedule and venues",
       "url": "https://www.fifa.com/en/tournaments/mens/worldcup/canadamexicousa2026/articles/match-schedule-fixtures-results-teams-stadiums"
@@ -2170,21 +2161,17 @@
       "url": "https://github.com/rezarahiminia/worldcup2026"
     }
   ],
-  "snapshotDate": "2026-06-16",
+  "snapshotDate": "2026-06-15",
   "snapshotRule": "Before 10:30 PM PDT, show today's matchday; after 10:30 PM PDT, show the next PDT matchday. After the final matchday, keep the final matchday as the snapshot.",
   "staticAfter": "2026-07-20T12:00:00-07:00",
-  "liveRefreshRule": "GitHub Actions and open browsers use the official FIFA calendar API first, then fallback sources. Browsers check every 60 seconds during same-day active/recent match windows. Both stop after staticAfter.",
+  "liveRefreshRule": "GitHub Actions checks during match windows; open browsers check live scores every 60 seconds during active match windows. Both stop after staticAfter.",
   "liveRefresh": {
     "browserPollSeconds": 60,
     "githubActionPollMinutes": 10,
     "startMinutesBeforeKickoff": 15,
-    "groupStageWindowMinutes": 720,
-    "knockoutWindowMinutes": 720,
-    "staticAfter": "2026-07-20T12:00:00-07:00",
-    "groupStageExpectedFinalMinutes": 165,
-    "knockoutExpectedFinalMinutes": 330,
-    "primarySource": "Official FIFA calendar API",
-    "fallbackSource": "Open-source World Cup 2026 API"
+    "groupStageWindowMinutes": 210,
+    "knockoutWindowMinutes": 330,
+    "staticAfter": "2026-07-20T12:00:00-07:00"
   },
   "improvementRoadmap": [
     {
@@ -2338,19 +2325,19 @@
     {
       "number": 2,
       "title": "Add match-window GitHub Actions polling",
-      "summary": "GitHub Actions polls the official FIFA calendar API about every 10 minutes during broad same-day match windows and redeploys only when scores/statuses change.",
+      "summary": "Configured: the workflow checks during tournament match windows about every 10 minutes.",
       "status": "configured"
     },
     {
       "number": 3,
       "title": "Add browser-side live refresh",
-      "summary": "Open browsers poll the official FIFA calendar API every 60 seconds during active/recent match windows and re-render snapshot, Match Explorer, group standings, and bracket immediately.",
+      "summary": "Configured: an open browser checks the live score API every 60 seconds during active match windows.",
       "status": "configured"
     },
     {
       "number": 4,
       "title": "Only deploy when worldcup-data.json actually changes",
-      "summary": "Scheduled workflows commit and deploy only when worldcup-data.json changes; manual runs can still force a deploy.",
+      "summary": "Configured: scheduled runs publish only when scores, status, teams, metadata, snapshot, or validation data changes.",
       "status": "configured"
     }
   ],
@@ -2476,29 +2463,5 @@
       "status": "implemented"
     }
   ],
-  "recentChanges": [
-    {
-      "time": "Jun 16, 2026 10:45 PM PDT",
-      "text": "M15: Saudi Arabia 1-1 Uruguay (final) — seed data refreshed"
-    },
-    {
-      "time": "Jun 16, 2026 10:45 PM PDT",
-      "text": "M16: IR Iran 2-2 New Zealand (final) — seed data refreshed"
-    },
-    {
-      "time": "Jun 16, 2026 10:45 PM PDT",
-      "text": "M17: France 3-1 Senegal (final) — seed data refreshed"
-    }
-  ],
-  "apiEndpoints": [
-    "https://api.fifa.com/api/v3/calendar/matches?idCompetition=17&idSeason=285023&count=500&language=en",
-    "https://worldcup26.ir/get/games"
-  ],
-  "lastSuccessfulUpdate": "June 16, 2026 02:39 PM PDT",
-  "validation": {
-    "ok": true,
-    "errors": [],
-    "warnings": [],
-    "checkedBy": "update_data.py validation"
-  }
+  "recentChanges": []
 }

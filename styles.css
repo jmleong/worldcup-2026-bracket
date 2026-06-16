@@ -241,22 +241,11 @@ section { margin: 30px 0; }
 .flag-scotland { background:#005eb8; }
 .flag-scotland::before { content:""; position:absolute; inset:0; background:linear-gradient(34deg, transparent 42%, #fff 43%, #fff 57%, transparent 58%), linear-gradient(146deg, transparent 42%, #fff 43%, #fff 57%, transparent 58%); }
 .flag-placeholder { color: var(--muted); }
-.groups { display:grid; grid-template-columns: repeat(2, minmax(430px, 1fr)); gap: 18px; }
-@media (max-width: 980px) { .groups { grid-template-columns: 1fr; } }
+.groups { display:grid; grid-template-columns: repeat(4, minmax(290px, 1fr)); gap: 16px; }
+@media (max-width: 1320px) { .groups { grid-template-columns: repeat(3, minmax(280px, 1fr)); } }
+@media (max-width: 980px) { .groups { grid-template-columns: repeat(2, minmax(260px, 1fr)); } }
+@media (max-width: 620px) { .groups { grid-template-columns: 1fr; } }
 .group-card h3 { margin: 0 0 10px; display:flex; justify-content:space-between; align-items:center; }
-
-.group-card { overflow:hidden; }
-.group-card .table-scroll { overflow-x:hidden; }
-.standings-table { table-layout: fixed; min-width: 0; }
-.standings-table th:first-child, .standings-table td:first-child { width: 39%; }
-.standings-table th:not(:first-child), .standings-table td:not(:first-child) { width: 7.6%; text-align:center; }
-.standings-team { display:grid; gap:5px; align-items:start; min-width:0; }
-.standings-team .team-link { max-width:100%; }
-.standings-team .tiny { width:max-content; max-width:100%; }
-.schedule-tools label { display:grid; gap:6px; color:var(--muted); font-size:.72rem; font-weight:850; text-transform:uppercase; letter-spacing:.08em; }
-.match-explorer-tools select { min-width: 160px; }
-.match-explorer-tools input { min-width: min(100%, 280px); }
-.team-focus-panel .schedule-tools { margin-top:0; }
 table { width: 100%; border-collapse: collapse; font-size: .82rem; }
 th, td { padding: 7px 5px; border-bottom: 1px solid rgba(255,255,255,.08); text-align: right; }
 th:first-child, td:first-child { text-align: left; }
@@ -273,6 +262,23 @@ input, select {
   min-height: 40px;
 }
 input::placeholder { color: rgba(247,251,255,.54); }
+select {
+  color-scheme: dark;
+  background-color: rgba(30, 48, 69, .96);
+  color: var(--ink);
+}
+select option, select optgroup {
+  background-color: #132234;
+  color: #f7fbff;
+}
+select option:checked {
+  background-color: #28d7a2;
+  color: #05120d;
+}
+select option:disabled {
+  color: #8fa0b4;
+}
+
 .group-fixture-map { display: grid; grid-template-columns: repeat(3, minmax(280px, 1fr)); gap: 16px; }
 @media (max-width: 1180px) { .group-fixture-map { grid-template-columns: repeat(2, minmax(260px, 1fr)); } }
 @media (max-width: 700px) { .group-fixture-map { grid-template-columns: 1fr; } }

@@ -33,9 +33,3 @@ This is a static GitHub Pages World Cup tracker with:
 The workflow keeps the 10:30 PM PDT daily snapshot with 10:35 PM and 10:45 PM PDT retries, polls during match windows about every 10 minutes, and deploys only when data changes. The browser also polls every 60 seconds during live match windows while the page is open.
 
 All refreshes stop after `2026-07-20 12:00 PM PDT`.
-
-## Live-score source update
-
-This version uses the FIFA calendar API as the primary live-score source, matching games by the two team names before using match numbers. This avoids writing a score to the wrong local match if FIFA/source match numbering differs from the bracket numbering.
-
-Upload the full package, run the GitHub Action manually once, and hard-refresh the live page.

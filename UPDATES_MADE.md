@@ -35,13 +35,3 @@ This package now implements the 20 previously suggested HTML improvements as wor
 ## Static cutoff
 
 All automatic refresh behavior stops after `2026-07-20 12:00 PM PDT`, which is 24 hours after the scheduled July 19 final kickoff window. After that, the site remains static.
-
-## Live-score reliability fix — FIFA source
-
-- Switched live-score refreshes to use the FIFA calendar API behind the FIFA scores/fixtures experience first, with the open-source World Cup API as a fallback.
-- Browser live refresh now tries to fetch the live API every 60 seconds during same-day active/recent match windows and cache-busts every request.
-- GitHub Actions live polling now uses the same FIFA-first source server-side and writes changes to `worldcup-data.json` only when scores/statuses actually change.
-- Match updates now match by team pair first, not by match number, because source numbering can differ from the local poster/bracket numbering.
-- Group-stage active/recent match windows were widened to 12 hours after kickoff so late final score/status changes are still picked up.
-- The seed snapshot has been refreshed with the June 15 final scores and France vs Senegal so the visible page updates immediately after you publish this package; later FIFA refreshes will override/extend it.
-- The Match Explorer filters are local to the Match Explorer section, and Team Focus has its own independent dropdown.
