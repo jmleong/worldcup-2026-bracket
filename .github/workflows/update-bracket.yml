@@ -4,52 +4,35 @@ on:
   workflow_dispatch:
     inputs:
       force_deploy:
-        description: "Publish the site even if worldcup-data.json did not change"
+        description: "Deploy even if worldcup-data.json did not change"
         required: false
         type: boolean
         default: true
-      force_fetch:
-        description: "Try the live score API even outside match windows"
-        required: false
-        type: boolean
-        default: true
-  push:
-    branches: ["main"]
-    paths:
-      - "index.html"
-      - "styles.css"
-      - "app.js"
-      - "worldcup-data.json"
-      - "update_data.py"
-      - ".github/workflows/update-bracket.yml"
-      - ".nojekyll"
   schedule:
-    # 10:30 PM PDT daily snapshot update, plus 10:35 and 10:45 PM retries.
-    # GitHub cron is UTC. 05:30 UTC = 10:30 PM PDT during June/July.
-    - cron: "30,35,45 5 11-30 6 *"
-    - cron: "30,35,45 5 1-20 7 *"
+    # Daily snapshot refresh at 10:30 PM PDT, plus retry runs at 10:35 and 10:45 PM PDT.
+    # GitHub cron uses UTC. 05:30/05:35/05:45 UTC = 10:30/10:35/10:45 PM PDT.
+    - cron: "30 5 11-30 6 *"
+    - cron: "35 5 11-30 6 *"
+    - cron: "45 5 11-30 6 *"
+    - cron: "30 5 1-20 7 *"
+    - cron: "35 5 1-20 7 *"
+    - cron: "45 5 1-20 7 *"
 
-    # Match-window score polling, about every 10 minutes during broad tournament hours.
-    # Offset minutes avoid the top of the hour, where GitHub scheduled jobs are more likely to be delayed.
+    # During-match score polling, about every 10 minutes during broad match windows.
+    # Offset minutes avoid the top of the hour. Dates are in UTC.
     - cron: "7/10 14-23 11-30 6 *"
-    - cron: "7/10 0-8 12-30 6 *"
+    - cron: "7/10 0-6 12-30 6 *"
     - cron: "7/10 14-23 1-19 7 *"
-    - cron: "7/10 0-8 1-20 7 *"
-    # A few last checks until the July 20, 2026 noon PDT static cutoff.
-    - cron: "7/10 14-19 20 7 *"
+    - cron: "7/10 0-6 1-20 7 *"
+    - cron: "7/10 14-18 20 7 *"
 
 permissions:
   contents: write
   pages: write
   id-token: write
 
-env:
-  WC_STATIC_AFTER_PT: "2026-07-20T12:00:00-07:00"
-  WC_GROUP_WINDOW_MINUTES: "390"
-  WC_KNOCKOUT_WINDOW_MINUTES: "510"
-
 concurrency:
-  group: github-pages
+  group: pages
   cancel-in-progress: false
 
 jobs:
@@ -58,6 +41,9 @@ jobs:
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
+    env:
+      UPDATE_MODE: ${{ github.event_name == 'workflow_dispatch' && 'manual' || 'scheduled' }}
+      GITHUB_EVENT_SCHEDULE: ${{ github.event.schedule }}
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -69,26 +55,10 @@ jobs:
 
       - name: Refresh World Cup data
         id: refresh
-        run: |
-          if [[ "${{ github.event_name }}" == "workflow_dispatch" && "${{ inputs.force_fetch }}" == "true" ]]; then
-            python3 update_data.py --force-fetch
-          else
-            python3 update_data.py
-          fi
-
-      - name: Check whether published data changed
-        id: changes
-        run: |
-          if git diff --quiet -- worldcup-data.json; then
-            echo "changed=false" >> "$GITHUB_OUTPUT"
-            echo "No worldcup-data.json changes."
-          else
-            echo "changed=true" >> "$GITHUB_OUTPUT"
-            echo "worldcup-data.json changed."
-          fi
+        run: python3 update_data.py --mode "$UPDATE_MODE"
 
       - name: Commit updated data back to the repository
-        if: steps.changes.outputs.changed == 'true'
+        if: steps.refresh.outputs.changed == 'true'
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
@@ -96,21 +66,8 @@ jobs:
           git commit -m "Update World Cup bracket data"
           git push
 
-      - name: Decide whether to deploy
-        id: deploy_decision
-        run: |
-          if [[ "${{ steps.changes.outputs.changed }}" == "true" ]]; then
-            echo "deploy=true" >> "$GITHUB_OUTPUT"
-          elif [[ "${{ github.event_name }}" == "workflow_dispatch" && "${{ inputs.force_deploy }}" == "true" ]]; then
-            echo "deploy=true" >> "$GITHUB_OUTPUT"
-          elif [[ "${{ github.event_name }}" == "push" ]]; then
-            echo "deploy=true" >> "$GITHUB_OUTPUT"
-          else
-            echo "deploy=false" >> "$GITHUB_OUTPUT"
-          fi
-
       - name: Prepare site files
-        if: steps.deploy_decision.outputs.deploy == 'true'
+        if: steps.refresh.outputs.changed == 'true' || (github.event_name == 'workflow_dispatch' && inputs.force_deploy == true)
         run: |
           mkdir -p _site
           cp index.html styles.css app.js worldcup-data.json _site/
@@ -119,7 +76,7 @@ jobs:
           find _site -maxdepth 1 -type f -printf "%f\n" | sort
 
       - name: Verify required website files
-        if: steps.deploy_decision.outputs.deploy == 'true'
+        if: steps.refresh.outputs.changed == 'true' || (github.event_name == 'workflow_dispatch' && inputs.force_deploy == true)
         run: |
           test -s _site/index.html
           test -s _site/styles.css
@@ -127,16 +84,16 @@ jobs:
           test -s _site/worldcup-data.json
 
       - name: Configure GitHub Pages
-        if: steps.deploy_decision.outputs.deploy == 'true'
+        if: steps.refresh.outputs.changed == 'true' || (github.event_name == 'workflow_dispatch' && inputs.force_deploy == true)
         uses: actions/configure-pages@v5
 
       - name: Upload site files
-        if: steps.deploy_decision.outputs.deploy == 'true'
-        uses: actions/upload-pages-artifact@v4
+        if: steps.refresh.outputs.changed == 'true' || (github.event_name == 'workflow_dispatch' && inputs.force_deploy == true)
+        uses: actions/upload-pages-artifact@v3
         with:
           path: "_site"
 
       - name: Deploy to GitHub Pages
-        if: steps.deploy_decision.outputs.deploy == 'true'
+        if: steps.refresh.outputs.changed == 'true' || (github.event_name == 'workflow_dispatch' && inputs.force_deploy == true)
         id: deployment
         uses: actions/deploy-pages@v4
