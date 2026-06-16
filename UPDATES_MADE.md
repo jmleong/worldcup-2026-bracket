@@ -14,8 +14,8 @@ This package now implements the 20 previously suggested HTML improvements as wor
 8. **True hourglass knockout bracket with connector lines** — the knockout section now has two branches on the left, two branches on the right, a center final, a third-place branch, and SVG bracket lines connecting each winner path.
 9. **Mobile bracket controls** — round tabs and responsive layouts make the bracket easier on phones.
 10. **Spoiler mode** — scores can be hidden or shown with a persistent toggle.
-11. **Team focus pages/filters** — clicking a country opens a team view with matches, record, and possible path.
-12. **Venue filter and venue view** — stadium cards and venue-specific match lists are included.
+11. **Team filtering inside Match Explorer** — clicking a country or choosing a team now filters the combined Match Explorer instead of opening a separate Team Focus tab.
+12. **Venue filtering inside Match Explorer** — the old separate Venue View is folded into the combined Match Explorer with a local Venue dropdown and summary card.
 13. **Time display toggle** — PDT, venue-local, and browser-local time modes are available.
 14. **Split code files** — the GitHub package now uses `index.html`, `styles.css`, `app.js`, and `worldcup-data.json`. A standalone bundled HTML is also included separately.
 15. **Update reliability checks** — `update_data.py` and the browser validate match counts, dates, venues, flags, scores, and snapshot date.
@@ -28,8 +28,8 @@ This package now implements the 20 previously suggested HTML improvements as wor
 ## 4 score-update behaviors configured
 
 1. **Keep the 10:30 PM PDT daily update** — the nightly workflow rolls the snapshot forward and retries at 10:35 PM and 10:45 PM PDT to reduce GitHub schedule delays.
-2. **Match-window GitHub Actions polling** — scheduled polling checks for score/status updates during active match windows.
-3. **Browser-side live refresh every 60 seconds** — open pages poll during active match windows.
+2. **Match-window GitHub Actions polling** — scheduled polling checks FIFA-first score/status updates during active and recently active match windows.
+3. **Browser-side live refresh every 60 seconds** — open pages poll FIFA first during active/recent match windows, then fall back to the published JSON and backup API.
 4. **Only deploy when data changes** — scheduled runs publish only when `worldcup-data.json` actually changes.
 
 ## Static cutoff

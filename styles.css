@@ -547,3 +547,16 @@ body.spoilers-hidden .points-value { filter: blur(6px); }
   }
   .bracket-line-svg { display: none; }
 }
+
+/* Match Explorer local filters and combined team/venue summaries */
+.match-explorer-panel { scroll-margin-top: 90px; }
+.explorer-tools { align-items: end; }
+.explorer-tools label { display: grid; gap: 6px; min-width: 170px; flex: 1 1 170px; color: var(--muted); font-size: .72rem; font-weight: 900; letter-spacing: .12em; text-transform: uppercase; }
+.explorer-tools .search-label { min-width: min(360px, 100%); flex: 2 1 280px; }
+.explorer-tools label span { padding-left: 8px; }
+.explorer-tools input, .explorer-tools select { width: 100%; }
+.explorer-summary-grid { display: grid; grid-template-columns: repeat(2, minmax(260px, 1fr)); gap: 12px; margin: 14px 0; }
+.explorer-summary-card { background: linear-gradient(180deg, rgba(255,255,255,.12), rgba(255,255,255,.055)); border: 1px solid rgba(255,255,255,.16); border-radius: var(--radius); padding: 14px 16px; box-shadow: var(--shadow); }
+.explorer-summary-card h3 { margin: 0 0 8px; display:flex; gap:8px; align-items:center; }
+.explorer-summary-card p { margin: 0; color: var(--muted); }
+@media (max-width: 780px) { .explorer-summary-grid { grid-template-columns: 1fr; } .explorer-tools label { min-width: 100%; } }

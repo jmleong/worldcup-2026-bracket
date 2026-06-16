@@ -8,15 +8,15 @@ This is a static GitHub Pages World Cup tracker with:
 - PDT kickoff times by default, plus venue-local and browser-local time modes
 - Group fixtures, full standings, and best third-place qualifiers
 - True side-hourglass knockout bracket with two left branches, two right branches, center final, third-place path, SVG bracket lines, and automatic advancement when results are available
-- Live browser refresh during active matches
-- GitHub Actions polling during match windows
+- FIFA-first live browser refresh during active and recently active matches
+- FIFA-first GitHub Actions polling during match windows, with fallback score API
 - Print, copy, and calendar features
 
 ## Files
 
-- `index.html` — page structure
+- `index.html` — page structure with Match Explorer filters
 - `styles.css` — styling, print views, hourglass bracket connector lines, mobile layout
-- `app.js` — rendering, filters, live refresh, standings, team/venue views, sharing
+- `app.js` — rendering, local Match Explorer filters, live refresh, standings, team/venue filtering, sharing
 - `worldcup-data.json` — schedule, teams, scores, metadata, implemented features
 - `update_data.py` — score updater and validation checks
 - `.github/workflows/update-bracket.yml` — GitHub Actions updater and GitHub Pages publisher
