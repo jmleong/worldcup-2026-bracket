@@ -85,7 +85,9 @@
     Object.entries(teams).forEach(([name, info]) => { if (!info.flagCode && TEAM_FLAG_CODES[name]) info.flagCode = TEAM_FLAG_CODES[name]; });
     merged.teams = teams;
     merged.matches = (merged.matches || []).slice().sort((a,b) => Number(a.number || 0) - Number(b.number || 0));
-    if (!merged.snapshotDate) merged.snapshotDate = firstMatchDateOnOrAfter(snapshotBaseDate(new Date()), merged.matches);
+    // ALWAYS compute snapshotDate from the browser's PDT clock — never trust the stale JSON value.
+    // The 10:30 PM PDT rule: before 10:30pm show today's matchday, at/after show tomorrow's.
+    merged.snapshotDate = firstMatchDateOnOrAfter(snapshotBaseDate(new Date()), merged.matches) || merged.snapshotDate || null;
     return merged;
   }
   function setData(data) {
@@ -721,10 +723,11 @@
       source: (g.IdCompetition || g.Home || g.HomeTeamScore !== undefined) ? 'FIFA' : 'Fallback API'
     };
   }
+  // Browser-side refresh ONLY reads worldcup-data.json (served from GitHub Pages).
+  // The FIFA API and fallback API are CORS-restricted and cannot be fetched by browsers.
+  // The Python updater (update_data.py) handles those APIs server-side via GitHub Actions.
   function liveEndpoints() {
-    const endpoints = Array.isArray(WC_DATA?.apiEndpoints) && WC_DATA.apiEndpoints.length ? WC_DATA.apiEndpoints.slice() : [WC_DATA?.apiEndpoint].filter(Boolean);
-    endpoints.push(`worldcup-data.json?ts=${Date.now()}`);
-    return [...new Set(endpoints.filter(Boolean))];
+    return [`worldcup-data.json?ts=${Date.now()}`];
   }
   function withCacheBust(url) {
     if (!url || url.includes('ts=')) return url;
@@ -751,67 +754,81 @@
     if (game.hs != null && game.as != null) return isInLiveWindow(target) ? 'live' : 'final';
     return target.status || 'scheduled';
   }
+  // Browser-side refresh: fetches worldcup-data.json and applies any score/status changes found.
+  // The FIFA and fallback APIs are fetched server-side by update_data.py via GitHub Actions —
+  // they cannot be called from the browser due to CORS restrictions.
   async function tryLiveRefresh(manual=false, silent=false) {
     if (!WC_DATA) return 0;
     if (isPastStaticCutoff()) { renderDataStatus(); if (manual) toast('Refreshes are stopped. The site is static after the final cutoff.'); return 0; }
-    if (!manual && !activeMatchesForNow().length) { renderDataStatus(); return 0; }
-    const endpoints = liveEndpoints();
-    let games = [];
-    const sourceErrors = [];
-    for (const endpoint of endpoints) {
-      try {
-        const payload = await fetchJsonWithTimeout(withCacheBust(endpoint), { cache: 'no-store' }, 12000);
-        const found = unwrapGames(payload);
-        if (found.length) games = games.concat(found);
-      } catch (err) {
-        sourceErrors.push(`${endpoint}: ${err.message}`);
-      }
+    let freshData = null;
+    try {
+      freshData = await fetchJsonWithTimeout(`worldcup-data.json?ts=${Date.now()}`, { cache: 'no-store' }, 12000);
+    } catch (err) {
+      if (manual) toast('Live refresh failed: could not load worldcup-data.json — ' + err.message);
+      else console.warn('Browser live refresh: could not fetch worldcup-data.json:', err);
+      renderDataStatus();
+      return 0;
     }
-    if (!games.length) throw new Error(sourceErrors.length ? sourceErrors.join(' | ') : 'No live data returned.');
+    if (!freshData?.matches?.length) {
+      if (manual) toast('Live refresh: worldcup-data.json returned no match data.');
+      return 0;
+    }
+    // Compare fresh JSON to current in-memory data and apply any changes
     let changed = 0;
     const changes = [];
-    games.map(normalizeExternalGame).forEach(g => {
-      if (!g.home || !g.away) return;
-      let target = WC_DATA.matches.find(m => (canonical(m.home) === g.home && canonical(m.away) === g.away) || (canonical(m.home) === g.away && canonical(m.away) === g.home));
-      if (!target && g.n) target = WC_DATA.matches.find(m => Number(m.number) === Number(g.n));
-      if (!target) return;
-      const reversed = canonical(target.home) === g.away && canonical(target.away) === g.home;
-      const newHomeScore = reversed ? g.as : g.hs;
-      const newAwayScore = reversed ? g.hs : g.as;
-      const newHomePen = reversed ? g.ap : g.hp;
-      const newAwayPen = reversed ? g.hp : g.ap;
-      const updates = {};
-      if (!isCountry(target.home) && isCountry(reversed ? g.away : g.home)) updates.home = reversed ? g.away : g.home;
-      if (!isCountry(target.away) && isCountry(reversed ? g.home : g.away)) updates.away = reversed ? g.home : g.away;
-      if (newHomeScore != null && newAwayScore != null && !Number.isNaN(newHomeScore) && !Number.isNaN(newAwayScore)) {
-        updates.homeScore = newHomeScore; updates.awayScore = newAwayScore; updates.status = inferExternalStatus(g, target); updates.resultSource = g.source || 'live source';
-      } else if (g.status === 'live' && target.status !== 'final') { updates.status = 'live'; updates.resultSource = g.source || 'live source'; }
-      if (newHomePen != null && !Number.isNaN(newHomePen)) updates.homePenalties = newHomePen;
-      if (newAwayPen != null && !Number.isNaN(newAwayPen)) updates.awayPenalties = newAwayPen;
+    const freshByNumber = new Map((freshData.matches || []).map(m => [Number(m.number), m]));
+    WC_DATA.matches.forEach(target => {
+      const fresh = freshByNumber.get(Number(target.number));
+      if (!fresh) return;
+      const fields = ['homeScore','awayScore','homePenalties','awayPenalties','status','home','away','resultSource'];
       const before = `${displayTeamName(target.home)} ${target.homeScore ?? '—'}-${target.awayScore ?? '—'} ${displayTeamName(target.away)} (${target.status})`;
-      Object.entries(updates).forEach(([key, value]) => { if (target[key] !== value) { target[key] = value; changed++; } });
-      if (Object.keys(updates).length) {
-        const after = `${displayTeamName(target.home)} ${target.homeScore ?? '—'}-${target.awayScore ?? '—'} ${displayTeamName(target.away)} (${target.status})`;
-        if (before !== after) changes.push({ time: new Date().toLocaleString('en-US', { timeZone:'America/Los_Angeles', dateStyle:'medium', timeStyle:'short' }) + ' PDT', text: `M${target.number}: ${after}` });
-      }
+      fields.forEach(key => {
+        if (fresh[key] !== undefined && target[key] !== fresh[key]) { target[key] = fresh[key]; changed++; }
+      });
+      const after = `${displayTeamName(target.home)} ${target.homeScore ?? '—'}-${target.awayScore ?? '—'} ${displayTeamName(target.away)} (${target.status})`;
+      if (before !== after) changes.push({ time: new Date().toLocaleString('en-US', { timeZone:'America/Los_Angeles', dateStyle:'medium', timeStyle:'short' }) + ' PDT', text: `M${target.number}: ${after}` });
+    });
+    // Also sync top-level metadata from fresh JSON
+    ['lastUpdated','lastSuccessfulUpdate','recentChanges','validation'].forEach(key => {
+      if (freshData[key] !== undefined) WC_DATA[key] = freshData[key];
     });
     if (changed || manual) {
-      WC_DATA.lastUpdated = `Browser live refresh: ${new Date().toLocaleString('en-US', { timeZone:'America/Los_Angeles', dateStyle:'medium', timeStyle:'short' })} PDT`;
+      WC_DATA.lastUpdated = changed
+        ? `Browser sync: ${new Date().toLocaleString('en-US', { timeZone:'America/Los_Angeles', dateStyle:'medium', timeStyle:'short' })} PDT (${changed} field${changed === 1 ? '' : 's'} updated)`
+        : WC_DATA.lastUpdated;
       WC_DATA.snapshotDate = firstMatchDateOnOrAfter(snapshotBaseDate(new Date()), WC_DATA.matches);
-      WC_DATA.recentChanges = [...changes, ...(WC_DATA.recentChanges || [])].slice(0, 20);
+      if (changes.length) WC_DATA.recentChanges = [...changes, ...(WC_DATA.recentChanges || [])].slice(0, 20);
       renderAll();
     } else renderDataStatus();
-    if (manual) toast(changed ? `Live refresh complete: ${changed} field update${changed === 1 ? '' : 's'} applied.` : 'Live refresh reached the API, but no score changes were detected.');
-    else if (changed && !silent) toast(`Live score update: ${changed} field change${changed === 1 ? '' : 's'} applied.`);
+    if (manual) toast(changed ? `Live refresh: ${changed} score/status update${changed === 1 ? '' : 's'} applied from server.` : 'Live refresh: data is already up to date.');
+    else if (changed && !silent) toast(`Score update: ${changed} change${changed === 1 ? '' : 's'} synced from server.`);
     return changed;
   }
+
+  // Determines whether the browser should actively poll for score updates right now.
+  // We poll any time we are within a broad tournament match window — not just when a match
+  // is actively in its kickoff window. This ensures the page stays live during game days.
+  function isTournamentActive(now = new Date()) {
+    if (isPastStaticCutoff(now)) return false;
+    const matches = WC_DATA?.matches || [];
+    if (!matches.length) return false;
+    // Poll if any match today (PDT) is scheduled or live, or was played today
+    const todayKey = todayKeyPT(now);
+    const todayMatches = matches.filter(m => m.pdt?.date === todayKey);
+    if (todayMatches.length) return true;
+    // Also poll if there are any currently-active match windows (15 min before to 900+ min after kickoff)
+    return matches.some(m => isInLiveWindow(m, now));
+  }
+
   function setupBrowserLivePolling() {
     if (!WC_DATA) return;
     const intervalMs = (WC_DATA.liveRefresh?.browserPollSeconds || 60) * 1000;
     async function tick() {
       renderDataStatus();
       if (isPastStaticCutoff()) { if (browserLiveTimer) clearInterval(browserLiveTimer); browserLiveTimer = null; return; }
-      if (!activeMatchesForNow().length) return;
+      // Poll every 60s on any day that has matches scheduled — this keeps scores synced
+      // from worldcup-data.json which GitHub Actions updates every ~10 min during games.
+      if (!isTournamentActive()) return;
       try { await tryLiveRefresh(false, true); } catch (err) { console.warn('Browser live refresh failed:', err); }
     }
     tick();
