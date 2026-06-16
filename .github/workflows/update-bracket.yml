@@ -10,7 +10,7 @@ on:
         default: true
   schedule:
     # Daily snapshot refresh at 10:30 PM PDT, plus retry runs at 10:35 and 10:45 PM PDT.
-    # GitHub cron uses UTC. 05:30/05:35/05:45 UTC = 10:30/10:35/10:45 PM PDT.
+    # GitHub cron uses UTC. During PDT (UTC-7): 05:30/05:35/05:45 UTC = 10:30/10:35/10:45 PM PDT.
     - cron: "30 5 11-30 6 *"
     - cron: "35 5 11-30 6 *"
     - cron: "45 5 11-30 6 *"
@@ -18,12 +18,16 @@ on:
     - cron: "35 5 1-20 7 *"
     - cron: "45 5 1-20 7 *"
 
-    # During-match score polling, about every 10 minutes during broad match windows.
-    # Offset minutes avoid the top of the hour. Dates are in UTC.
+    # During-match score polling — every 10 minutes across the full PDT match day window.
+    # PDT match hours: ~9 AM PDT (16:00 UTC) through ~1 AM PDT next day (08:00 UTC).
+    # We split into two UTC hour bands to cover the full window without gaps:
+    #   Band A: UTC hours 14-23 (= 7 AM–4 PM PDT)  — morning and afternoon games
+    #   Band B: UTC hours 0-8  (= 5 PM–1 AM PDT)   — evening games and post-game final scores
+    # This fixes the previous gap at UTC 7-8 (= midnight-1am PDT) where late game scores were missed.
     - cron: "7/10 14-23 11-30 6 *"
-    - cron: "7/10 0-6 12-30 6 *"
+    - cron: "7/10 0-8 12-30 6 *"
     - cron: "7/10 14-23 1-19 7 *"
-    - cron: "7/10 0-6 1-20 7 *"
+    - cron: "7/10 0-8 2-20 7 *"
     - cron: "7/10 14-18 20 7 *"
 
 permissions:
@@ -93,7 +97,3 @@ jobs:
         with:
           path: "_site"
 
-      - name: Deploy to GitHub Pages
-        if: steps.refresh.outputs.changed == 'true' || (github.event_name == 'workflow_dispatch' && inputs.force_deploy == true)
-        id: deployment
-        uses: actions/deploy-pages@v4
