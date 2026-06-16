@@ -1,8 +1,6 @@
 name: Update and publish World Cup bracket
 
 on:
-  push:
-    branches: [main]
   workflow_dispatch:
     inputs:
       force_deploy:
@@ -10,24 +8,45 @@ on:
         required: false
         type: boolean
         default: true
+      force_fetch:
+        description: "Try the live score API even outside match windows"
+        required: false
+        type: boolean
+        default: true
+  push:
+    branches: ["main"]
+    paths:
+      - "index.html"
+      - "styles.css"
+      - "app.js"
+      - "worldcup-data.json"
+      - "update_data.py"
+      - ".github/workflows/update-bracket.yml"
+      - ".nojekyll"
   schedule:
-    # 10:30 PM, 10:35 PM, and 10:45 PM PDT during the tournament.
-    # GitHub cron is UTC by default; 05:30 UTC = 10:30 PM PDT.
-    # Backup runs help because scheduled GitHub Actions can be delayed or dropped.
+    # 10:30 PM PDT daily snapshot update, plus 10:35 and 10:45 PM retries.
+    # GitHub cron is UTC. 05:30 UTC = 10:30 PM PDT during June/July.
     - cron: "30,35,45 5 11-30 6 *"
     - cron: "30,35,45 5 1-20 7 *"
 
-    # Match-window polling about every 10 minutes during normal World Cup match hours.
-    # These are UTC ranges covering morning through late evening PDT.
+    # Match-window score polling, about every 10 minutes during broad tournament hours.
+    # Offset minutes avoid the top of the hour, where GitHub scheduled jobs are more likely to be delayed.
     - cron: "7/10 14-23 11-30 6 *"
-    - cron: "7/10 0-7 12-30 6 *"
+    - cron: "7/10 0-8 12-30 6 *"
     - cron: "7/10 14-23 1-19 7 *"
-    - cron: "7/10 0-7 1-20 7 *"
+    - cron: "7/10 0-8 1-20 7 *"
+    # A few last checks until the July 20, 2026 noon PDT static cutoff.
+    - cron: "7/10 14-19 20 7 *"
 
 permissions:
   contents: write
   pages: write
   id-token: write
+
+env:
+  WC_STATIC_AFTER_PT: "2026-07-20T12:00:00-07:00"
+  WC_GROUP_WINDOW_MINUTES: "390"
+  WC_KNOCKOUT_WINDOW_MINUTES: "510"
 
 concurrency:
   group: github-pages
@@ -39,11 +58,6 @@ jobs:
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
-    env:
-      WC_LIVE_START_MINUTES_BEFORE: "20"
-      WC_GROUP_WINDOW_MINUTES: "420"
-      WC_KNOCKOUT_WINDOW_MINUTES: "480"
-      WC_STATIC_AFTER_PT: "2026-07-20T12:00:00-07:00"
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -54,9 +68,15 @@ jobs:
           python-version: "3.11"
 
       - name: Refresh World Cup data
-        run: python3 update_data.py
+        id: refresh
+        run: |
+          if [[ "${{ github.event_name }}" == "workflow_dispatch" && "${{ inputs.force_fetch }}" == "true" ]]; then
+            python3 update_data.py --force-fetch
+          else
+            python3 update_data.py
+          fi
 
-      - name: Check whether data changed
+      - name: Check whether published data changed
         id: changes
         run: |
           if git diff --quiet -- worldcup-data.json; then
@@ -76,8 +96,21 @@ jobs:
           git commit -m "Update World Cup bracket data"
           git push
 
+      - name: Decide whether to deploy
+        id: deploy_decision
+        run: |
+          if [[ "${{ steps.changes.outputs.changed }}" == "true" ]]; then
+            echo "deploy=true" >> "$GITHUB_OUTPUT"
+          elif [[ "${{ github.event_name }}" == "workflow_dispatch" && "${{ inputs.force_deploy }}" == "true" ]]; then
+            echo "deploy=true" >> "$GITHUB_OUTPUT"
+          elif [[ "${{ github.event_name }}" == "push" ]]; then
+            echo "deploy=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "deploy=false" >> "$GITHUB_OUTPUT"
+          fi
+
       - name: Prepare site files
-        if: steps.changes.outputs.changed == 'true' || github.event_name == 'push' || github.event_name == 'workflow_dispatch'
+        if: steps.deploy_decision.outputs.deploy == 'true'
         run: |
           mkdir -p _site
           cp index.html styles.css app.js worldcup-data.json _site/
@@ -86,7 +119,7 @@ jobs:
           find _site -maxdepth 1 -type f -printf "%f\n" | sort
 
       - name: Verify required website files
-        if: steps.changes.outputs.changed == 'true' || github.event_name == 'push' || github.event_name == 'workflow_dispatch'
+        if: steps.deploy_decision.outputs.deploy == 'true'
         run: |
           test -s _site/index.html
           test -s _site/styles.css
@@ -94,16 +127,16 @@ jobs:
           test -s _site/worldcup-data.json
 
       - name: Configure GitHub Pages
-        if: steps.changes.outputs.changed == 'true' || github.event_name == 'push' || github.event_name == 'workflow_dispatch'
+        if: steps.deploy_decision.outputs.deploy == 'true'
         uses: actions/configure-pages@v5
 
       - name: Upload site files
-        if: steps.changes.outputs.changed == 'true' || github.event_name == 'push' || github.event_name == 'workflow_dispatch'
-        uses: actions/upload-pages-artifact@v3
+        if: steps.deploy_decision.outputs.deploy == 'true'
+        uses: actions/upload-pages-artifact@v4
         with:
           path: "_site"
 
       - name: Deploy to GitHub Pages
-        if: steps.changes.outputs.changed == 'true' || github.event_name == 'push' || github.event_name == 'workflow_dispatch'
+        if: steps.deploy_decision.outputs.deploy == 'true'
         id: deployment
         uses: actions/deploy-pages@v4
