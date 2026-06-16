@@ -1,7 +1,7 @@
 {
   "title": "FIFA World Cup 2026 Bracket Tracker",
-  "lastUpdated": "June 15, 2026 09:31 PM PDT",
-  "updateTarget": "Daily 10:30 PM PDT plus match-window polling and browser live refresh.",
+  "lastUpdated": "June 16, 2026 9:18 AM PDT",
+  "updateTarget": "Daily 10:30 PM PDT plus match-window live score checks",
   "apiEndpoint": "https://worldcup26.ir/get/games",
   "teams": {
     "Mexico": {
@@ -2155,16 +2155,27 @@
   ],
   "version": "2026.06.16-live-fix-v4",
   "staticAfter": "2026-07-20T12:00:00-07:00",
-  "snapshotRule": "Before 10:30 PM PDT, the browser shows the current PDT matchday. At/after 10:30 PM PDT, it shows the next PDT matchday, even if GitHub Actions is late.",
-  "lastUpdateIso": "2026-06-15T21:31:00-07:00",
-  "updateReason": "Seed data packaged with live-update client and Actions fixes.",
-  "changesSinceLastUpdate": [],
+  "snapshotRule": "Before 10:30 PM PDT, show today's PDT matchday. At or after 10:30 PM PDT, show the next PDT matchday. The browser also enforces this rule locally.",
+  "lastUpdateIso": "2026-06-16T09:18:05.926772-07:00",
+  "updateReason": "snapshot rollover",
+  "changesSinceLastUpdate": [
+    {
+      "time": "Jun 16, 2026 9:18 AM PDT",
+      "text": "Daily snapshot moved to 2026-06-16."
+    }
+  ],
   "automation": {
     "nightlyUpdate": "10:30 PM PDT, with retry schedules at 10:35 PM and 10:45 PM PDT",
-    "matchWindowPolling": "GitHub Actions polls about every 10 minutes during match windows and extended post-match windows.",
-    "browserRefresh": "The browser checks every 60 seconds during active/recent match windows and also re-renders the 10:30 PM snapshot rule locally.",
-    "deployRule": "The workflow deploys only when worldcup-data.json changes, except manual runs can force a deployment.",
+    "matchWindowPolling": "GitHub Actions polls about every 10 minutes during extended active/recent match windows.",
+    "browserRefresh": "The browser attempts a direct live API refresh every 60 seconds during active/recent match windows, then falls back to the published worldcup-data.json.",
+    "deployRule": "Scheduled workflow runs deploy only when worldcup-data.json changes. Manual workflow runs can force a deployment.",
     "staticCutoff": "2026-07-20T12:00:00-07:00"
   },
-  "snapshotDate": "2026-06-15"
+  "snapshotDate": "2026-06-16",
+  "validation": {
+    "ok": true,
+    "errors": [],
+    "warnings": [],
+    "checkedBy": "update_data.py validation"
+  }
 }
