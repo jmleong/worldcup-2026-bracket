@@ -1,12 +1,16 @@
 #!/usr/bin/env python3
-"""Refresh World Cup 2026 bracket data for GitHub Pages.
+"""Refresh World Cup 2026 bracket data.
 
-This updater intentionally separates two things:
-1. The nightly snapshot date, which moves to the next PDT matchday at/after 10:30 PM PDT.
-2. Score/status updates, which are fetched during extended match windows.
+Modes:
+  manual     Always try the API and update changed scores/statuses/teams.
+  daily      Try the API and roll the snapshot to the correct PDT matchday.
+  live       Only try the API during match windows.
+  scheduled  Used by GitHub Actions; daily cron entries become daily mode, all
+             other cron entries become live mode.
 
-It writes worldcup-data.json only when something actually changes so scheduled runs do not
-redeploy the site unnecessarily.
+The script writes worldcup-data.json only when something actually changes. It
+also validates the data before publishing and emits GitHub Actions outputs when
+GITHUB_OUTPUT is available.
 """
 from __future__ import annotations
 
@@ -24,21 +28,17 @@ from zoneinfo import ZoneInfo
 DATA_PATH = Path(__file__).with_name("worldcup-data.json")
 API_URL = os.environ.get("WORLD_CUP_API_URL", "https://worldcup26.ir/get/games")
 PT = ZoneInfo("America/Los_Angeles")
-STATIC_AFTER_PT = "2026-07-20T12:00:00-07:00"
+DAILY_CRON_PREFIXES = ("30 5", "35 5", "45 5")
+DEFAULT_STATIC_HOURS_AFTER_LAST_KICKOFF = 24
 LIVE_START_MINUTES_BEFORE = int(os.environ.get("WC_LIVE_START_MINUTES_BEFORE", "15"))
-GROUP_WINDOW_MINUTES = int(os.environ.get("WC_GROUP_WINDOW_MINUTES", "390"))
-KNOCKOUT_WINDOW_MINUTES = int(os.environ.get("WC_KNOCKOUT_WINDOW_MINUTES", "510"))
+GROUP_WINDOW_MINUTES = int(os.environ.get("WC_GROUP_WINDOW_MINUTES", "210"))
+KNOCKOUT_WINDOW_MINUTES = int(os.environ.get("WC_KNOCKOUT_WINDOW_MINUTES", "330"))
 
 TEAM_ALIASES = {
-    "United States": "USA", "USMNT": "USA", "South Korea": "Korea Republic",
-    "Iran": "IR Iran", "IR Iran": "IR Iran", "Cape Verde": "Cabo Verde",
-    "Czech Republic": "Czechia", "Cote d'Ivoire": "Côte d'Ivoire", "Côte d’Ivoire": "Côte d'Ivoire",
+    "United States": "USA", "USMNT": "USA", "South Korea": "Korea Republic", "Iran": "IR Iran", "IR Iran": "IR Iran",
+    "Cape Verde": "Cabo Verde", "Czech Republic": "Czechia", "Cote d'Ivoire": "Côte d'Ivoire", "Côte d’Ivoire": "Côte d'Ivoire",
     "Ivory Coast": "Côte d'Ivoire", "Curacao": "Curaçao", "Turkiye": "Türkiye", "Turkey": "Türkiye",
     "Democratic Republic of Congo": "Congo DR", "DR Congo": "Congo DR", "DRC": "Congo DR",
-}
-
-FLAG_CODES = {
-    'Mexico':'mx','South Africa':'za','Korea Republic':'kr','Czechia':'cz','Canada':'ca','Bosnia and Herzegovina':'ba','Qatar':'qa','Switzerland':'ch','Brazil':'br','Morocco':'ma','Haiti':'ht','Scotland':'gb-sct','USA':'us','Paraguay':'py','Australia':'au','Türkiye':'tr','Germany':'de','Curaçao':'cw',"Côte d'Ivoire":'ci','Ecuador':'ec','Netherlands':'nl','Japan':'jp','Sweden':'se','Tunisia':'tn','Belgium':'be','Egypt':'eg','IR Iran':'ir','New Zealand':'nz','Spain':'es','Cabo Verde':'cv','Saudi Arabia':'sa','Uruguay':'uy','France':'fr','Senegal':'sn','Iraq':'iq','Norway':'no','Argentina':'ar','Algeria':'dz','Austria':'at','Jordan':'jo','Portugal':'pt','Congo DR':'cd','Uzbekistan':'uz','Colombia':'co','England':'gb-eng','Croatia':'hr','Ghana':'gh','Panama':'pa'
 }
 
 
@@ -55,28 +55,6 @@ def emit(**values: object) -> None:
 def canonical(name: object) -> str:
     value = str(name or "").strip()
     return TEAM_ALIASES.get(value, value)
-
-
-def load_data() -> dict[str, Any]:
-    with DATA_PATH.open("r", encoding="utf-8") as fh:
-        return json.load(fh)
-
-
-def save_data(data: dict[str, Any]) -> None:
-    DATA_PATH.write_text(json.dumps(data, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
-
-
-def parse_pt(value: str) -> datetime:
-    return datetime.fromisoformat(value).astimezone(PT)
-
-
-def static_after(data: dict[str, Any]) -> datetime:
-    explicit = str(os.environ.get("WC_STATIC_AFTER_PT") or data.get("staticAfter") or STATIC_AFTER_PT)
-    return parse_pt(explicit)
-
-
-def is_static(data: dict[str, Any], now: datetime) -> bool:
-    return now >= static_after(data)
 
 
 def dig(obj: Any, paths: list[str]) -> Any:
@@ -103,9 +81,10 @@ def unwrap(payload: Any) -> list[dict[str, Any]]:
         value = payload.get(key)
         if isinstance(value, list):
             return [x for x in value if isinstance(x, dict)]
-        nested = unwrap(value)
-        if nested:
-            return nested
+        if isinstance(value, dict):
+            nested = unwrap(value)
+            if nested:
+                return nested
     return []
 
 
@@ -118,7 +97,14 @@ def to_int(value: Any) -> int | None:
         return None
 
 
-def normalize_game(game: dict[str, Any]) -> dict[str, Any]:
+def normalize(game: dict[str, Any]) -> dict[str, Any]:
+    number = to_int(dig(game, ["number", "matchNumber", "match_no", "gameNumber", "id", "match_id"]))
+    home = canonical(dig(game, ["home.name_en", "home.name", "homeTeam.name", "home_team.name", "team1.name", "homeTeam", "home_team", "home", "team1"]))
+    away = canonical(dig(game, ["away.name_en", "away.name", "awayTeam.name", "away_team.name", "team2.name", "awayTeam", "away_team", "away", "team2"]))
+    home_score = to_int(dig(game, ["homeScore", "home_score", "score.home", "home.score", "goalsHome", "team1_score", "score1"]))
+    away_score = to_int(dig(game, ["awayScore", "away_score", "score.away", "away.score", "goalsAway", "team2_score", "score2"]))
+    home_pen = to_int(dig(game, ["homePenalties", "home_penalties", "penalties.home", "home.penalties", "penalty.home", "score.penalties.home"]))
+    away_pen = to_int(dig(game, ["awayPenalties", "away_penalties", "penalties.away", "away.penalties", "penalty.away", "score.penalties.away"]))
     status_raw = str(dig(game, ["status", "match_status", "state", "status.short", "status.long"]) or "").lower()
     if any(word in status_raw for word in ("finish", "final", "complete", "full time")) or status_raw in {"ft", "aet", "pen"}:
         status = "final"
@@ -126,65 +112,68 @@ def normalize_game(game: dict[str, Any]) -> dict[str, Any]:
         status = "live"
     else:
         status = "scheduled"
-    return {
-        "number": to_int(dig(game, ["number", "matchNumber", "match_no", "gameNumber", "id", "match_id"])),
-        "home": canonical(dig(game, ["home.name_en", "home.name", "homeTeam.name", "home_team.name", "team1.name", "homeTeam", "home_team", "home", "team1"])),
-        "away": canonical(dig(game, ["away.name_en", "away.name", "awayTeam.name", "away_team.name", "team2.name", "awayTeam", "away_team", "away", "team2"])),
-        "homeScore": to_int(dig(game, ["homeScore", "home_score", "score.home", "home.score", "goalsHome", "team1_score", "score1"])),
-        "awayScore": to_int(dig(game, ["awayScore", "away_score", "score.away", "away.score", "goalsAway", "team2_score", "score2"])),
-        "homePenalties": to_int(dig(game, ["homePenalties", "home_penalties", "penalties.home", "home.penalties", "score.penalties.home"])),
-        "awayPenalties": to_int(dig(game, ["awayPenalties", "away_penalties", "penalties.away", "away.penalties", "score.penalties.away"])),
-        "status": status,
-    }
+    return {"number": number, "home": home, "away": away, "homeScore": home_score, "awayScore": away_score, "homePenalties": home_pen, "awayPenalties": away_pen, "status": status}
 
 
-def fetch_games() -> list[dict[str, Any]]:
-    request = urllib.request.Request(API_URL, headers={"User-Agent": "wc2026-bracket-updater/4.0"})
-    with urllib.request.urlopen(request, timeout=35) as response:
-        payload = json.loads(response.read().decode("utf-8"))
-    return [normalize_game(game) for game in unwrap(payload)]
+def parse_pt(value: str) -> datetime:
+    return datetime.fromisoformat(value).astimezone(PT)
+
+
+def latest_match_start(data: dict[str, Any]) -> datetime | None:
+    starts: list[datetime] = []
+    for match in data.get("matches", []):
+        iso = (match.get("pdt") or {}).get("iso")
+        if iso:
+            try:
+                starts.append(parse_pt(iso))
+            except Exception:
+                pass
+    return max(starts) if starts else None
+
+
+def static_after(data: dict[str, Any]) -> datetime | None:
+    explicit = os.environ.get("WC_STATIC_AFTER_PT") or data.get("staticAfter")
+    if explicit:
+        try:
+            return parse_pt(str(explicit))
+        except Exception:
+            pass
+    last_start = latest_match_start(data)
+    if not last_start:
+        return None
+    hours = int(os.environ.get("WC_STATIC_AFTER_HOURS", str(DEFAULT_STATIC_HOURS_AFTER_LAST_KICKOFF)))
+    return last_start + timedelta(hours=hours)
+
+
+def is_static(data: dict[str, Any], now: datetime) -> bool:
+    cutoff = static_after(data)
+    return bool(cutoff and now >= cutoff)
 
 
 def match_window_minutes(match: dict[str, Any]) -> int:
     return GROUP_WINDOW_MINUTES if str(match.get("stage") or "") == "Group Stage" else KNOCKOUT_WINDOW_MINUTES
 
 
-def match_start(match: dict[str, Any]) -> datetime | None:
-    iso = (match.get("pdt") or {}).get("iso")
-    if not iso:
-        return None
-    try:
-        return parse_pt(str(iso))
-    except Exception:
-        return None
-
-
 def active_match_windows(data: dict[str, Any], now: datetime) -> list[dict[str, Any]]:
     active: list[dict[str, Any]] = []
     for match in data.get("matches", []):
-        start = match_start(match)
-        if not start:
+        iso = (match.get("pdt") or {}).get("iso")
+        if not iso:
+            continue
+        try:
+            start = parse_pt(iso)
+        except Exception:
             continue
         if start - timedelta(minutes=LIVE_START_MINUTES_BEFORE) <= now <= start + timedelta(minutes=match_window_minutes(match)):
             active.append(match)
     return active
 
 
-def in_daily_rollover_window(now: datetime) -> bool:
-    return (now.hour == 22 and now.minute >= 25) or (now.hour == 23 and now.minute <= 15)
-
-
-def match_dates(data: dict[str, Any]) -> list[str]:
-    return sorted({str((match.get("pdt") or {}).get("date")) for match in data.get("matches", []) if (match.get("pdt") or {}).get("date")})
-
-
-def compute_snapshot_date(data: dict[str, Any], now: datetime) -> str | None:
-    base = now.date()
-    if now.hour > 22 or (now.hour == 22 and now.minute >= 30):
-        base += timedelta(days=1)
-    target_key = base.isoformat()
-    dates = match_dates(data)
-    return next((date for date in dates if date >= target_key), dates[-1] if dates else None)
+def fetch_games() -> list[dict[str, Any]]:
+    request = urllib.request.Request(API_URL, headers={"User-Agent": "wc2026-bracket-updater/3.0"})
+    with urllib.request.urlopen(request, timeout=30) as response:
+        payload = json.loads(response.read().decode("utf-8"))
+    return [normalize(game) for game in unwrap(payload)]
 
 
 def is_real_team(data: dict[str, Any], name: object) -> bool:
@@ -217,29 +206,30 @@ def find_match(data: dict[str, Any], game: dict[str, Any]) -> tuple[dict[str, An
 def infer_status(api_status: str, target: dict[str, Any], now: datetime) -> str:
     if api_status in {"final", "live"}:
         return api_status
-    start = match_start(target)
-    if not start:
-        return "scheduled"
-    if now < start:
-        return "scheduled"
-    if now <= start + timedelta(minutes=match_window_minutes(target)):
-        return "live"
+    iso = (target.get("pdt") or {}).get("iso")
+    if iso:
+        try:
+            start = parse_pt(iso)
+            if now <= start + timedelta(minutes=match_window_minutes(target)):
+                return "live"
+        except Exception:
+            pass
     return "final"
 
 
 def score_line(match: dict[str, Any]) -> str:
     hs = match.get("homeScore", "—")
-    away_score = match.get("awayScore", "—")
+    as_ = match.get("awayScore", "—")
     hp = match.get("homePenalties")
     ap = match.get("awayPenalties")
     if hp is not None and ap is not None:
-        return f"{match.get('home')} {hs} ({hp})-{away_score} ({ap}) {match.get('away')}"
-    return f"{match.get('home')} {hs}-{away_score} {match.get('away')}"
+        return f"{match.get('home')} {hs} ({hp})-{as_} ({ap}) {match.get('away')}"
+    return f"{match.get('home')} {hs}-{as_} {match.get('away')}"
 
 
 def apply_games(data: dict[str, Any], games: list[dict[str, Any]], now: datetime) -> tuple[int, list[dict[str, str]]]:
     changed = 0
-    records: list[dict[str, str]] = []
+    change_records: list[dict[str, str]] = []
     for game in games:
         if not game.get("home") or not game.get("away"):
             continue
@@ -258,13 +248,10 @@ def apply_games(data: dict[str, Any], games: list[dict[str, Any]], now: datetime
         new_away_score = game.get("homeScore") if reversed_pair else game.get("awayScore")
         new_home_pen = game.get("awayPenalties") if reversed_pair else game.get("homePenalties")
         new_away_pen = game.get("homePenalties") if reversed_pair else game.get("awayPenalties")
-        inferred_status = infer_status(str(game.get("status") or "scheduled"), target, now)
-        start = match_start(target)
-        may_apply_score = inferred_status in {"live", "final"} or (start is not None and now >= start)
-        if new_home_score is not None and new_away_score is not None and may_apply_score:
+        if new_home_score is not None and new_away_score is not None:
             updates["homeScore"] = new_home_score
             updates["awayScore"] = new_away_score
-            updates["status"] = inferred_status
+            updates["status"] = infer_status(str(game.get("status") or "scheduled"), target, now)
         elif game.get("status") == "live" and target.get("status") != "final":
             updates["status"] = "live"
         if new_home_pen is not None:
@@ -276,11 +263,26 @@ def apply_games(data: dict[str, Any], games: list[dict[str, Any]], now: datetime
                 target[key] = value
                 changed += 1
         if before != target:
-            records.append({
-                "time": now.strftime("%b %-d, %Y %-I:%M %p PDT"),
-                "text": f"M{target.get('number')}: {score_line(target)} ({target.get('status', 'scheduled')})",
-            })
-    return changed, records
+            text = f"M{target.get('number')}: {score_line(target)} ({target.get('status', 'scheduled')})"
+            if before.get("home") != target.get("home") or before.get("away") != target.get("away"):
+                text += " — teams filled from live source"
+            change_records.append({"time": now.strftime("%b %-d, %Y %-I:%M %p PDT"), "text": text})
+    return changed, change_records
+
+
+def match_dates(data: dict[str, Any]) -> list[str]:
+    return sorted({str((match.get("pdt") or {}).get("date")) for match in data.get("matches", []) if (match.get("pdt") or {}).get("date")})
+
+
+def compute_snapshot_date(data: dict[str, Any], now: datetime) -> str | None:
+    base = now.date()
+    if now.hour > 22 or (now.hour == 22 and now.minute >= 30):
+        base += timedelta(days=1)
+    target_key = base.isoformat()
+    dates = match_dates(data)
+    if not dates:
+        return None
+    return next((date for date in dates if date >= target_key), dates[-1])
 
 
 def validate_data(data: dict[str, Any]) -> dict[str, Any]:
@@ -317,104 +319,83 @@ def validate_data(data: dict[str, Any]) -> dict[str, Any]:
     return {"ok": not errors, "errors": errors, "warnings": warnings, "checkedBy": "update_data.py validation"}
 
 
-def ensure_metadata(data: dict[str, Any]) -> None:
-    data.setdefault("title", "FIFA World Cup 2026 Bracket Tracker")
-    data["version"] = "2026.06.16-live-fix-v4"
-    data["apiEndpoint"] = API_URL
-    data["staticAfter"] = str(data.get("staticAfter") or STATIC_AFTER_PT)
-    data["updateTarget"] = "Daily 10:30 PM PDT plus match-window live score checks"
-    data["snapshotRule"] = "Before 10:30 PM PDT, show today's PDT matchday. At or after 10:30 PM PDT, show the next PDT matchday. The browser also enforces this rule locally."
-    data["automation"] = {
-        "nightlyUpdate": "10:30 PM PDT, with retry schedules at 10:35 PM and 10:45 PM PDT",
-        "matchWindowPolling": "GitHub Actions polls about every 10 minutes during extended active/recent match windows.",
-        "browserRefresh": "The browser attempts a direct live API refresh every 60 seconds during active/recent match windows, then falls back to the published worldcup-data.json.",
-        "deployRule": "Scheduled workflow runs deploy only when worldcup-data.json changes. Manual workflow runs can force a deployment.",
-        "staticCutoff": data["staticAfter"],
+def update_metadata(data: dict[str, Any], mode: str, now: datetime, score_changes: int, change_records: list[dict[str, str]]) -> int:
+    metadata_changes = 0
+    snapshot = compute_snapshot_date(data, now)
+    fields: dict[str, Any] = {
+        "apiEndpoint": API_URL,
+        "updateTarget": "Daily 10:30 PM PDT plus during-match live score checks",
+        "snapshotRule": "Before 10:30 PM PDT, show today's matchday; after 10:30 PM PDT, show the next PDT matchday. After the final matchday, keep the final matchday as the snapshot.",
+        "staticAfter": (static_after(data) or datetime(2026, 7, 20, 12, 0, tzinfo=PT)).isoformat(),
+        "liveRefreshRule": "GitHub Actions checks during match windows; open browsers check live scores every 60 seconds during active match windows. Both stop after staticAfter.",
+        "validation": validate_data(data),
     }
-    for name, info in (data.get("teams") or {}).items():
-        if isinstance(info, dict) and not info.get("flagCode") and FLAG_CODES.get(name):
-            info["flagCode"] = FLAG_CODES[name]
+    if snapshot:
+        fields["snapshotDate"] = snapshot
+    if change_records:
+        existing = data.get("recentChanges") or []
+        fields["recentChanges"] = (change_records + existing)[:20]
+    if score_changes or mode in {"daily", "manual"}:
+        now_text = now.strftime("%B ") + str(now.day) + now.strftime(", %Y %I:%M %p PDT")
+        fields["lastUpdated"] = f"Automated {mode} refresh: {now_text}"
+        fields["lastSuccessfulUpdate"] = now_text
+    for key, value in fields.items():
+        if data.get(key) != value:
+            data[key] = value
+            metadata_changes += 1
+    return metadata_changes
 
 
-def update_metadata(data: dict[str, Any], now: datetime, reason: str, records: list[dict[str, str]]) -> None:
-    data["lastUpdated"] = now.strftime("%B %-d, %Y %-I:%M %p PDT")
-    data["lastUpdateIso"] = now.isoformat()
-    data["updateReason"] = reason
-    existing = data.get("changesSinceLastUpdate") or []
-    data["changesSinceLastUpdate"] = (records + existing)[:25]
-    data["validation"] = validate_data(data)
+def choose_mode(arg_mode: str) -> str:
+    if arg_mode != "scheduled":
+        return arg_mode
+    schedule = os.environ.get("GITHUB_EVENT_SCHEDULE", "").strip()
+    if any(schedule.startswith(prefix) for prefix in DAILY_CRON_PREFIXES):
+        return "daily"
+    return "live"
 
 
 def main() -> int:
     parser = argparse.ArgumentParser()
-    parser.add_argument("--force-fetch", action="store_true", help="Fetch live API even outside match windows.")
-    parser.add_argument("--dry-run", action="store_true", help="Validate without writing.")
+    parser.add_argument("--mode", choices=["manual", "daily", "live", "scheduled"], default="manual")
     args = parser.parse_args()
-
-    data = load_data()
-    before = deepcopy(data)
+    if not DATA_PATH.exists():
+        print(f"Missing {DATA_PATH}", file=sys.stderr)
+        return 1
+    data = json.loads(DATA_PATH.read_text(encoding="utf-8"))
+    original = deepcopy(data)
     now = datetime.now(PT)
-    ensure_metadata(data)
-
+    mode = choose_mode(args.mode)
+    cutoff = static_after(data)
     if is_static(data, now):
-        if not data.get("automationStopped"):
-            data["automationStopped"] = True
-            data["automationStoppedAt"] = now.isoformat()
-            update_metadata(data, now, "Final static cutoff reached; scheduled refreshes stopped.", [])
-        changed = data != before
-        if changed and not args.dry_run:
-            save_data(data)
-        emit(data_changed=changed, fetched=False, static=True, snapshot=data.get("snapshotDate", ""))
-        print("Static cutoff has passed; no live fetch attempted.")
+        print(f"Static cutoff reached ({cutoff.isoformat() if cutoff else 'unknown'}). No refresh attempted.")
+        emit(changed=False, should_deploy=False, fetched=False, mode=mode, reason="static-cutoff")
         return 0
-
-    records: list[dict[str, str]] = []
-    fetched = False
-    fetch_error = ""
-    old_snapshot = data.get("snapshotDate")
-    new_snapshot = compute_snapshot_date(data, now)
-    if new_snapshot and new_snapshot != old_snapshot:
-        data["snapshotDate"] = new_snapshot
-        records.append({"time": now.strftime("%b %-d, %Y %-I:%M %p PDT"), "text": f"Daily snapshot moved to {new_snapshot}."})
-
     active = active_match_windows(data, now)
-    should_fetch = args.force_fetch or bool(active) or in_daily_rollover_window(now)
+    should_fetch = mode in {"manual", "daily"} or bool(active)
+    if mode == "live" and not active:
+        print("No active or recently active match window. No refresh attempted.")
+        emit(changed=False, should_deploy=False, fetched=False, mode=mode, active_matches=0, reason="no-active-match-window")
+        return 0
     score_changes = 0
+    change_records: list[dict[str, str]] = []
     if should_fetch:
         try:
             games = fetch_games()
-            fetched = True
-            score_changes, api_records = apply_games(data, games, now)
-            records.extend(api_records)
         except Exception as exc:
-            fetch_error = str(exc)
-            print(f"Live API fetch skipped/failed safely: {fetch_error}", file=sys.stderr)
-
-    if records or data != before:
-        reason_bits = []
-        if new_snapshot != old_snapshot:
-            reason_bits.append("snapshot rollover")
-        if score_changes:
-            reason_bits.append(f"{score_changes} score/status fields changed")
-        if fetch_error:
-            reason_bits.append("API unavailable; metadata/snapshot only")
-        update_metadata(data, now, "; ".join(reason_bits) or "metadata refresh", records)
+            print(f"API refresh skipped because the data source could not be reached: {exc}", file=sys.stderr)
+            emit(changed=False, should_deploy=False, fetched=False, mode=mode, reason="api-error")
+            return 0
+        score_changes, change_records = apply_games(data, games, now)
+        print(f"Fetched {len(games)} API game records from {API_URL}")
+    metadata_changes = update_metadata(data, mode, now, score_changes, change_records)
+    file_changed = data != original
+    if file_changed:
+        DATA_PATH.write_text(json.dumps(data, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+        print(f"worldcup-data.json changed: {score_changes} score/status/team field changes, {metadata_changes} metadata changes.")
     else:
-        # Keep validation current in memory, but do not write solely to update timestamps.
-        data["validation"] = validate_data(data)
-
-    changed = data != before
-    if changed and not args.dry_run:
-        save_data(data)
-    emit(data_changed=changed, fetched=fetched, static=False, snapshot=data.get("snapshotDate", ""), score_changes=score_changes)
-    print(json.dumps({
-        "changed": changed,
-        "fetched": fetched,
-        "active_windows": len(active),
-        "snapshot": data.get("snapshotDate"),
-        "score_changes": score_changes,
-        "fetch_error": fetch_error,
-    }, ensure_ascii=False))
+        print("worldcup-data.json unchanged.")
+    emit(changed=file_changed, should_deploy=file_changed, fetched=should_fetch, mode=mode, score_changes=score_changes, metadata_changes=metadata_changes, active_matches=len(active), reason="changed" if file_changed else "unchanged")
     return 0
 
 

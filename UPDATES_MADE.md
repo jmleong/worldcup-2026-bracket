@@ -1,43 +1,65 @@
-# Updates Made
+# Updates implemented
 
-## 20 HTML improvements implemented
+This package now implements the 20 previously suggested HTML improvements as working features, not merely as a roadmap.
 
-1. Daily snapshot is the main daily-view feature and shows every match for the active PDT matchday.
-2. All Matches is grouped by date and sorted by kickoff time.
-3. Quick filters were added: All, Today, Tomorrow, Next matchday, Upcoming only, Completed.
-4. Flags use image mappings with emoji fallback for all countries.
-5. Group standings show P, W, D, L, GF, GA, GD, Pts, and status.
-6. Best third-place qualifiers table was added.
-7. Automatic knockout advancement fills group winners/runners-up and knockout winners/losers when results are known.
-8. Bracket connector lines were added with CSS.
-9. Mobile layout was improved with round tabs and responsive bracket layout.
-10. Spoiler mode was added with a Hide scores / Show scores toggle.
-11. Team focus was added; clicking a country filters/selects that team.
-12. Venue view was added with a venue selector.
-13. Time display toggle was added for PDT, venue local time, and viewer local time.
-14. Code is split into `index.html`, `styles.css`, `app.js`, `worldcup-data.json`, and `update_data.py` in the GitHub package.
-15. Data reliability checks validate match count, duplicate numbers, dates, times, venues, scores, flags, and snapshot date.
-16. Update status box shows last update, snapshot, validation, PDT clock, active windows, deploy rule, and static cutoff.
-17. Changes since last update are recorded and displayed.
-18. Source display was cleaned up into source cards.
-19. Print-friendly buttons were added for full page, bracket, snapshot, and standings.
-20. Sharing features were added: copy snapshot, copy link, and download calendar for the snapshot matchday.
+## 20 implemented HTML improvements
 
-## 4 score-update behaviors implemented
+1. **Daily snapshot as the main daily-view feature** — the hero snapshot shows all matches for the selected PDT matchday.
+2. **All Matches grouped by date with sticky day headers** — each matchday is separated, sticky, and sorted by kickoff time.
+3. **Today, Tomorrow, Next Matchday, Upcoming, and Completed quick buttons** — quick filters are live in the All Matches section.
+4. **Reliable country flags** — flag image mappings, drawn England/Scotland flags, and emoji fallbacks are included.
+5. **Full group standings** — tables now include P, W, D, L, GF, GA, GD, Pts, and status.
+6. **Third-place qualifiers table** — the best third-place race is ranked separately.
+7. **Automatic knockout advancement** — group winners/runners-up fill after group completion; knockout winners/losers fill after final results; third-place placeholders resolve when clear.
+8. **True hourglass knockout bracket with connector lines** — the knockout section now has two branches on the left, two branches on the right, a center final, a third-place branch, and SVG bracket lines connecting each winner path.
+9. **Mobile bracket controls** — round tabs and responsive layouts make the bracket easier on phones.
+10. **Spoiler mode** — scores can be hidden or shown with a persistent toggle.
+11. **Team focus pages/filters** — clicking a country opens a team view with matches, record, and possible path.
+12. **Venue filter and venue view** — stadium cards and venue-specific match lists are included.
+13. **Time display toggle** — PDT, venue-local, and browser-local time modes are available.
+14. **Split code files** — the GitHub package now uses `index.html`, `styles.css`, `app.js`, and `worldcup-data.json`. A standalone bundled HTML is also included separately.
+15. **Update reliability checks** — `update_data.py` and the browser validate match counts, dates, venues, flags, scores, and snapshot date.
+16. **Update status box** — the page shows last update, snapshot, validation, next nightly update, active windows, deploy behavior, and static cutoff.
+17. **Changes since last update** — recent score/status/team-name updates are saved by the updater and displayed on the page.
+18. **Cleaner source display** — source cards are compact and show update context.
+19. **Print-friendly views** — full page, bracket-only, snapshot-only, and standings-only print modes are included.
+20. **Sharing features** — copy snapshot, copy page link, and calendar download actions are included.
 
-1. The 10:30 PM PDT daily update remains active, with 10:35 and 10:45 PM PDT retries.
-2. GitHub Actions match-window polling checks scores about every 10 minutes during broad active/recent match windows.
-3. Browser-side live refresh checks every 60 seconds during active/recent match windows and re-renders the snapshot locally around the 10:30 PM rollover.
-4. Scheduled workflow runs deploy only when `worldcup-data.json` changes. Manual workflow runs can force a deploy.
+## 4 score-update behaviors configured
 
-## Static cutoff implemented
+1. **Keep the 10:30 PM PDT daily update** — the nightly workflow rolls the snapshot forward and retries at 10:35 PM and 10:45 PM PDT to reduce GitHub schedule delays.
+2. **Match-window GitHub Actions polling** — scheduled polling checks for score/status updates during active match windows.
+3. **Browser-side live refresh every 60 seconds** — open pages poll during active match windows.
+4. **Only deploy when data changes** — scheduled runs publish only when `worldcup-data.json` actually changes.
 
-All scheduled/browser refresh behavior stops after:
+## Static cutoff
 
-```text
-2026-07-20T12:00:00-07:00
-```
+All automatic refresh behavior stops after `2026-07-20 12:00 PM PDT`, which is 24 hours after the scheduled July 19 final kickoff window. After that, the site remains static.
 
-## Bug fixed from the 10:34 PM issue
+## UX/UI correction pass requested after review
 
-The prior version preferred the saved JSON `snapshotDate`, so an old `snapshotDate` could keep the page stuck on Monday even after 10:30 PM PDT. This version calculates the snapshot from the browser's PDT clock first.
+Implemented these fixes in the live package:
+
+1. Daily snapshot cards now use a dedicated snapshot layout so both teams always show, including flags, score placeholders/scores, kickoff time, venue, and status.
+2. The global floating Team Focus dropdown was removed from the top controls.
+3. The Team Focus dropdown now lives inside the Team Focus tab/section.
+4. The Team Focus `All teams` option now clears the focused team and returns to the team grid.
+5. The match explorer now has section-local controls for Dates, Teams, Groups, Venue, Stage, Search, and quick filters.
+6. The team filter inside Match Explorer no longer changes the Team Focus section.
+7. The Venue section was merged into Match Explorer through the Venue dropdown/filter so the controls are local to the section they affect.
+8. Group standings were rebuilt with wider cards, fixed-width columns, shorter readable status badges, and horizontal protection so columns do not overlap.
+9. The hourglass knockout bracket was tightened with compact bracket-only match boxes.
+10. The knockout bracket positions were recalculated so boxes do not overlap and SVG connector lines align to the card centers.
+
+Verification performed before packaging:
+
+- JavaScript syntax check passed with `node --check app.js`.
+- Standalone HTML rendered in headless Chromium using the bundled data.
+- Snapshot contained 4 cards and the first snapshot card contained exactly 2 teams.
+- Top-level `#teamFilter` no longer exists.
+- Team Focus `#teamFocusFilter` exists and `All teams` clears the team focus.
+- Match Explorer `#matchTeamFilter` exists and changing it does not change Team Focus.
+- Removed standalone `#venues` section; venue filtering is in Match Explorer.
+- Group standings table rendered 4 rows per group and no text/column overlap was visible in the checked screenshot.
+- Hourglass bracket rendered 32 nodes and 32 SVG connector lines.
+- Bracket overlap test returned 0 overlapping nodes.
