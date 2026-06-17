@@ -1,6 +1,6 @@
 {
   "title": "FIFA World Cup 2026 Bracket Tracker",
-  "lastUpdated": "Automated daily refresh: June 17, 2026 03:18 AM PDT",
+  "lastUpdated": "Automated live refresh: June 17, 2026 10:16 AM PDT",
   "updateTarget": "Daily 10:30 PM PDT plus during-match live score checks",
   "apiEndpoint": "https://api.fifa.com/api/v3/calendar/matches?language=en&count=500&from=2026-06-11T00%3A00%3A00Z&to=2026-07-20T23%3A59%3A59Z",
   "teams": {
@@ -636,16 +636,17 @@
       "home": "Portugal",
       "away": "Congo DR",
       "venue": "Houston Stadium, Houston",
-      "status": "scheduled",
-      "homeScore": null,
-      "awayScore": null,
+      "status": "live",
+      "homeScore": 1,
+      "awayScore": 0,
       "pdt": {
         "date": "2026-06-17",
         "dateLabel": "Wed, Jun 17",
         "time": "10:00 AM PDT",
         "iso": "2026-06-17T10:00:00-07:00",
         "etLabel": "Wed, Jun 17, 1:00 PM ET"
-      }
+      },
+      "resultSource": "FIFA"
     },
     {
       "number": 22,
@@ -2493,6 +2494,10 @@
   ],
   "recentChanges": [
     {
+      "time": "Jun 17, 2026 10:16 AM PDT",
+      "text": "M21: Portugal 1-0 Congo DR (live) - source: FIFA"
+    },
+    {
       "time": "Jun 17, 2026 3:08 AM PDT",
       "text": "M20: Austria 3-1 Jordan (final) - source: FIFA"
     },
@@ -2567,17 +2572,13 @@
     {
       "time": "Jun 16, 2026 4:29 PM PDT",
       "text": "M14: Belgium 1-1 Egypt (final) - source: FIFA"
-    },
-    {
-      "time": "Jun 16, 2026 4:29 PM PDT",
-      "text": "M15: Saudi Arabia 1-1 Uruguay (final) - source: FIFA"
     }
   ],
   "apiEndpoints": [
     "https://api.fifa.com/api/v3/calendar/matches?language=en&count=500&from=2026-06-11T00%3A00%3A00Z&to=2026-07-20T23%3A59%3A59Z",
     "https://worldcup26.ir/get/games"
   ],
-  "lastSuccessfulUpdate": "June 17, 2026 03:18 AM PDT",
+  "lastSuccessfulUpdate": "June 17, 2026 10:16 AM PDT",
   "validation": {
     "ok": true,
     "errors": [],
