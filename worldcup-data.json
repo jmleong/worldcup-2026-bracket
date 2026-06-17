@@ -1,6 +1,6 @@
 {
   "title": "FIFA World Cup 2026 Bracket Tracker",
-  "lastUpdated": "Automated manual refresh: June 16, 2026 04:29 PM PDT",
+  "lastUpdated": "Automated live refresh: June 16, 2026 06:41 PM PDT",
   "updateTarget": "Daily 10:30 PM PDT plus during-match live score checks",
   "apiEndpoint": "https://api.fifa.com/api/v3/calendar/matches?language=en&count=500&from=2026-06-11T00%3A00%3A00Z&to=2026-07-20T23%3A59%3A59Z",
   "teams": {
@@ -579,9 +579,9 @@
       "home": "Iraq",
       "away": "Norway",
       "venue": "Gillette Stadium, Boston",
-      "status": "live",
+      "status": "final",
       "homeScore": 1,
-      "awayScore": 2,
+      "awayScore": 4,
       "pdt": {
         "date": "2026-06-16",
         "dateLabel": "Tue, Jun 16",
@@ -598,16 +598,17 @@
       "home": "Argentina",
       "away": "Algeria",
       "venue": "Kansas City Stadium, Kansas City",
-      "status": "scheduled",
-      "homeScore": null,
-      "awayScore": null,
+      "status": "live",
+      "homeScore": 1,
+      "awayScore": 0,
       "pdt": {
         "date": "2026-06-16",
         "dateLabel": "Tue, Jun 16",
         "time": "6:00 PM PDT",
         "iso": "2026-06-16T18:00:00-07:00",
         "etLabel": "Tue, Jun 16, 9:00 PM ET"
-      }
+      },
+      "resultSource": "FIFA"
     },
     {
       "number": 20,
@@ -2491,6 +2492,14 @@
   ],
   "recentChanges": [
     {
+      "time": "Jun 16, 2026 6:41 PM PDT",
+      "text": "M18: Iraq 1-4 Norway (final) - source: FIFA"
+    },
+    {
+      "time": "Jun 16, 2026 6:41 PM PDT",
+      "text": "M19: Argentina 1-0 Algeria (live) - source: FIFA"
+    },
+    {
       "time": "Jun 16, 2026 4:29 PM PDT",
       "text": "M1: Mexico 2-0 South Africa (final) - source: FIFA"
     },
@@ -2561,21 +2570,13 @@
     {
       "time": "Jun 16, 2026 4:29 PM PDT",
       "text": "M18: Iraq 1-2 Norway (live) - source: FIFA"
-    },
-    {
-      "time": "Seed update",
-      "text": "M15: Saudi Arabia 1-1 Uruguay (final) - added to seed data."
-    },
-    {
-      "time": "Seed update",
-      "text": "M16: IR Iran 2-2 New Zealand (final) - added to seed data."
     }
   ],
   "apiEndpoints": [
     "https://api.fifa.com/api/v3/calendar/matches?language=en&count=500&from=2026-06-11T00%3A00%3A00Z&to=2026-07-20T23%3A59%3A59Z",
     "https://worldcup26.ir/get/games"
   ],
-  "lastSuccessfulUpdate": "June 16, 2026 04:29 PM PDT",
+  "lastSuccessfulUpdate": "June 16, 2026 06:41 PM PDT",
   "validation": {
     "ok": true,
     "errors": [],
@@ -2583,6 +2584,7 @@
     "checkedBy": "update_data.py validation"
   },
   "lastRefreshSources": [
-    "FIFA calendar API (48 usable records)"
+    "FIFA calendar API (48 usable records)",
+    "Fallback World Cup API (104 records)"
   ]
 }
