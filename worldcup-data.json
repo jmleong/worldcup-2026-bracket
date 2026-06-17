@@ -1,6 +1,6 @@
 {
   "title": "FIFA World Cup 2026 Bracket Tracker",
-  "lastUpdated": "Automated live refresh: June 17, 2026 02:31 PM PDT",
+  "lastUpdated": "Automated live refresh: June 17, 2026 04:04 PM PDT",
   "updateTarget": "Daily 10:30 PM PDT plus during-match live score checks",
   "apiEndpoint": "https://api.fifa.com/api/v3/calendar/matches?language=en&count=500&from=2026-06-11T00%3A00%3A00Z&to=2026-07-20T23%3A59%3A59Z",
   "teams": {
@@ -655,8 +655,8 @@
       "home": "England",
       "away": "Croatia",
       "venue": "Dallas Stadium, Arlington",
-      "status": "live",
-      "homeScore": 3,
+      "status": "final",
+      "homeScore": 4,
       "awayScore": 2,
       "pdt": {
         "date": "2026-06-17",
@@ -674,16 +674,17 @@
       "home": "Ghana",
       "away": "Panama",
       "venue": "Toronto Stadium, Toronto",
-      "status": "scheduled",
-      "homeScore": null,
-      "awayScore": null,
+      "status": "live",
+      "homeScore": 0,
+      "awayScore": 0,
       "pdt": {
         "date": "2026-06-17",
         "dateLabel": "Wed, Jun 17",
         "time": "4:00 PM PDT",
         "iso": "2026-06-17T16:00:00-07:00",
         "etLabel": "Wed, Jun 17, 7:00 PM ET"
-      }
+      },
+      "resultSource": "FIFA"
     },
     {
       "number": 24,
@@ -2495,6 +2496,14 @@
   ],
   "recentChanges": [
     {
+      "time": "Jun 17, 2026 4:04 PM PDT",
+      "text": "M22: England 4-2 Croatia (final) - source: FIFA"
+    },
+    {
+      "time": "Jun 17, 2026 4:04 PM PDT",
+      "text": "M23: Ghana 0-0 Panama (live) - source: FIFA"
+    },
+    {
       "time": "Jun 17, 2026 2:31 PM PDT",
       "text": "M22: England 3-2 Croatia (live) - source: FIFA"
     },
@@ -2565,21 +2574,13 @@
     {
       "time": "Jun 16, 2026 4:29 PM PDT",
       "text": "M10: Netherlands 2-2 Japan (final) - source: FIFA"
-    },
-    {
-      "time": "Jun 16, 2026 4:29 PM PDT",
-      "text": "M11: Côte d'Ivoire 1-0 Ecuador (final) - source: FIFA"
-    },
-    {
-      "time": "Jun 16, 2026 4:29 PM PDT",
-      "text": "M12: Sweden 5-1 Tunisia (final) - source: FIFA"
     }
   ],
   "apiEndpoints": [
     "https://api.fifa.com/api/v3/calendar/matches?language=en&count=500&from=2026-06-11T00%3A00%3A00Z&to=2026-07-20T23%3A59%3A59Z",
     "https://worldcup26.ir/get/games"
   ],
-  "lastSuccessfulUpdate": "June 17, 2026 02:31 PM PDT",
+  "lastSuccessfulUpdate": "June 17, 2026 04:04 PM PDT",
   "validation": {
     "ok": true,
     "errors": [],
@@ -2587,7 +2588,6 @@
     "checkedBy": "update_data.py validation"
   },
   "lastRefreshSources": [
-    "FIFA calendar API (47 usable records)",
-    "Fallback World Cup API (104 records)"
+    "FIFA calendar API (47 usable records)"
   ]
 }
