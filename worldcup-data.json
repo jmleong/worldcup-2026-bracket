@@ -1,6 +1,6 @@
 {
   "title": "FIFA World Cup 2026 Bracket Tracker",
-  "lastUpdated": "Automated live refresh: June 17, 2026 04:04 PM PDT",
+  "lastUpdated": "Automated live refresh: June 17, 2026 06:36 PM PDT",
   "updateTarget": "Daily 10:30 PM PDT plus during-match live score checks",
   "apiEndpoint": "https://api.fifa.com/api/v3/calendar/matches?language=en&count=500&from=2026-06-11T00%3A00%3A00Z&to=2026-07-20T23%3A59%3A59Z",
   "teams": {
@@ -674,8 +674,8 @@
       "home": "Ghana",
       "away": "Panama",
       "venue": "Toronto Stadium, Toronto",
-      "status": "live",
-      "homeScore": 0,
+      "status": "final",
+      "homeScore": 1,
       "awayScore": 0,
       "pdt": {
         "date": "2026-06-17",
@@ -2496,6 +2496,10 @@
   ],
   "recentChanges": [
     {
+      "time": "Jun 17, 2026 6:36 PM PDT",
+      "text": "M23: Ghana 1-0 Panama (final) - source: FIFA"
+    },
+    {
       "time": "Jun 17, 2026 4:04 PM PDT",
       "text": "M22: England 4-2 Croatia (final) - source: FIFA"
     },
@@ -2570,17 +2574,13 @@
     {
       "time": "Jun 16, 2026 4:29 PM PDT",
       "text": "M9: Germany 7-1 Curaçao (final) - source: FIFA"
-    },
-    {
-      "time": "Jun 16, 2026 4:29 PM PDT",
-      "text": "M10: Netherlands 2-2 Japan (final) - source: FIFA"
     }
   ],
   "apiEndpoints": [
     "https://api.fifa.com/api/v3/calendar/matches?language=en&count=500&from=2026-06-11T00%3A00%3A00Z&to=2026-07-20T23%3A59%3A59Z",
     "https://worldcup26.ir/get/games"
   ],
-  "lastSuccessfulUpdate": "June 17, 2026 04:04 PM PDT",
+  "lastSuccessfulUpdate": "June 17, 2026 06:36 PM PDT",
   "validation": {
     "ok": true,
     "errors": [],
@@ -2588,6 +2588,7 @@
     "checkedBy": "update_data.py validation"
   },
   "lastRefreshSources": [
-    "FIFA calendar API (47 usable records)"
+    "FIFA calendar API (47 usable records)",
+    "Fallback World Cup API (104 records)"
   ]
 }
