@@ -1,6 +1,6 @@
 {
   "title": "FIFA World Cup 2026 Bracket Tracker",
-  "lastUpdated": "Automated daily refresh: June 18, 2026 02:58 AM PDT",
+  "lastUpdated": "Automated live refresh: June 18, 2026 10:22 AM PDT",
   "updateTarget": "Daily 10:30 PM PDT plus during-match live score checks",
   "apiEndpoint": "https://api.fifa.com/api/v3/calendar/matches?language=en&count=500&from=2026-06-11T00%3A00%3A00Z&to=2026-07-20T23%3A59%3A59Z",
   "teams": {
@@ -712,16 +712,17 @@
       "home": "Czechia",
       "away": "South Africa",
       "venue": "Atlanta Stadium, Atlanta",
-      "status": "scheduled",
-      "homeScore": null,
-      "awayScore": null,
+      "status": "live",
+      "homeScore": 1,
+      "awayScore": 0,
       "pdt": {
         "date": "2026-06-18",
         "dateLabel": "Thu, Jun 18",
         "time": "9:00 AM PDT",
         "iso": "2026-06-18T09:00:00-07:00",
         "etLabel": "Thu, Jun 18, 12:00 PM ET"
-      }
+      },
+      "resultSource": "FIFA"
     },
     {
       "number": 26,
@@ -2497,6 +2498,10 @@
   ],
   "recentChanges": [
     {
+      "time": "Jun 18, 2026 10:22 AM PDT",
+      "text": "M25: Czechia 1-0 South Africa (live) - source: FIFA"
+    },
+    {
       "time": "Jun 17, 2026 9:59 PM PDT",
       "text": "M24: Uzbekistan 1-3 Colombia (final) - source: FIFA"
     },
@@ -2571,17 +2576,13 @@
     {
       "time": "Jun 16, 2026 4:29 PM PDT",
       "text": "M5: Haiti 0-1 Scotland (final) - source: FIFA"
-    },
-    {
-      "time": "Jun 16, 2026 4:29 PM PDT",
-      "text": "M8: Australia 2-0 Türkiye (final) - source: FIFA"
     }
   ],
   "apiEndpoints": [
     "https://api.fifa.com/api/v3/calendar/matches?language=en&count=500&from=2026-06-11T00%3A00%3A00Z&to=2026-07-20T23%3A59%3A59Z",
     "https://worldcup26.ir/get/games"
   ],
-  "lastSuccessfulUpdate": "June 18, 2026 02:58 AM PDT",
+  "lastSuccessfulUpdate": "June 18, 2026 10:22 AM PDT",
   "validation": {
     "ok": true,
     "errors": [],
