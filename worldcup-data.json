@@ -1,6 +1,6 @@
 {
   "title": "FIFA World Cup 2026 Bracket Tracker",
-  "lastUpdated": "Automated live refresh: June 18, 2026 10:22 AM PDT",
+  "lastUpdated": "Automated live refresh: June 18, 2026 12:37 PM PDT",
   "updateTarget": "Daily 10:30 PM PDT plus during-match live score checks",
   "apiEndpoint": "https://api.fifa.com/api/v3/calendar/matches?language=en&count=500&from=2026-06-11T00%3A00%3A00Z&to=2026-07-20T23%3A59%3A59Z",
   "teams": {
@@ -712,9 +712,9 @@
       "home": "Czechia",
       "away": "South Africa",
       "venue": "Atlanta Stadium, Atlanta",
-      "status": "live",
+      "status": "final",
       "homeScore": 1,
-      "awayScore": 0,
+      "awayScore": 1,
       "pdt": {
         "date": "2026-06-18",
         "dateLabel": "Thu, Jun 18",
@@ -731,16 +731,17 @@
       "home": "Switzerland",
       "away": "Bosnia and Herzegovina",
       "venue": "Los Angeles Stadium, Los Angeles",
-      "status": "scheduled",
-      "homeScore": null,
-      "awayScore": null,
+      "status": "live",
+      "homeScore": 0,
+      "awayScore": 0,
       "pdt": {
         "date": "2026-06-18",
         "dateLabel": "Thu, Jun 18",
         "time": "12:00 PM PDT",
         "iso": "2026-06-18T12:00:00-07:00",
         "etLabel": "Thu, Jun 18, 3:00 PM ET"
-      }
+      },
+      "resultSource": "FIFA"
     },
     {
       "number": 27,
@@ -2498,6 +2499,14 @@
   ],
   "recentChanges": [
     {
+      "time": "Jun 18, 2026 12:37 PM PDT",
+      "text": "M25: Czechia 1-1 South Africa (final) - source: FIFA"
+    },
+    {
+      "time": "Jun 18, 2026 12:37 PM PDT",
+      "text": "M26: Switzerland 0-0 Bosnia and Herzegovina (live) - source: FIFA"
+    },
+    {
       "time": "Jun 18, 2026 10:22 AM PDT",
       "text": "M25: Czechia 1-0 South Africa (live) - source: FIFA"
     },
@@ -2568,21 +2577,13 @@
     {
       "time": "Jun 16, 2026 4:29 PM PDT",
       "text": "M7: Qatar 1-1 Switzerland (final) - source: FIFA"
-    },
-    {
-      "time": "Jun 16, 2026 4:29 PM PDT",
-      "text": "M6: Brazil 1-1 Morocco (final) - source: FIFA"
-    },
-    {
-      "time": "Jun 16, 2026 4:29 PM PDT",
-      "text": "M5: Haiti 0-1 Scotland (final) - source: FIFA"
     }
   ],
   "apiEndpoints": [
     "https://api.fifa.com/api/v3/calendar/matches?language=en&count=500&from=2026-06-11T00%3A00%3A00Z&to=2026-07-20T23%3A59%3A59Z",
     "https://worldcup26.ir/get/games"
   ],
-  "lastSuccessfulUpdate": "June 18, 2026 10:22 AM PDT",
+  "lastSuccessfulUpdate": "June 18, 2026 12:37 PM PDT",
   "validation": {
     "ok": true,
     "errors": [],
@@ -2590,6 +2591,7 @@
     "checkedBy": "update_data.py validation"
   },
   "lastRefreshSources": [
-    "FIFA calendar API (47 usable records)"
+    "FIFA calendar API (47 usable records)",
+    "Fallback World Cup API (104 records)"
   ]
 }
