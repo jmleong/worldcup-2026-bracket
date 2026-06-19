@@ -1,6 +1,6 @@
 {
   "title": "FIFA World Cup 2026 Bracket Tracker",
-  "lastUpdated": "Automated live refresh: June 19, 2026 02:35 PM PDT",
+  "lastUpdated": "Automated live refresh: June 19, 2026 03:33 PM PDT",
   "updateTarget": "Daily 10:30 PM PDT plus during-match live score checks",
   "apiEndpoint": "https://api.fifa.com/api/v3/calendar/matches?language=en&count=500&from=2026-06-11T00%3A00%3A00Z&to=2026-07-20T23%3A59%3A59Z",
   "teams": {
@@ -807,16 +807,17 @@
       "home": "Scotland",
       "away": "Morocco",
       "venue": "Boston Stadium, Boston",
-      "status": "scheduled",
-      "homeScore": null,
-      "awayScore": null,
+      "status": "live",
+      "homeScore": 0,
+      "awayScore": 1,
       "pdt": {
         "date": "2026-06-19",
         "dateLabel": "Fri, Jun 19",
         "time": "3:00 PM PDT",
         "iso": "2026-06-19T15:00:00-07:00",
         "etLabel": "Fri, Jun 19, 6:00 PM ET"
-      }
+      },
+      "resultSource": "FIFA"
     },
     {
       "number": 31,
@@ -2502,6 +2503,10 @@
   ],
   "recentChanges": [
     {
+      "time": "Jun 19, 2026 3:33 PM PDT",
+      "text": "M30: Scotland 0-1 Morocco (live) - source: FIFA"
+    },
+    {
       "time": "Jun 19, 2026 2:35 PM PDT",
       "text": "M29: USA 2-0 Australia (final) - source: FIFA"
     },
@@ -2576,17 +2581,13 @@
     {
       "time": "Jun 16, 2026 10:09 PM PDT",
       "text": "M19: Argentina 3-0 Algeria (final) - source: FIFA"
-    },
-    {
-      "time": "Jun 16, 2026 10:09 PM PDT",
-      "text": "M20: Austria 1-0 Jordan (live) - source: FIFA"
     }
   ],
   "apiEndpoints": [
     "https://api.fifa.com/api/v3/calendar/matches?language=en&count=500&from=2026-06-11T00%3A00%3A00Z&to=2026-07-20T23%3A59%3A59Z",
     "https://worldcup26.ir/get/games"
   ],
-  "lastSuccessfulUpdate": "June 19, 2026 02:35 PM PDT",
+  "lastSuccessfulUpdate": "June 19, 2026 03:33 PM PDT",
   "validation": {
     "ok": true,
     "errors": [],
