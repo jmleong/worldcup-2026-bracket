@@ -1,6 +1,6 @@
 {
   "title": "FIFA World Cup 2026 Bracket Tracker",
-  "lastUpdated": "Automated daily refresh: June 19, 2026 03:05 AM PDT",
+  "lastUpdated": "Automated live refresh: June 19, 2026 01:11 PM PDT",
   "updateTarget": "Daily 10:30 PM PDT plus during-match live score checks",
   "apiEndpoint": "https://api.fifa.com/api/v3/calendar/matches?language=en&count=500&from=2026-06-11T00%3A00%3A00Z&to=2026-07-20T23%3A59%3A59Z",
   "teams": {
@@ -788,16 +788,17 @@
       "home": "USA",
       "away": "Australia",
       "venue": "Seattle Stadium, Seattle",
-      "status": "scheduled",
-      "homeScore": null,
-      "awayScore": null,
+      "status": "live",
+      "homeScore": 2,
+      "awayScore": 0,
       "pdt": {
         "date": "2026-06-19",
         "dateLabel": "Fri, Jun 19",
         "time": "12:00 PM PDT",
         "iso": "2026-06-19T12:00:00-07:00",
         "etLabel": "Fri, Jun 19, 3:00 PM ET"
-      }
+      },
+      "resultSource": "FIFA"
     },
     {
       "number": 30,
@@ -2501,6 +2502,10 @@
   ],
   "recentChanges": [
     {
+      "time": "Jun 19, 2026 1:11 PM PDT",
+      "text": "M29: USA 2-0 Australia (live) - source: FIFA"
+    },
+    {
       "time": "Jun 18, 2026 10:20 PM PDT",
       "text": "M28: Mexico 1-0 Korea Republic (final) - source: FIFA"
     },
@@ -2575,17 +2580,13 @@
     {
       "time": "Jun 16, 2026 6:41 PM PDT",
       "text": "M18: Iraq 1-4 Norway (final) - source: FIFA"
-    },
-    {
-      "time": "Jun 16, 2026 6:41 PM PDT",
-      "text": "M19: Argentina 1-0 Algeria (live) - source: FIFA"
     }
   ],
   "apiEndpoints": [
     "https://api.fifa.com/api/v3/calendar/matches?language=en&count=500&from=2026-06-11T00%3A00%3A00Z&to=2026-07-20T23%3A59%3A59Z",
     "https://worldcup26.ir/get/games"
   ],
-  "lastSuccessfulUpdate": "June 19, 2026 03:05 AM PDT",
+  "lastSuccessfulUpdate": "June 19, 2026 01:11 PM PDT",
   "validation": {
     "ok": true,
     "errors": [],
@@ -2593,7 +2594,6 @@
     "checkedBy": "update_data.py validation"
   },
   "lastRefreshSources": [
-    "FIFA calendar API (47 usable records)",
-    "Fallback World Cup API (104 records)"
+    "FIFA calendar API (47 usable records)"
   ]
 }
