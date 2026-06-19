@@ -2593,7 +2593,6 @@
     "checkedBy": "update_data.py validation"
   },
   "lastRefreshSources": [
-    "FIFA calendar API (47 usable records)",
-    "Fallback World Cup API (104 records)"
+    "FIFA calendar API (47 usable records)"
   ]
 }
