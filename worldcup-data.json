@@ -1,6 +1,6 @@
 {
   "title": "FIFA World Cup 2026 Bracket Tracker",
-  "lastUpdated": "Automated live refresh: June 18, 2026 04:27 PM PDT",
+  "lastUpdated": "Automated live refresh: June 18, 2026 07:20 PM PDT",
   "updateTarget": "Daily 10:30 PM PDT plus during-match live score checks",
   "apiEndpoint": "https://api.fifa.com/api/v3/calendar/matches?language=en&count=500&from=2026-06-11T00%3A00%3A00Z&to=2026-07-20T23%3A59%3A59Z",
   "teams": {
@@ -750,9 +750,9 @@
       "home": "Canada",
       "away": "Qatar",
       "venue": "BC Place Vancouver, Vancouver",
-      "status": "live",
-      "homeScore": 3,
-      "awayScore": 1,
+      "status": "final",
+      "homeScore": 6,
+      "awayScore": 0,
       "pdt": {
         "date": "2026-06-18",
         "dateLabel": "Thu, Jun 18",
@@ -769,16 +769,17 @@
       "home": "Mexico",
       "away": "Korea Republic",
       "venue": "Estadio Guadalajara, Guadalajara",
-      "status": "scheduled",
-      "homeScore": null,
-      "awayScore": null,
+      "status": "live",
+      "homeScore": 1,
+      "awayScore": 0,
       "pdt": {
         "date": "2026-06-18",
         "dateLabel": "Thu, Jun 18",
         "time": "6:00 PM PDT",
         "iso": "2026-06-18T18:00:00-07:00",
         "etLabel": "Thu, Jun 18, 9:00 PM ET"
-      }
+      },
+      "resultSource": "FIFA"
     },
     {
       "number": 29,
@@ -2500,6 +2501,14 @@
   ],
   "recentChanges": [
     {
+      "time": "Jun 18, 2026 7:20 PM PDT",
+      "text": "M27: Canada 6-0 Qatar (final) - source: FIFA"
+    },
+    {
+      "time": "Jun 18, 2026 7:20 PM PDT",
+      "text": "M28: Mexico 1-0 Korea Republic (live) - source: FIFA"
+    },
+    {
       "time": "Jun 18, 2026 4:27 PM PDT",
       "text": "M27: Canada 3-1 Qatar (live) - source: FIFA"
     },
@@ -2570,21 +2579,13 @@
     {
       "time": "Jun 16, 2026 4:29 PM PDT",
       "text": "M1: Mexico 2-0 South Africa (final) - source: FIFA"
-    },
-    {
-      "time": "Jun 16, 2026 4:29 PM PDT",
-      "text": "M2: Korea Republic 2-1 Czechia (final) - source: FIFA"
-    },
-    {
-      "time": "Jun 16, 2026 4:29 PM PDT",
-      "text": "M3: Canada 1-1 Bosnia and Herzegovina (final) - source: FIFA"
     }
   ],
   "apiEndpoints": [
     "https://api.fifa.com/api/v3/calendar/matches?language=en&count=500&from=2026-06-11T00%3A00%3A00Z&to=2026-07-20T23%3A59%3A59Z",
     "https://worldcup26.ir/get/games"
   ],
-  "lastSuccessfulUpdate": "June 18, 2026 04:27 PM PDT",
+  "lastSuccessfulUpdate": "June 18, 2026 07:20 PM PDT",
   "validation": {
     "ok": true,
     "errors": [],
@@ -2592,6 +2593,7 @@
     "checkedBy": "update_data.py validation"
   },
   "lastRefreshSources": [
-    "FIFA calendar API (47 usable records)"
+    "FIFA calendar API (47 usable records)",
+    "Fallback World Cup API (104 records)"
   ]
 }
