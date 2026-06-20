@@ -1,6 +1,6 @@
 {
   "title": "FIFA World Cup 2026 Bracket Tracker",
-  "lastUpdated": "Automated live refresh: June 20, 2026 11:46 AM PDT",
+  "lastUpdated": "Automated live refresh: June 20, 2026 01:08 PM PDT",
   "updateTarget": "Daily 10:30 PM PDT plus during-match live score checks",
   "apiEndpoint": "https://api.fifa.com/api/v3/calendar/matches?language=en&count=500&from=2026-06-11T00%3A00%3A00Z&to=2026-07-20T23%3A59%3A59Z",
   "teams": {
@@ -864,8 +864,8 @@
       "home": "Netherlands",
       "away": "Sweden",
       "venue": "Houston Stadium, Houston",
-      "status": "live",
-      "homeScore": 4,
+      "status": "final",
+      "homeScore": 5,
       "awayScore": 1,
       "pdt": {
         "date": "2026-06-20",
@@ -883,16 +883,17 @@
       "home": "Germany",
       "away": "Côte d'Ivoire",
       "venue": "Toronto Stadium, Toronto",
-      "status": "scheduled",
-      "homeScore": null,
-      "awayScore": null,
+      "status": "live",
+      "homeScore": 0,
+      "awayScore": 0,
       "pdt": {
         "date": "2026-06-20",
         "dateLabel": "Sat, Jun 20",
         "time": "1:00 PM PDT",
         "iso": "2026-06-20T13:00:00-07:00",
         "etLabel": "Sat, Jun 20, 4:00 PM ET"
-      }
+      },
+      "resultSource": "FIFA"
     },
     {
       "number": 35,
@@ -2506,6 +2507,14 @@
   ],
   "recentChanges": [
     {
+      "time": "Jun 20, 2026 1:08 PM PDT",
+      "text": "M33: Netherlands 5-1 Sweden (final) - source: FIFA"
+    },
+    {
+      "time": "Jun 20, 2026 1:08 PM PDT",
+      "text": "M34: Germany 0-0 Côte d'Ivoire (live) - source: FIFA"
+    },
+    {
       "time": "Jun 20, 2026 11:46 AM PDT",
       "text": "M33: Netherlands 4-1 Sweden (live) - source: FIFA"
     },
@@ -2576,21 +2585,13 @@
     {
       "time": "Jun 18, 2026 10:22 AM PDT",
       "text": "M25: Czechia 1-0 South Africa (live) - source: FIFA"
-    },
-    {
-      "time": "Jun 17, 2026 9:59 PM PDT",
-      "text": "M24: Uzbekistan 1-3 Colombia (final) - source: FIFA"
-    },
-    {
-      "time": "Jun 17, 2026 6:36 PM PDT",
-      "text": "M23: Ghana 1-0 Panama (final) - source: FIFA"
     }
   ],
   "apiEndpoints": [
     "https://api.fifa.com/api/v3/calendar/matches?language=en&count=500&from=2026-06-11T00%3A00%3A00Z&to=2026-07-20T23%3A59%3A59Z",
     "https://worldcup26.ir/get/games"
   ],
-  "lastSuccessfulUpdate": "June 20, 2026 11:46 AM PDT",
+  "lastSuccessfulUpdate": "June 20, 2026 01:08 PM PDT",
   "validation": {
     "ok": true,
     "errors": [],
