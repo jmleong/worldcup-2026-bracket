@@ -1,6 +1,6 @@
 {
   "title": "FIFA World Cup 2026 Bracket Tracker",
-  "lastUpdated": "Automated live refresh: June 20, 2026 10:12 AM PDT",
+  "lastUpdated": "Automated live refresh: June 20, 2026 11:46 AM PDT",
   "updateTarget": "Daily 10:30 PM PDT plus during-match live score checks",
   "apiEndpoint": "https://api.fifa.com/api/v3/calendar/matches?language=en&count=500&from=2026-06-11T00%3A00%3A00Z&to=2026-07-20T23%3A59%3A59Z",
   "teams": {
@@ -865,8 +865,8 @@
       "away": "Sweden",
       "venue": "Houston Stadium, Houston",
       "status": "live",
-      "homeScore": 1,
-      "awayScore": 0,
+      "homeScore": 4,
+      "awayScore": 1,
       "pdt": {
         "date": "2026-06-20",
         "dateLabel": "Sat, Jun 20",
@@ -2506,6 +2506,10 @@
   ],
   "recentChanges": [
     {
+      "time": "Jun 20, 2026 11:46 AM PDT",
+      "text": "M33: Netherlands 4-1 Sweden (live) - source: FIFA"
+    },
+    {
       "time": "Jun 20, 2026 10:12 AM PDT",
       "text": "M33: Netherlands 1-0 Sweden (live) - source: FIFA"
     },
@@ -2580,17 +2584,13 @@
     {
       "time": "Jun 17, 2026 6:36 PM PDT",
       "text": "M23: Ghana 1-0 Panama (final) - source: FIFA"
-    },
-    {
-      "time": "Jun 17, 2026 4:04 PM PDT",
-      "text": "M22: England 4-2 Croatia (final) - source: FIFA"
     }
   ],
   "apiEndpoints": [
     "https://api.fifa.com/api/v3/calendar/matches?language=en&count=500&from=2026-06-11T00%3A00%3A00Z&to=2026-07-20T23%3A59%3A59Z",
     "https://worldcup26.ir/get/games"
   ],
-  "lastSuccessfulUpdate": "June 20, 2026 10:12 AM PDT",
+  "lastSuccessfulUpdate": "June 20, 2026 11:46 AM PDT",
   "validation": {
     "ok": true,
     "errors": [],
