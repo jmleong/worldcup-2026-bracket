@@ -1,6 +1,6 @@
 {
   "title": "FIFA World Cup 2026 Bracket Tracker",
-  "lastUpdated": "Automated live refresh: June 19, 2026 06:53 PM PDT",
+  "lastUpdated": "Automated live refresh: June 19, 2026 09:38 PM PDT",
   "updateTarget": "Daily 10:30 PM PDT plus during-match live score checks",
   "apiEndpoint": "https://api.fifa.com/api/v3/calendar/matches?language=en&count=500&from=2026-06-11T00%3A00%3A00Z&to=2026-07-20T23%3A59%3A59Z",
   "teams": {
@@ -826,7 +826,7 @@
       "home": "Brazil",
       "away": "Haiti",
       "venue": "Philadelphia Stadium, Philadelphia",
-      "status": "live",
+      "status": "final",
       "homeScore": 3,
       "awayScore": 0,
       "pdt": {
@@ -845,16 +845,17 @@
       "home": "Türkiye",
       "away": "Paraguay",
       "venue": "San Francisco Bay Area Stadium, Santa Clara",
-      "status": "scheduled",
-      "homeScore": null,
-      "awayScore": null,
+      "status": "live",
+      "homeScore": 0,
+      "awayScore": 1,
       "pdt": {
         "date": "2026-06-19",
         "dateLabel": "Fri, Jun 19",
         "time": "9:00 PM PDT",
         "iso": "2026-06-19T21:00:00-07:00",
         "etLabel": "Sat, Jun 20, 12:00 AM ET"
-      }
+      },
+      "resultSource": "FIFA"
     },
     {
       "number": 33,
@@ -2504,6 +2505,14 @@
   ],
   "recentChanges": [
     {
+      "time": "Jun 19, 2026 9:38 PM PDT",
+      "text": "M31: Brazil 3-0 Haiti (final) - source: FIFA"
+    },
+    {
+      "time": "Jun 19, 2026 9:38 PM PDT",
+      "text": "M32: Türkiye 0-1 Paraguay (live) - source: FIFA"
+    },
+    {
       "time": "Jun 19, 2026 6:53 PM PDT",
       "text": "M30: Scotland 0-1 Morocco (final) - source: FIFA"
     },
@@ -2574,21 +2583,13 @@
     {
       "time": "Jun 17, 2026 2:31 PM PDT",
       "text": "M22: England 3-2 Croatia (live) - source: FIFA"
-    },
-    {
-      "time": "Jun 17, 2026 12:32 PM PDT",
-      "text": "M21: Portugal 1-1 Congo DR (final) - source: FIFA"
-    },
-    {
-      "time": "Jun 17, 2026 10:16 AM PDT",
-      "text": "M21: Portugal 1-0 Congo DR (live) - source: FIFA"
     }
   ],
   "apiEndpoints": [
     "https://api.fifa.com/api/v3/calendar/matches?language=en&count=500&from=2026-06-11T00%3A00%3A00Z&to=2026-07-20T23%3A59%3A59Z",
     "https://worldcup26.ir/get/games"
   ],
-  "lastSuccessfulUpdate": "June 19, 2026 06:53 PM PDT",
+  "lastSuccessfulUpdate": "June 19, 2026 09:38 PM PDT",
   "validation": {
     "ok": true,
     "errors": [],
