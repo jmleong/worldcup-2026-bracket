@@ -1,6 +1,6 @@
 {
   "title": "FIFA World Cup 2026 Bracket Tracker",
-  "lastUpdated": "Automated live refresh: June 19, 2026 03:33 PM PDT",
+  "lastUpdated": "Automated live refresh: June 19, 2026 06:53 PM PDT",
   "updateTarget": "Daily 10:30 PM PDT plus during-match live score checks",
   "apiEndpoint": "https://api.fifa.com/api/v3/calendar/matches?language=en&count=500&from=2026-06-11T00%3A00%3A00Z&to=2026-07-20T23%3A59%3A59Z",
   "teams": {
@@ -807,7 +807,7 @@
       "home": "Scotland",
       "away": "Morocco",
       "venue": "Boston Stadium, Boston",
-      "status": "live",
+      "status": "final",
       "homeScore": 0,
       "awayScore": 1,
       "pdt": {
@@ -826,16 +826,17 @@
       "home": "Brazil",
       "away": "Haiti",
       "venue": "Philadelphia Stadium, Philadelphia",
-      "status": "scheduled",
-      "homeScore": null,
-      "awayScore": null,
+      "status": "live",
+      "homeScore": 3,
+      "awayScore": 0,
       "pdt": {
         "date": "2026-06-19",
         "dateLabel": "Fri, Jun 19",
         "time": "6:00 PM PDT",
         "iso": "2026-06-19T18:00:00-07:00",
         "etLabel": "Fri, Jun 19, 9:00 PM ET"
-      }
+      },
+      "resultSource": "FIFA"
     },
     {
       "number": 32,
@@ -2503,6 +2504,14 @@
   ],
   "recentChanges": [
     {
+      "time": "Jun 19, 2026 6:53 PM PDT",
+      "text": "M30: Scotland 0-1 Morocco (final) - source: FIFA"
+    },
+    {
+      "time": "Jun 19, 2026 6:53 PM PDT",
+      "text": "M31: Brazil 3-0 Haiti (live) - source: FIFA"
+    },
+    {
       "time": "Jun 19, 2026 3:33 PM PDT",
       "text": "M30: Scotland 0-1 Morocco (live) - source: FIFA"
     },
@@ -2573,21 +2582,13 @@
     {
       "time": "Jun 17, 2026 10:16 AM PDT",
       "text": "M21: Portugal 1-0 Congo DR (live) - source: FIFA"
-    },
-    {
-      "time": "Jun 17, 2026 3:08 AM PDT",
-      "text": "M20: Austria 3-1 Jordan (final) - source: FIFA"
-    },
-    {
-      "time": "Jun 16, 2026 10:09 PM PDT",
-      "text": "M19: Argentina 3-0 Algeria (final) - source: FIFA"
     }
   ],
   "apiEndpoints": [
     "https://api.fifa.com/api/v3/calendar/matches?language=en&count=500&from=2026-06-11T00%3A00%3A00Z&to=2026-07-20T23%3A59%3A59Z",
     "https://worldcup26.ir/get/games"
   ],
-  "lastSuccessfulUpdate": "June 19, 2026 03:33 PM PDT",
+  "lastSuccessfulUpdate": "June 19, 2026 06:53 PM PDT",
   "validation": {
     "ok": true,
     "errors": [],
@@ -2595,6 +2596,7 @@
     "checkedBy": "update_data.py validation"
   },
   "lastRefreshSources": [
-    "FIFA calendar API (47 usable records)"
+    "FIFA calendar API (47 usable records)",
+    "Fallback World Cup API (104 records)"
   ]
 }
