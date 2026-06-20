@@ -1,6 +1,6 @@
 {
   "title": "FIFA World Cup 2026 Bracket Tracker",
-  "lastUpdated": "Automated live refresh: June 20, 2026 01:08 PM PDT",
+  "lastUpdated": "Automated live refresh: June 20, 2026 02:40 PM PDT",
   "updateTarget": "Daily 10:30 PM PDT plus during-match live score checks",
   "apiEndpoint": "https://api.fifa.com/api/v3/calendar/matches?language=en&count=500&from=2026-06-11T00%3A00%3A00Z&to=2026-07-20T23%3A59%3A59Z",
   "teams": {
@@ -884,8 +884,8 @@
       "away": "Côte d'Ivoire",
       "venue": "Toronto Stadium, Toronto",
       "status": "live",
-      "homeScore": 0,
-      "awayScore": 0,
+      "homeScore": 1,
+      "awayScore": 1,
       "pdt": {
         "date": "2026-06-20",
         "dateLabel": "Sat, Jun 20",
@@ -2507,6 +2507,10 @@
   ],
   "recentChanges": [
     {
+      "time": "Jun 20, 2026 2:40 PM PDT",
+      "text": "M34: Germany 1-1 Côte d'Ivoire (live) - source: FIFA"
+    },
+    {
       "time": "Jun 20, 2026 1:08 PM PDT",
       "text": "M33: Netherlands 5-1 Sweden (final) - source: FIFA"
     },
@@ -2581,17 +2585,13 @@
     {
       "time": "Jun 18, 2026 12:37 PM PDT",
       "text": "M26: Switzerland 0-0 Bosnia and Herzegovina (live) - source: FIFA"
-    },
-    {
-      "time": "Jun 18, 2026 10:22 AM PDT",
-      "text": "M25: Czechia 1-0 South Africa (live) - source: FIFA"
     }
   ],
   "apiEndpoints": [
     "https://api.fifa.com/api/v3/calendar/matches?language=en&count=500&from=2026-06-11T00%3A00%3A00Z&to=2026-07-20T23%3A59%3A59Z",
     "https://worldcup26.ir/get/games"
   ],
-  "lastSuccessfulUpdate": "June 20, 2026 01:08 PM PDT",
+  "lastSuccessfulUpdate": "June 20, 2026 02:40 PM PDT",
   "validation": {
     "ok": true,
     "errors": [],
@@ -2599,7 +2599,6 @@
     "checkedBy": "update_data.py validation"
   },
   "lastRefreshSources": [
-    "FIFA calendar API (47 usable records)",
-    "Fallback World Cup API (104 records)"
+    "FIFA calendar API (47 usable records)"
   ]
 }
