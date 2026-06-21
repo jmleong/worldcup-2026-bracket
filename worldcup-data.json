@@ -1,6 +1,6 @@
 {
   "title": "FIFA World Cup 2026 Bracket Tracker",
-  "lastUpdated": "Automated live refresh: June 20, 2026 03:49 PM PDT",
+  "lastUpdated": "Automated live refresh: June 20, 2026 10:15 PM PDT",
   "updateTarget": "Daily 10:30 PM PDT plus during-match live score checks",
   "apiEndpoint": "https://api.fifa.com/api/v3/calendar/matches?language=en&count=500&from=2026-06-11T00%3A00%3A00Z&to=2026-07-20T23%3A59%3A59Z",
   "teams": {
@@ -902,16 +902,17 @@
       "home": "Ecuador",
       "away": "Curaçao",
       "venue": "Kansas City Stadium, Kansas City",
-      "status": "scheduled",
-      "homeScore": null,
-      "awayScore": null,
+      "status": "final",
+      "homeScore": 0,
+      "awayScore": 0,
       "pdt": {
         "date": "2026-06-20",
         "dateLabel": "Sat, Jun 20",
         "time": "5:00 PM PDT",
         "iso": "2026-06-20T17:00:00-07:00",
         "etLabel": "Sat, Jun 20, 8:00 PM ET"
-      }
+      },
+      "resultSource": "FIFA"
     },
     {
       "number": 36,
@@ -920,16 +921,17 @@
       "home": "Tunisia",
       "away": "Japan",
       "venue": "Estadio Monterrey, Guadalupe",
-      "status": "scheduled",
-      "homeScore": null,
-      "awayScore": null,
+      "status": "live",
+      "homeScore": 0,
+      "awayScore": 2,
       "pdt": {
         "date": "2026-06-20",
         "dateLabel": "Sat, Jun 20",
         "time": "9:00 PM PDT",
         "iso": "2026-06-20T21:00:00-07:00",
         "etLabel": "Sun, Jun 21, 12:00 AM ET"
-      }
+      },
+      "resultSource": "FIFA"
     },
     {
       "number": 37,
@@ -2507,6 +2509,14 @@
   ],
   "recentChanges": [
     {
+      "time": "Jun 20, 2026 10:15 PM PDT",
+      "text": "M35: Ecuador 0-0 Curaçao (final) - source: FIFA"
+    },
+    {
+      "time": "Jun 20, 2026 10:15 PM PDT",
+      "text": "M36: Tunisia 0-2 Japan (live) - source: FIFA"
+    },
+    {
       "time": "Jun 20, 2026 3:49 PM PDT",
       "text": "M34: Germany 2-1 Côte d'Ivoire (final) - source: FIFA"
     },
@@ -2577,21 +2587,13 @@
     {
       "time": "Jun 18, 2026 4:27 PM PDT",
       "text": "M27: Canada 3-1 Qatar (live) - source: FIFA"
-    },
-    {
-      "time": "Jun 18, 2026 2:51 PM PDT",
-      "text": "M26: Switzerland 4-1 Bosnia and Herzegovina (final) - source: FIFA"
-    },
-    {
-      "time": "Jun 18, 2026 12:37 PM PDT",
-      "text": "M25: Czechia 1-1 South Africa (final) - source: FIFA"
     }
   ],
   "apiEndpoints": [
     "https://api.fifa.com/api/v3/calendar/matches?language=en&count=500&from=2026-06-11T00%3A00%3A00Z&to=2026-07-20T23%3A59%3A59Z",
     "https://worldcup26.ir/get/games"
   ],
-  "lastSuccessfulUpdate": "June 20, 2026 03:49 PM PDT",
+  "lastSuccessfulUpdate": "June 20, 2026 10:15 PM PDT",
   "validation": {
     "ok": true,
     "errors": [],
@@ -2599,7 +2601,7 @@
     "checkedBy": "update_data.py validation"
   },
   "lastRefreshSources": [
-    "FIFA calendar API (47 usable records)",
+    "FIFA calendar API (45 usable records)",
     "Fallback World Cup API (104 records)"
   ]
 }
