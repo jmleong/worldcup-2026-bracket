@@ -1,6 +1,6 @@
 {
   "title": "FIFA World Cup 2026 Bracket Tracker",
-  "lastUpdated": "Automated daily refresh: June 21, 2026 02:28 AM PDT",
+  "lastUpdated": "Automated live refresh: June 21, 2026 09:03 AM PDT",
   "updateTarget": "Daily 10:30 PM PDT plus during-match live score checks",
   "apiEndpoint": "https://api.fifa.com/api/v3/calendar/matches?language=en&count=500&from=2026-06-11T00%3A00%3A00Z&to=2026-07-20T23%3A59%3A59Z",
   "teams": {
@@ -940,16 +940,17 @@
       "home": "Spain",
       "away": "Saudi Arabia",
       "venue": "Atlanta Stadium, Atlanta",
-      "status": "scheduled",
-      "homeScore": null,
-      "awayScore": null,
+      "status": "live",
+      "homeScore": 0,
+      "awayScore": 0,
       "pdt": {
         "date": "2026-06-21",
         "dateLabel": "Sun, Jun 21",
         "time": "9:00 AM PDT",
         "iso": "2026-06-21T09:00:00-07:00",
         "etLabel": "Sun, Jun 21, 12:00 PM ET"
-      }
+      },
+      "resultSource": "FIFA"
     },
     {
       "number": 38,
@@ -2509,6 +2510,10 @@
   ],
   "recentChanges": [
     {
+      "time": "Jun 21, 2026 9:03 AM PDT",
+      "text": "M37: Spain 0-0 Saudi Arabia (live) - source: FIFA"
+    },
+    {
       "time": "Jun 21, 2026 2:05 AM PDT",
       "text": "M36: Tunisia 0-4 Japan (final) - source: FIFA"
     },
@@ -2583,17 +2588,13 @@
     {
       "time": "Jun 18, 2026 7:20 PM PDT",
       "text": "M27: Canada 6-0 Qatar (final) - source: FIFA"
-    },
-    {
-      "time": "Jun 18, 2026 7:20 PM PDT",
-      "text": "M28: Mexico 1-0 Korea Republic (live) - source: FIFA"
     }
   ],
   "apiEndpoints": [
     "https://api.fifa.com/api/v3/calendar/matches?language=en&count=500&from=2026-06-11T00%3A00%3A00Z&to=2026-07-20T23%3A59%3A59Z",
     "https://worldcup26.ir/get/games"
   ],
-  "lastSuccessfulUpdate": "June 21, 2026 02:28 AM PDT",
+  "lastSuccessfulUpdate": "June 21, 2026 09:03 AM PDT",
   "validation": {
     "ok": true,
     "errors": [],
