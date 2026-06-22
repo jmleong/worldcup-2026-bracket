@@ -1,6 +1,6 @@
 {
   "title": "FIFA World Cup 2026 Bracket Tracker",
-  "lastUpdated": "Automated daily refresh: June 22, 2026 04:20 AM PDT",
+  "lastUpdated": "Automated live refresh: June 22, 2026 11:16 AM PDT",
   "updateTarget": "Daily 10:30 PM PDT plus during-match live score checks",
   "apiEndpoint": "https://api.fifa.com/api/v3/calendar/matches?language=en&count=500&from=2026-06-11T00%3A00%3A00Z&to=2026-07-20T23%3A59%3A59Z",
   "teams": {
@@ -1016,16 +1016,17 @@
       "home": "Argentina",
       "away": "Austria",
       "venue": "Dallas Stadium, Arlington",
-      "status": "scheduled",
-      "homeScore": null,
-      "awayScore": null,
+      "status": "live",
+      "homeScore": 1,
+      "awayScore": 0,
       "pdt": {
         "date": "2026-06-22",
         "dateLabel": "Mon, Jun 22",
         "time": "10:00 AM PDT",
         "iso": "2026-06-22T10:00:00-07:00",
         "etLabel": "Mon, Jun 22, 1:00 PM ET"
-      }
+      },
+      "resultSource": "FIFA"
     },
     {
       "number": 42,
@@ -2513,6 +2514,10 @@
   ],
   "recentChanges": [
     {
+      "time": "Jun 22, 2026 11:16 AM PDT",
+      "text": "M41: Argentina 1-0 Austria (live) - source: FIFA"
+    },
+    {
       "time": "Jun 21, 2026 10:26 PM PDT",
       "text": "M40: New Zealand 1-3 Egypt (final) - source: FIFA"
     },
@@ -2587,17 +2592,13 @@
     {
       "time": "Jun 20, 2026 10:12 AM PDT",
       "text": "M33: Netherlands 1-0 Sweden (live) - source: FIFA"
-    },
-    {
-      "time": "Jun 20, 2026 1:15 AM PDT",
-      "text": "M32: Türkiye 0-1 Paraguay (final) - source: FIFA"
     }
   ],
   "apiEndpoints": [
     "https://api.fifa.com/api/v3/calendar/matches?language=en&count=500&from=2026-06-11T00%3A00%3A00Z&to=2026-07-20T23%3A59%3A59Z",
     "https://worldcup26.ir/get/games"
   ],
-  "lastSuccessfulUpdate": "June 22, 2026 04:20 AM PDT",
+  "lastSuccessfulUpdate": "June 22, 2026 11:16 AM PDT",
   "validation": {
     "ok": true,
     "errors": [],
@@ -2605,7 +2606,6 @@
     "checkedBy": "update_data.py validation"
   },
   "lastRefreshSources": [
-    "FIFA calendar API (45 usable records)",
-    "Fallback World Cup API (104 records)"
+    "FIFA calendar API (45 usable records)"
   ]
 }
