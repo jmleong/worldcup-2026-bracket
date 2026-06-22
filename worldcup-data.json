@@ -1,6 +1,6 @@
 {
   "title": "FIFA World Cup 2026 Bracket Tracker",
-  "lastUpdated": "Automated live refresh: June 22, 2026 11:16 AM PDT",
+  "lastUpdated": "Automated live refresh: June 22, 2026 02:16 PM PDT",
   "updateTarget": "Daily 10:30 PM PDT plus during-match live score checks",
   "apiEndpoint": "https://api.fifa.com/api/v3/calendar/matches?language=en&count=500&from=2026-06-11T00%3A00%3A00Z&to=2026-07-20T23%3A59%3A59Z",
   "teams": {
@@ -1016,8 +1016,8 @@
       "home": "Argentina",
       "away": "Austria",
       "venue": "Dallas Stadium, Arlington",
-      "status": "live",
-      "homeScore": 1,
+      "status": "final",
+      "homeScore": 2,
       "awayScore": 0,
       "pdt": {
         "date": "2026-06-22",
@@ -1035,16 +1035,17 @@
       "home": "France",
       "away": "Iraq",
       "venue": "Philadelphia Stadium, Philadelphia",
-      "status": "scheduled",
-      "homeScore": null,
-      "awayScore": null,
+      "status": "live",
+      "homeScore": 1,
+      "awayScore": 0,
       "pdt": {
         "date": "2026-06-22",
         "dateLabel": "Mon, Jun 22",
         "time": "2:00 PM PDT",
         "iso": "2026-06-22T14:00:00-07:00",
         "etLabel": "Mon, Jun 22, 5:00 PM ET"
-      }
+      },
+      "resultSource": "FIFA"
     },
     {
       "number": 43,
@@ -2514,6 +2515,14 @@
   ],
   "recentChanges": [
     {
+      "time": "Jun 22, 2026 2:16 PM PDT",
+      "text": "M41: Argentina 2-0 Austria (final) - source: FIFA"
+    },
+    {
+      "time": "Jun 22, 2026 2:16 PM PDT",
+      "text": "M42: France 1-0 Iraq (live) - source: FIFA"
+    },
+    {
       "time": "Jun 22, 2026 11:16 AM PDT",
       "text": "M41: Argentina 1-0 Austria (live) - source: FIFA"
     },
@@ -2584,21 +2593,13 @@
     {
       "time": "Jun 20, 2026 1:08 PM PDT",
       "text": "M34: Germany 0-0 Côte d'Ivoire (live) - source: FIFA"
-    },
-    {
-      "time": "Jun 20, 2026 11:46 AM PDT",
-      "text": "M33: Netherlands 4-1 Sweden (live) - source: FIFA"
-    },
-    {
-      "time": "Jun 20, 2026 10:12 AM PDT",
-      "text": "M33: Netherlands 1-0 Sweden (live) - source: FIFA"
     }
   ],
   "apiEndpoints": [
     "https://api.fifa.com/api/v3/calendar/matches?language=en&count=500&from=2026-06-11T00%3A00%3A00Z&to=2026-07-20T23%3A59%3A59Z",
     "https://worldcup26.ir/get/games"
   ],
-  "lastSuccessfulUpdate": "June 22, 2026 11:16 AM PDT",
+  "lastSuccessfulUpdate": "June 22, 2026 02:16 PM PDT",
   "validation": {
     "ok": true,
     "errors": [],
@@ -2606,6 +2607,7 @@
     "checkedBy": "update_data.py validation"
   },
   "lastRefreshSources": [
-    "FIFA calendar API (45 usable records)"
+    "FIFA calendar API (45 usable records)",
+    "Fallback World Cup API (104 records)"
   ]
 }
