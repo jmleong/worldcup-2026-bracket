@@ -1,6 +1,6 @@
 {
   "title": "FIFA World Cup 2026 Bracket Tracker",
-  "lastUpdated": "Automated live refresh: June 21, 2026 07:09 PM PDT",
+  "lastUpdated": "Automated live refresh: June 21, 2026 10:26 PM PDT",
   "updateTarget": "Daily 10:30 PM PDT plus during-match live score checks",
   "apiEndpoint": "https://api.fifa.com/api/v3/calendar/matches?language=en&count=500&from=2026-06-11T00%3A00%3A00Z&to=2026-07-20T23%3A59%3A59Z",
   "teams": {
@@ -997,9 +997,9 @@
       "home": "New Zealand",
       "away": "Egypt",
       "venue": "BC Place Vancouver, Vancouver",
-      "status": "live",
+      "status": "final",
       "homeScore": 1,
-      "awayScore": 0,
+      "awayScore": 3,
       "pdt": {
         "date": "2026-06-21",
         "dateLabel": "Sun, Jun 21",
@@ -2513,6 +2513,10 @@
   ],
   "recentChanges": [
     {
+      "time": "Jun 21, 2026 10:26 PM PDT",
+      "text": "M40: New Zealand 1-3 Egypt (final) - source: FIFA"
+    },
+    {
       "time": "Jun 21, 2026 7:09 PM PDT",
       "text": "M39: Uruguay 2-2 Cabo Verde (final) - source: FIFA"
     },
@@ -2587,17 +2591,13 @@
     {
       "time": "Jun 20, 2026 1:15 AM PDT",
       "text": "M32: Türkiye 0-1 Paraguay (final) - source: FIFA"
-    },
-    {
-      "time": "Jun 19, 2026 9:38 PM PDT",
-      "text": "M31: Brazil 3-0 Haiti (final) - source: FIFA"
     }
   ],
   "apiEndpoints": [
     "https://api.fifa.com/api/v3/calendar/matches?language=en&count=500&from=2026-06-11T00%3A00%3A00Z&to=2026-07-20T23%3A59%3A59Z",
     "https://worldcup26.ir/get/games"
   ],
-  "lastSuccessfulUpdate": "June 21, 2026 07:09 PM PDT",
+  "lastSuccessfulUpdate": "June 21, 2026 10:26 PM PDT",
   "validation": {
     "ok": true,
     "errors": [],
