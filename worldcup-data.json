@@ -1,6 +1,6 @@
 {
   "title": "FIFA World Cup 2026 Bracket Tracker",
-  "lastUpdated": "Automated live refresh: June 22, 2026 09:17 PM PDT",
+  "lastUpdated": "Automated live refresh: June 23, 2026 01:03 AM PDT",
   "updateTarget": "Daily 10:30 PM PDT plus during-match live score checks",
   "apiEndpoint": "https://api.fifa.com/api/v3/calendar/matches?language=en&count=500&from=2026-06-11T00%3A00%3A00Z&to=2026-07-20T23%3A59%3A59Z",
   "teams": {
@@ -1073,9 +1073,9 @@
       "home": "Jordan",
       "away": "Algeria",
       "venue": "San Francisco Bay Area Stadium, Santa Clara",
-      "status": "live",
+      "status": "final",
       "homeScore": 1,
-      "awayScore": 0,
+      "awayScore": 2,
       "pdt": {
         "date": "2026-06-22",
         "dateLabel": "Mon, Jun 22",
@@ -2217,7 +2217,7 @@
       "url": "https://github.com/rezarahiminia/worldcup2026"
     }
   ],
-  "snapshotDate": "2026-06-22",
+  "snapshotDate": "2026-06-23",
   "snapshotRule": "Before 10:30 PM PDT, show today's matchday; after 10:30 PM PDT, show the next PDT matchday. After the final matchday, keep the final matchday as the snapshot.",
   "staticAfter": "2026-07-20T12:00:00-07:00",
   "liveRefreshRule": "GitHub Actions checks during match windows; open browsers check live scores every 60 seconds during active/recent match windows. Both stop after staticAfter.",
@@ -2517,6 +2517,10 @@
   ],
   "recentChanges": [
     {
+      "time": "Jun 23, 2026 1:03 AM PDT",
+      "text": "M44: Jordan 1-2 Algeria (final) - source: FIFA"
+    },
+    {
       "time": "Jun 22, 2026 9:17 PM PDT",
       "text": "M42: France 3-0 Iraq (final) - source: FIFA"
     },
@@ -2591,17 +2595,13 @@
     {
       "time": "Jun 21, 2026 2:05 AM PDT",
       "text": "M36: Tunisia 0-4 Japan (final) - source: FIFA"
-    },
-    {
-      "time": "Jun 20, 2026 10:15 PM PDT",
-      "text": "M35: Ecuador 0-0 Curaçao (final) - source: FIFA"
     }
   ],
   "apiEndpoints": [
     "https://api.fifa.com/api/v3/calendar/matches?language=en&count=500&from=2026-06-11T00%3A00%3A00Z&to=2026-07-20T23%3A59%3A59Z",
     "https://worldcup26.ir/get/games"
   ],
-  "lastSuccessfulUpdate": "June 22, 2026 09:17 PM PDT",
+  "lastSuccessfulUpdate": "June 23, 2026 01:03 AM PDT",
   "validation": {
     "ok": true,
     "errors": [],
