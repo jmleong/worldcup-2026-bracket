@@ -1,6 +1,6 @@
 {
   "title": "FIFA World Cup 2026 Bracket Tracker",
-  "lastUpdated": "Automated live refresh: June 22, 2026 02:16 PM PDT",
+  "lastUpdated": "Automated live refresh: June 22, 2026 05:17 PM PDT",
   "updateTarget": "Daily 10:30 PM PDT plus during-match live score checks",
   "apiEndpoint": "https://api.fifa.com/api/v3/calendar/matches?language=en&count=500&from=2026-06-11T00%3A00%3A00Z&to=2026-07-20T23%3A59%3A59Z",
   "teams": {
@@ -1035,8 +1035,8 @@
       "home": "France",
       "away": "Iraq",
       "venue": "Philadelphia Stadium, Philadelphia",
-      "status": "live",
-      "homeScore": 1,
+      "status": "final",
+      "homeScore": 2,
       "awayScore": 0,
       "pdt": {
         "date": "2026-06-22",
@@ -1054,16 +1054,17 @@
       "home": "Norway",
       "away": "Senegal",
       "venue": "New York New Jersey Stadium, East Rutherford",
-      "status": "scheduled",
-      "homeScore": null,
-      "awayScore": null,
+      "status": "live",
+      "homeScore": 0,
+      "awayScore": 0,
       "pdt": {
         "date": "2026-06-22",
         "dateLabel": "Mon, Jun 22",
         "time": "5:00 PM PDT",
         "iso": "2026-06-22T17:00:00-07:00",
         "etLabel": "Mon, Jun 22, 8:00 PM ET"
-      }
+      },
+      "resultSource": "FIFA"
     },
     {
       "number": 44,
@@ -2515,6 +2516,14 @@
   ],
   "recentChanges": [
     {
+      "time": "Jun 22, 2026 5:17 PM PDT",
+      "text": "M42: France 2-0 Iraq (final) - source: FIFA"
+    },
+    {
+      "time": "Jun 22, 2026 5:17 PM PDT",
+      "text": "M43: Norway 0-0 Senegal (live) - source: FIFA"
+    },
+    {
       "time": "Jun 22, 2026 2:16 PM PDT",
       "text": "M41: Argentina 2-0 Austria (final) - source: FIFA"
     },
@@ -2585,21 +2594,13 @@
     {
       "time": "Jun 20, 2026 2:40 PM PDT",
       "text": "M34: Germany 1-1 Côte d'Ivoire (live) - source: FIFA"
-    },
-    {
-      "time": "Jun 20, 2026 1:08 PM PDT",
-      "text": "M33: Netherlands 5-1 Sweden (final) - source: FIFA"
-    },
-    {
-      "time": "Jun 20, 2026 1:08 PM PDT",
-      "text": "M34: Germany 0-0 Côte d'Ivoire (live) - source: FIFA"
     }
   ],
   "apiEndpoints": [
     "https://api.fifa.com/api/v3/calendar/matches?language=en&count=500&from=2026-06-11T00%3A00%3A00Z&to=2026-07-20T23%3A59%3A59Z",
     "https://worldcup26.ir/get/games"
   ],
-  "lastSuccessfulUpdate": "June 22, 2026 02:16 PM PDT",
+  "lastSuccessfulUpdate": "June 22, 2026 05:17 PM PDT",
   "validation": {
     "ok": true,
     "errors": [],
