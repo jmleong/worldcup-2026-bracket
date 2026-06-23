@@ -1,6 +1,6 @@
 {
   "title": "FIFA World Cup 2026 Bracket Tracker",
-  "lastUpdated": "Automated live refresh: June 22, 2026 05:17 PM PDT",
+  "lastUpdated": "Automated live refresh: June 22, 2026 09:17 PM PDT",
   "updateTarget": "Daily 10:30 PM PDT plus during-match live score checks",
   "apiEndpoint": "https://api.fifa.com/api/v3/calendar/matches?language=en&count=500&from=2026-06-11T00%3A00%3A00Z&to=2026-07-20T23%3A59%3A59Z",
   "teams": {
@@ -1036,7 +1036,7 @@
       "away": "Iraq",
       "venue": "Philadelphia Stadium, Philadelphia",
       "status": "final",
-      "homeScore": 2,
+      "homeScore": 3,
       "awayScore": 0,
       "pdt": {
         "date": "2026-06-22",
@@ -1054,9 +1054,9 @@
       "home": "Norway",
       "away": "Senegal",
       "venue": "New York New Jersey Stadium, East Rutherford",
-      "status": "live",
-      "homeScore": 0,
-      "awayScore": 0,
+      "status": "final",
+      "homeScore": 3,
+      "awayScore": 2,
       "pdt": {
         "date": "2026-06-22",
         "dateLabel": "Mon, Jun 22",
@@ -1073,16 +1073,17 @@
       "home": "Jordan",
       "away": "Algeria",
       "venue": "San Francisco Bay Area Stadium, Santa Clara",
-      "status": "scheduled",
-      "homeScore": null,
-      "awayScore": null,
+      "status": "live",
+      "homeScore": 1,
+      "awayScore": 0,
       "pdt": {
         "date": "2026-06-22",
         "dateLabel": "Mon, Jun 22",
         "time": "8:00 PM PDT",
         "iso": "2026-06-22T20:00:00-07:00",
         "etLabel": "Mon, Jun 22, 11:00 PM ET"
-      }
+      },
+      "resultSource": "FIFA"
     },
     {
       "number": 45,
@@ -2516,6 +2517,18 @@
   ],
   "recentChanges": [
     {
+      "time": "Jun 22, 2026 9:17 PM PDT",
+      "text": "M42: France 3-0 Iraq (final) - source: FIFA"
+    },
+    {
+      "time": "Jun 22, 2026 9:17 PM PDT",
+      "text": "M43: Norway 3-2 Senegal (final) - source: FIFA"
+    },
+    {
+      "time": "Jun 22, 2026 9:17 PM PDT",
+      "text": "M44: Jordan 1-0 Algeria (live) - source: FIFA"
+    },
+    {
       "time": "Jun 22, 2026 5:17 PM PDT",
       "text": "M42: France 2-0 Iraq (final) - source: FIFA"
     },
@@ -2582,25 +2595,13 @@
     {
       "time": "Jun 20, 2026 10:15 PM PDT",
       "text": "M35: Ecuador 0-0 Curaçao (final) - source: FIFA"
-    },
-    {
-      "time": "Jun 20, 2026 10:15 PM PDT",
-      "text": "M36: Tunisia 0-2 Japan (live) - source: FIFA"
-    },
-    {
-      "time": "Jun 20, 2026 3:49 PM PDT",
-      "text": "M34: Germany 2-1 Côte d'Ivoire (final) - source: FIFA"
-    },
-    {
-      "time": "Jun 20, 2026 2:40 PM PDT",
-      "text": "M34: Germany 1-1 Côte d'Ivoire (live) - source: FIFA"
     }
   ],
   "apiEndpoints": [
     "https://api.fifa.com/api/v3/calendar/matches?language=en&count=500&from=2026-06-11T00%3A00%3A00Z&to=2026-07-20T23%3A59%3A59Z",
     "https://worldcup26.ir/get/games"
   ],
-  "lastSuccessfulUpdate": "June 22, 2026 05:17 PM PDT",
+  "lastSuccessfulUpdate": "June 22, 2026 09:17 PM PDT",
   "validation": {
     "ok": true,
     "errors": [],
