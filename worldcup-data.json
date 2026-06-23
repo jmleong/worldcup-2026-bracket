@@ -1,6 +1,6 @@
 {
   "title": "FIFA World Cup 2026 Bracket Tracker",
-  "lastUpdated": "Automated live refresh: June 23, 2026 11:25 AM PDT",
+  "lastUpdated": "Automated live refresh: June 23, 2026 01:32 PM PDT",
   "updateTarget": "Daily 10:30 PM PDT plus during-match live score checks",
   "apiEndpoint": "https://api.fifa.com/api/v3/calendar/matches?language=en&count=500&from=2026-06-11T00%3A00%3A00Z&to=2026-07-20T23%3A59%3A59Z",
   "teams": {
@@ -1092,8 +1092,8 @@
       "home": "Portugal",
       "away": "Uzbekistan",
       "venue": "Houston Stadium, Houston",
-      "status": "live",
-      "homeScore": 4,
+      "status": "final",
+      "homeScore": 5,
       "awayScore": 0,
       "pdt": {
         "date": "2026-06-23",
@@ -2518,6 +2518,10 @@
   ],
   "recentChanges": [
     {
+      "time": "Jun 23, 2026 1:32 PM PDT",
+      "text": "M45: Portugal 5-0 Uzbekistan (final) - source: FIFA"
+    },
+    {
       "time": "Jun 23, 2026 11:25 AM PDT",
       "text": "M45: Portugal 4-0 Uzbekistan (live) - source: FIFA"
     },
@@ -2592,17 +2596,13 @@
     {
       "time": "Jun 21, 2026 10:48 AM PDT",
       "text": "M37: Spain 4-0 Saudi Arabia (live) - source: FIFA"
-    },
-    {
-      "time": "Jun 21, 2026 9:03 AM PDT",
-      "text": "M37: Spain 0-0 Saudi Arabia (live) - source: FIFA"
     }
   ],
   "apiEndpoints": [
     "https://api.fifa.com/api/v3/calendar/matches?language=en&count=500&from=2026-06-11T00%3A00%3A00Z&to=2026-07-20T23%3A59%3A59Z",
     "https://worldcup26.ir/get/games"
   ],
-  "lastSuccessfulUpdate": "June 23, 2026 11:25 AM PDT",
+  "lastSuccessfulUpdate": "June 23, 2026 01:32 PM PDT",
   "validation": {
     "ok": true,
     "errors": [],
