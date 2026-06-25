@@ -204,21 +204,35 @@
 
   function resolvePlaceholder(label, byNumber, standings, thirdRows, usedThirdGroups) {
     const name = String(label || '');
+    // Winner/Runner-up Group: show confirmed result if group complete, projected leader otherwise
     let m = name.match(/^Winner Group ([A-L])$/);
-    if (m && groupIsComplete(m[1])) return { name: standings[m[1]][0]?.name, note: `Auto-filled from ${label}` };
+    if (m) {
+      const g = m[1];
+      const top = standings[g]?.[0]?.name;
+      if (!top) return null;
+      const confirmed = groupIsComplete(g);
+      return { name: top, note: confirmed ? `Winner Group ${g}` : `Projected Winner Group ${g}` };
+    }
     m = name.match(/^Runner-up Group ([A-L])$/);
-    if (m && groupIsComplete(m[1])) return { name: standings[m[1]][1]?.name, note: `Auto-filled from ${label}` };
+    if (m) {
+      const g = m[1];
+      const second = standings[g]?.[1]?.name;
+      if (!second) return null;
+      const confirmed = groupIsComplete(g);
+      return { name: second, note: confirmed ? `Runner-up Group ${g}` : `Projected Runner-up Group ${g}` };
+    }
     m = name.match(/^3rd Group ([A-L](?:\/[A-L])*)$/);
     if (m) {
       const allowed = m[1].split('/');
+      // Only show confirmed 3rd-place qualifiers (group must be complete)
       const qualified = thirdRows.filter(r => allowed.includes(r.group) && r.thirdRank <= 8 && r.complete && !usedThirdGroups.has(r.group));
       if (qualified.length === 1) {
         usedThirdGroups.add(qualified[0].group);
-        return { name: qualified[0].name, note: `Auto-filled from ${label}` };
+        return { name: qualified[0].name, note: `3rd place qualifier` };
       }
       if (qualified.length > 1 && GROUPS.every(g => groupIsComplete(g))) {
         usedThirdGroups.add(qualified[0].group);
-        return { name: qualified[0].name, note: `Provisional third-place auto-fill from ${label}` };
+        return { name: qualified[0].name, note: `Projected 3rd place qualifier` };
       }
       return null;
     }
@@ -226,13 +240,13 @@
     if (m) {
       const prior = byNumber.get(Number(m[1]));
       const winner = prior ? winnerName(prior) : null;
-      return winner ? { name: winner, note: `Auto-filled from ${label}` } : null;
+      return winner ? { name: winner, note: `Winner M${m[1]}` } : null;
     }
     m = name.match(/^Loser Match (\d+)$/);
     if (m) {
       const prior = byNumber.get(Number(m[1]));
       const loser = prior ? loserName(prior) : null;
-      return loser ? { name: loser, note: `Auto-filled from ${label}` } : null;
+      return loser ? { name: loser, note: `Loser M${m[1]}` } : null;
     }
     return null;
   }
