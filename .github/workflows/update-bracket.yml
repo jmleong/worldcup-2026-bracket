@@ -20,10 +20,6 @@ on:
 
     # During-match score polling — every 10 minutes across the full PDT match day window.
     # PDT match hours: ~9 AM PDT (16:00 UTC) through ~1 AM PDT next day (08:00 UTC).
-    # We split into two UTC hour bands to cover the full window without gaps:
-    #   Band A: UTC hours 14-23 (= 7 AM–4 PM PDT)  — morning and afternoon games
-    #   Band B: UTC hours 0-8  (= 5 PM–1 AM PDT)   — evening games and post-game final scores
-    # This fixes the previous gap at UTC 7-8 (= midnight-1am PDT) where late game scores were missed.
     - cron: "7/10 14-23 11-30 6 *"
     - cron: "7/10 0-8 12-30 6 *"
     - cron: "7/10 14-23 1-19 7 *"
@@ -71,7 +67,7 @@ jobs:
           git push
 
       - name: Prepare site files
-        if: steps.refresh.outputs.changed == 'true' || (github.event_name == 'workflow_dispatch' && inputs.force_deploy == true)
+        if: steps.refresh.outputs.changed == 'true' || github.event_name == 'workflow_dispatch'
         run: |
           mkdir -p _site
           cp index.html styles.css app.js worldcup-data.json _site/
@@ -80,7 +76,7 @@ jobs:
           find _site -maxdepth 1 -type f -printf "%f\n" | sort
 
       - name: Verify required website files
-        if: steps.refresh.outputs.changed == 'true' || (github.event_name == 'workflow_dispatch' && inputs.force_deploy == true)
+        if: steps.refresh.outputs.changed == 'true' || github.event_name == 'workflow_dispatch'
         run: |
           test -s _site/index.html
           test -s _site/styles.css
@@ -88,12 +84,16 @@ jobs:
           test -s _site/worldcup-data.json
 
       - name: Configure GitHub Pages
-        if: steps.refresh.outputs.changed == 'true' || (github.event_name == 'workflow_dispatch' && inputs.force_deploy == true)
+        if: steps.refresh.outputs.changed == 'true' || github.event_name == 'workflow_dispatch'
         uses: actions/configure-pages@v5
 
       - name: Upload site files
-        if: steps.refresh.outputs.changed == 'true' || (github.event_name == 'workflow_dispatch' && inputs.force_deploy == true)
+        if: steps.refresh.outputs.changed == 'true' || github.event_name == 'workflow_dispatch'
         uses: actions/upload-pages-artifact@v3
         with:
           path: "_site"
 
+      - name: Deploy to GitHub Pages
+        if: steps.refresh.outputs.changed == 'true' || github.event_name == 'workflow_dispatch'
+        id: deployment
+        uses: actions/deploy-pages@v4
