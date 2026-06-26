@@ -1396,7 +1396,7 @@
       "home": "Norway",
       "away": "France",
       "venue": "Boston Stadium, Boston",
-      "status": "final",
+      "status": "live",
       "homeScore": 1,
       "awayScore": 3,
       "pdt": {
@@ -1406,7 +1406,7 @@
         "iso": "2026-06-26T12:00:00-07:00",
         "etLabel": "Fri, Jun 26, 3:00 PM ET"
       },
-      "resultSource": "Manually seeded from ESPN/Fox Sports verified results"
+      "resultSource": "Live — halftime score only, game in progress"
     },
     {
       "number": 62,
@@ -1415,7 +1415,7 @@
       "home": "Senegal",
       "away": "Iraq",
       "venue": "Toronto Stadium, Toronto",
-      "status": "final",
+      "status": "live",
       "homeScore": 1,
       "awayScore": 0,
       "pdt": {
@@ -1425,7 +1425,7 @@
         "iso": "2026-06-26T12:00:00-07:00",
         "etLabel": "Fri, Jun 26, 3:00 PM ET"
       },
-      "resultSource": "Manually seeded from ESPN/Fox Sports verified results"
+      "resultSource": "Live — halftime score only, game in progress"
     },
     {
       "number": 63,
