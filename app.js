@@ -642,6 +642,35 @@
     else if (active.length) { pill.textContent = `Live watch · ${active.length}`; pill.classList.add('green'); }
     else { pill.textContent = 'Snapshot loaded'; pill.classList.add('green'); }
   }
+  // renderScores: fast path — only updates sections that show live scores/status.
+  // Called every 60 seconds during live polling. Does NOT recompute standings or bracket.
+  function renderScores() {
+    if (!WC_DATA) return;
+    renderHero();
+    renderMatches();
+    renderDataStatus();
+  }
+
+  // renderStandings: called when a match flips to final — recomputes group tables + third place.
+  function renderStandings() {
+    if (!WC_DATA) return;
+    renderGroups();
+    renderThirdPlace();
+    renderGroupFixtures();
+  }
+
+  // renderBracketIfNeeded: called only when a group becomes newly complete.
+  // Resolves placeholder slots (Winner Group X) and redraws the SVG lines once.
+  function renderBracketIfNeeded(prevFinalsByGroup) {
+    if (!WC_DATA) return;
+    const nowComplete = GROUPS.filter(g => groupIsComplete(g));
+    const newlyComplete = nowComplete.filter(g => !(prevFinalsByGroup[g] === 6));
+    if (newlyComplete.length > 0) {
+      renderBracket();
+    }
+  }
+
+  // renderAll: full render — used on initial load and user-triggered actions (filters, tabs).
   function renderAll() {
     if (!WC_DATA) return;
     populateFilters();
@@ -804,6 +833,12 @@
       if (manual) toast('Live refresh: worldcup-data.json returned no match data.');
       return 0;
     }
+    // Snapshot how many finals exist per group BEFORE applying changes
+    // so we can detect newly-completed groups after the update
+    const prevFinalsByGroup = {};
+    GROUPS.forEach(g => {
+      prevFinalsByGroup[g] = (WC_DATA.matches || []).filter(m => m.group === g && m.status === 'final').length;
+    });
     // Compare fresh JSON to current in-memory data and apply any changes
     let changed = 0;
     const changes = [];
@@ -830,7 +865,19 @@
         : WC_DATA.lastUpdated;
       WC_DATA.snapshotDate = firstMatchDateOnOrAfter(snapshotBaseDate(new Date()), WC_DATA.matches);
       if (changes.length) WC_DATA.recentChanges = [...changes, ...(WC_DATA.recentChanges || [])].slice(0, 20);
-      renderAll();
+      if (manual) {
+        // Manual refresh: full render so user sees everything immediately
+        renderAll();
+      } else {
+        // Automatic poll: smart render path
+        // 1. Always update score/status display
+        renderScores();
+        // 2. If any match flipped to final this poll, recompute standings
+        const anyNewFinal = changes.some(ch => ch.text && ch.text.includes('(final)'));
+        if (anyNewFinal) renderStandings();
+        // 3. If a group became newly complete, redraw bracket once
+        renderBracketIfNeeded(prevFinalsByGroup);
+      }
     } else renderDataStatus();
     if (manual) toast(changed ? `Live refresh: ${changed} score/status update${changed === 1 ? '' : 's'} applied from server.` : 'Live refresh: data is already up to date.');
     else if (changed && !silent) toast(`Score update: ${changed} change${changed === 1 ? '' : 's'} synced from server.`);

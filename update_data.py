@@ -27,6 +27,10 @@ FIFA_CALENDAR_URL = os.environ.get(
     "https://api.fifa.com/api/v3/calendar/matches?language=en&count=500&from=2026-06-11T00%3A00%3A00Z&to=2026-07-20T23%3A59%3A59Z",
 )
 FALLBACK_API_URL = os.environ.get("WORLD_CUP_API_URL", "https://worldcup26.ir/get/games")
+ESPN_API_URL = os.environ.get(
+    "ESPN_API_URL",
+    "https://site.api.espn.com/apis/site/v2/sports/soccer/fifa.world/scoreboard",
+)
 DAILY_CRON_PREFIXES = ("30 5", "35 5", "45 5")
 DEFAULT_STATIC_HOURS_AFTER_LAST_KICKOFF = 24
 LIVE_START_MINUTES_BEFORE = int(os.environ.get("WC_LIVE_START_MINUTES_BEFORE", "15"))
@@ -282,6 +286,54 @@ def fetch_fallback_games() -> list[dict[str, Any]]:
     return [normalize(game) for game in unwrap(payload)]
 
 
+def fetch_espn_games(data: dict[str, Any]) -> list[dict[str, Any]]:
+    """Fetch scores from ESPN scoreboard API — more reliable for live/final status."""
+    payload = fetch_json(ESPN_API_URL)
+    events = payload.get("events") or []
+    teams = known_team_names(data)
+    results: list[dict[str, Any]] = []
+    for event in events:
+        comps = event.get("competitions") or []
+        for comp in comps:
+            competitors = comp.get("competitors") or []
+            if len(competitors) < 2:
+                continue
+            home_comp = next((c for c in competitors if c.get("homeAway") == "home"), competitors[0])
+            away_comp = next((c for c in competitors if c.get("homeAway") == "away"), competitors[1])
+            home_name = canonical(
+                (home_comp.get("team") or {}).get("displayName")
+                or (home_comp.get("team") or {}).get("name") or ""
+            )
+            away_name = canonical(
+                (away_comp.get("team") or {}).get("displayName")
+                or (away_comp.get("team") or {}).get("name") or ""
+            )
+            if home_name not in teams or away_name not in teams:
+                continue
+            status_obj = comp.get("status") or {}
+            status_type = (status_obj.get("type") or {}).get("name") or ""
+            if status_type == "STATUS_FINAL":
+                status = "final"
+            elif status_type in ("STATUS_IN_PROGRESS", "STATUS_HALFTIME"):
+                status = "live"
+            else:
+                status = "scheduled"
+            home_score = to_int((home_comp.get("score") or "").strip() or None)
+            away_score = to_int((away_comp.get("score") or "").strip() or None)
+            results.append({
+                "number": None,
+                "home": home_name,
+                "away": away_name,
+                "homeScore": home_score,
+                "awayScore": away_score,
+                "homePenalties": None,
+                "awayPenalties": None,
+                "status": status,
+                "source": "ESPN",
+            })
+    return results
+
+
 def fetch_games(data: dict[str, Any]) -> tuple[list[dict[str, Any]], list[str]]:
     combined: list[dict[str, Any]] = []
     sources: list[str] = []
@@ -298,6 +350,12 @@ def fetch_games(data: dict[str, Any]) -> tuple[list[dict[str, Any]], list[str]]:
         sources.append(f"Fallback World Cup API ({len(fallback)} records)")
     except Exception as exc:
         errors.append(f"Fallback API error: {exc}")
+    try:
+        espn = fetch_espn_games(data)
+        combined.extend(espn)
+        sources.append(f"ESPN scoreboard API ({len(espn)} usable records)")
+    except Exception as exc:
+        errors.append(f"ESPN API error: {exc}")
     if not combined and errors:
         raise RuntimeError("; ".join(errors))
     return combined, sources or errors
@@ -462,7 +520,7 @@ def update_metadata(data: dict[str, Any], mode: str, now: datetime, score_change
     })
     fields: dict[str, Any] = {
         "apiEndpoint": FIFA_CALENDAR_URL,
-        "apiEndpoints": [FIFA_CALENDAR_URL, FALLBACK_API_URL],
+        "apiEndpoints": [FIFA_CALENDAR_URL, FALLBACK_API_URL, ESPN_API_URL],
         "liveRefresh": live_refresh,
         "updateTarget": "Daily 10:30 PM PDT plus during-match live score checks",
         "snapshotRule": "Before 10:30 PM PDT, show today's matchday; after 10:30 PM PDT, show the next PDT matchday. After the final matchday, keep the final matchday as the snapshot.",
@@ -476,6 +534,9 @@ def update_metadata(data: dict[str, Any], mode: str, now: datetime, score_change
     if change_records:
         existing = data.get("recentChanges") or []
         fields["recentChanges"] = (change_records + existing)[:20]
+    # Always update lastChecked so GitHub Actions always has something to commit,
+    # which changes the file ETag and busts the GitHub Pages CDN cache every run.
+    fields["lastChecked"] = now.strftime("%B ") + str(now.day) + now.strftime(", %Y %I:%M %p PDT")
     if score_changes or mode in {"daily", "manual"}:
         now_text = now.strftime("%B ") + str(now.day) + now.strftime(", %Y %I:%M %p PDT")
         fields["lastUpdated"] = f"Automated {mode} refresh: {now_text}"
