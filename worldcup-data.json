@@ -1,6 +1,6 @@
 {
   "title": "FIFA World Cup 2026 Bracket Tracker",
-  "lastUpdated": "Manual seed: 6/26/2026, 12:45 PM PDT",
+  "lastUpdated": "Automated manual refresh: June 26, 2026 12:47 PM PDT",
   "updateTarget": "Daily 10:30 PM PDT plus during-match live score checks",
   "apiEndpoint": "https://api.fifa.com/api/v3/calendar/matches?language=en&count=500&from=2026-06-11T00%3A00%3A00Z&to=2026-07-20T23%3A59%3A59Z",
   "teams": {
@@ -2619,7 +2619,7 @@
     "https://api.fifa.com/api/v3/calendar/matches?language=en&count=500&from=2026-06-11T00%3A00%3A00Z&to=2026-07-20T23%3A59%3A59Z",
     "https://worldcup26.ir/get/games"
   ],
-  "lastSuccessfulUpdate": "6/26/2026, 12:45 PM PDT",
+  "lastSuccessfulUpdate": "June 26, 2026 12:47 PM PDT",
   "validation": {
     "ok": true,
     "errors": [],
