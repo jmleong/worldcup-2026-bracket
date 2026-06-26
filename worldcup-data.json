@@ -1,6 +1,6 @@
 {
   "title": "FIFA World Cup 2026 Bracket Tracker",
-  "lastUpdated": "Automated manual refresh: June 26, 2026 01:25 PM PDT",
+  "lastUpdated": "Automated live refresh: June 26, 2026 02:40 PM PDT",
   "updateTarget": "Daily 10:30 PM PDT plus during-match live score checks",
   "apiEndpoint": "https://api.fifa.com/api/v3/calendar/matches?language=en&count=500&from=2026-06-11T00%3A00%3A00Z&to=2026-07-20T23%3A59%3A59Z",
   "teams": {
@@ -1396,9 +1396,9 @@
       "home": "Norway",
       "away": "France",
       "venue": "Boston Stadium, Boston",
-      "status": "live",
+      "status": "final",
       "homeScore": 1,
-      "awayScore": 3,
+      "awayScore": 4,
       "pdt": {
         "date": "2026-06-26",
         "dateLabel": "Fri, Jun 26",
@@ -1415,8 +1415,8 @@
       "home": "Senegal",
       "away": "Iraq",
       "venue": "Toronto Stadium, Toronto",
-      "status": "live",
-      "homeScore": 2,
+      "status": "final",
+      "homeScore": 5,
       "awayScore": 0,
       "pdt": {
         "date": "2026-06-26",
@@ -2539,6 +2539,14 @@
   ],
   "recentChanges": [
     {
+      "time": "Jun 26, 2026 2:40 PM PDT",
+      "text": "M61: Norway 1-4 France (final) - source: ESPN"
+    },
+    {
+      "time": "Jun 26, 2026 2:40 PM PDT",
+      "text": "M62: Senegal 5-0 Iraq (final) - source: ESPN"
+    },
+    {
       "time": "Jun 26, 2026 1:25 PM PDT",
       "text": "M62: Senegal 2-0 Iraq (live) - source: ESPN"
     },
@@ -2609,14 +2617,6 @@
     {
       "time": "Jun 22, 2026 5:17 PM PDT",
       "text": "M43: Norway 0-0 Senegal (live) - source: FIFA"
-    },
-    {
-      "time": "Jun 22, 2026 2:16 PM PDT",
-      "text": "M41: Argentina 2-0 Austria (final) - source: FIFA"
-    },
-    {
-      "time": "Jun 22, 2026 2:16 PM PDT",
-      "text": "M42: France 1-0 Iraq (live) - source: FIFA"
     }
   ],
   "apiEndpoints": [
@@ -2624,7 +2624,7 @@
     "https://worldcup26.ir/get/games",
     "https://site.api.espn.com/apis/site/v2/sports/soccer/fifa.world/scoreboard"
   ],
-  "lastSuccessfulUpdate": "June 26, 2026 01:25 PM PDT",
+  "lastSuccessfulUpdate": "June 26, 2026 02:40 PM PDT",
   "validation": {
     "ok": true,
     "errors": [],
@@ -2636,5 +2636,5 @@
     "Fallback World Cup API (104 records)",
     "ESPN scoreboard API (6 usable records)"
   ],
-  "lastChecked": "June 26, 2026 01:25 PM PDT"
+  "lastChecked": "June 26, 2026 02:40 PM PDT"
 }
