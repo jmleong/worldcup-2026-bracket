@@ -1,6 +1,6 @@
 {
   "title": "FIFA World Cup 2026 Bracket Tracker",
-  "lastUpdated": "Automated manual refresh: June 25, 2026 02:47 PM PDT",
+  "lastUpdated": "Automated live refresh: June 25, 2026 09:37 PM PDT",
   "updateTarget": "Daily 10:30 PM PDT plus during-match live score checks",
   "apiEndpoint": "https://api.fifa.com/api/v3/calendar/matches?language=en&count=500&from=2026-06-11T00%3A00%3A00Z&to=2026-07-20T23%3A59%3A59Z",
   "teams": {
@@ -1111,16 +1111,17 @@
       "home": "England",
       "away": "Ghana",
       "venue": "Boston Stadium, Boston",
-      "status": "scheduled",
-      "homeScore": null,
-      "awayScore": null,
+      "status": "final",
+      "homeScore": 0,
+      "awayScore": 0,
       "pdt": {
         "date": "2026-06-23",
         "dateLabel": "Tue, Jun 23",
         "time": "1:00 PM PDT",
         "iso": "2026-06-23T13:00:00-07:00",
         "etLabel": "Tue, Jun 23, 4:00 PM ET"
-      }
+      },
+      "resultSource": "FIFA"
     },
     {
       "number": 47,
@@ -1129,16 +1130,17 @@
       "home": "Panama",
       "away": "Croatia",
       "venue": "Toronto Stadium, Toronto",
-      "status": "scheduled",
-      "homeScore": null,
-      "awayScore": null,
+      "status": "final",
+      "homeScore": 0,
+      "awayScore": 1,
       "pdt": {
         "date": "2026-06-23",
         "dateLabel": "Tue, Jun 23",
         "time": "4:00 PM PDT",
         "iso": "2026-06-23T16:00:00-07:00",
         "etLabel": "Tue, Jun 23, 7:00 PM ET"
-      }
+      },
+      "resultSource": "FIFA"
     },
     {
       "number": 48,
@@ -1147,16 +1149,17 @@
       "home": "Colombia",
       "away": "Congo DR",
       "venue": "Estadio Guadalajara, Guadalajara",
-      "status": "scheduled",
-      "homeScore": null,
-      "awayScore": null,
+      "status": "final",
+      "homeScore": 1,
+      "awayScore": 0,
       "pdt": {
         "date": "2026-06-23",
         "dateLabel": "Tue, Jun 23",
         "time": "7:00 PM PDT",
         "iso": "2026-06-23T19:00:00-07:00",
         "etLabel": "Tue, Jun 23, 10:00 PM ET"
-      }
+      },
+      "resultSource": "FIFA"
     },
     {
       "number": 49,
@@ -2518,6 +2521,18 @@
   ],
   "recentChanges": [
     {
+      "time": "Jun 25, 2026 9:37 PM PDT",
+      "text": "M46: England 0-0 Ghana (final) - source: FIFA"
+    },
+    {
+      "time": "Jun 25, 2026 9:37 PM PDT",
+      "text": "M47: Panama 0-1 Croatia (final) - source: FIFA"
+    },
+    {
+      "time": "Jun 25, 2026 9:37 PM PDT",
+      "text": "M48: Colombia 1-0 Congo DR (final) - source: FIFA"
+    },
+    {
       "time": "Jun 23, 2026 1:32 PM PDT",
       "text": "M45: Portugal 5-0 Uzbekistan (final) - source: FIFA"
     },
@@ -2584,25 +2599,13 @@
     {
       "time": "Jun 21, 2026 3:07 PM PDT",
       "text": "M39: Uruguay 0-0 Cabo Verde (live) - source: FIFA"
-    },
-    {
-      "time": "Jun 21, 2026 12:10 PM PDT",
-      "text": "M37: Spain 4-0 Saudi Arabia (final) - source: FIFA"
-    },
-    {
-      "time": "Jun 21, 2026 12:10 PM PDT",
-      "text": "M38: Belgium 0-0 IR Iran (live) - source: FIFA"
-    },
-    {
-      "time": "Jun 21, 2026 10:48 AM PDT",
-      "text": "M37: Spain 4-0 Saudi Arabia (live) - source: FIFA"
     }
   ],
   "apiEndpoints": [
     "https://api.fifa.com/api/v3/calendar/matches?language=en&count=500&from=2026-06-11T00%3A00%3A00Z&to=2026-07-20T23%3A59%3A59Z",
     "https://worldcup26.ir/get/games"
   ],
-  "lastSuccessfulUpdate": "June 25, 2026 02:47 PM PDT",
+  "lastSuccessfulUpdate": "June 25, 2026 09:37 PM PDT",
   "validation": {
     "ok": true,
     "errors": [],
@@ -2610,7 +2613,7 @@
     "checkedBy": "update_data.py validation"
   },
   "lastRefreshSources": [
-    "FIFA calendar API (45 usable records)",
+    "FIFA calendar API (48 usable records)",
     "Fallback World Cup API (104 records)"
   ]
 }
