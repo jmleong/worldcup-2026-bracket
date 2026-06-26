@@ -126,7 +126,23 @@
     const pen = side === 'home' ? match.homePenalties : match.awayPenalties;
     return pen != null ? `${score} (${pen})` : String(score);
   }
-  function statusLabel(match) { return match.status === 'final' ? 'Final' : (match.status === 'live' ? 'Live' : 'Scheduled'); }
+  // statusLabel is the SINGLE place that converts match.status to display text.
+  // It also auto-derives 'Live' from kickoff time when the stored status is 'scheduled'
+  // but the match window is currently active — this handles FIFA API gaps.
+  function statusLabel(match, now = new Date()) {
+    if (match.status === 'final') return 'Final';
+    if (match.status === 'live') return 'Live';
+    // Auto-derive live status from kickoff time (covers FIFA API gaps)
+    if (match.status !== 'final' && isInLiveWindow(match, now)) return 'Live';
+    return 'Scheduled';
+  }
+  // statusClass returns the CSS class matching the effective status
+  function statusClass(match, now = new Date()) {
+    const label = statusLabel(match, now);
+    if (label === 'Final') return 'final';
+    if (label === 'Live') return 'live';
+    return 'scheduled';
+  }
   function pointsFor(match, side) {
     if (match.stage !== 'Group Stage' || match.status !== 'final' || !hasScore(match)) return '';
     if (match.homeScore === match.awayScore) return '+1 pt';
@@ -331,14 +347,14 @@
       <div class="match-head"><span>M${Number(match.number)} · ${escapeHtml(label)}</span><span>${status}</span></div>
       <div class="teams">${teamRow(match,'home')}${teamRow(match,'away')}</div>
       <div class="meta"><span class="time-label">${escapeHtml(formatKickoff(match, opts.compactTime))}</span><br>${escapeHtml(match.venue || 'Venue TBD')}
-        <div class="badge-row"><span class="tiny ${escapeAttr(match.status || 'scheduled')}">${status}</span>${points}${winnerNote}${auto}</div>
+        <div class="badge-row"><span class="tiny ${statusClass(match)}">${status}</span>${points}${winnerNote}${auto}</div>
       </div>
     </article>`;
   }
   function fixtureMiniCard(match) {
     const points = match.status === 'final' && match.stage === 'Group Stage'
       ? `<span class="tiny points-value">${escapeHtml(displayTeamName(match.home))} ${pointsFor(match,'home')}</span><span class="tiny points-value">${escapeHtml(displayTeamName(match.away))} ${pointsFor(match,'away')}</span>`
-      : `<span class="tiny ${escapeAttr(match.status || 'scheduled')}">${statusLabel(match)}</span>`;
+      : `<span class="tiny ${statusClass(match)}">${statusLabel(match)}</span>`;
     return `<article class="fixture-mini" data-match="${Number(match.number)}">
       <div class="fixture-top"><span>M${Number(match.number)}</span><span>${escapeHtml(formatKickoff(match, true))}</span></div>
       <div class="fixture-teams">${teamRow(match,'home')}${teamRow(match,'away')}</div>
@@ -366,7 +382,8 @@
     const validation = WC_DATA.validation || validateData(WC_DATA);
     const snapDate = snapshotTargetDate();
     return [
-      `<div class="status-card"><b>Last update</b><span>${escapeHtml(WC_DATA.lastSuccessfulUpdate || WC_DATA.lastUpdated || 'Not recorded yet')}</span></div>`,
+      `<div class="status-card"><b>Server update</b><span>${escapeHtml(WC_DATA.lastSuccessfulUpdate || WC_DATA.lastUpdated || 'Not recorded yet')}</span></div>`,
+      `<div class="status-card"><b>Browser synced</b><span id="browserFetchTime">${escapeHtml(WC_DATA._browserFetchTime || 'Not yet fetched this session')}</span></div>`,
       `<div class="status-card"><b>Snapshot</b><span>${escapeHtml(snapDate ? fullDateLabel(snapDate) : 'No matchday')}</span></div>`,
       `<div class="status-card"><b>Validation</b><span>${validation.ok ? 'Passed' : `${validation.errors.length} issue(s)`}</span></div>`,
       `<div class="status-card"><b>Static after</b><span>${escapeHtml(formatCutoff())}</span></div>`
@@ -807,6 +824,7 @@
       if (freshData[key] !== undefined) WC_DATA[key] = freshData[key];
     });
     if (changed || manual) {
+      WC_DATA._browserFetchTime = new Date().toLocaleString('en-US', { timeZone:'America/Los_Angeles', dateStyle:'medium', timeStyle:'short' }) + ' PDT';
       WC_DATA.lastUpdated = changed
         ? `Browser sync: ${new Date().toLocaleString('en-US', { timeZone:'America/Los_Angeles', dateStyle:'medium', timeStyle:'short' })} PDT (${changed} field${changed === 1 ? '' : 's'} updated)`
         : WC_DATA.lastUpdated;

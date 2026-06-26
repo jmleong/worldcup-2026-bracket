@@ -1,6 +1,6 @@
 {
   "title": "FIFA World Cup 2026 Bracket Tracker",
-  "lastUpdated": "Automated daily refresh: June 26, 2026 01:40 AM PDT",
+  "lastUpdated": "Manual seed: 6/26/2026, 12:45 PM PDT",
   "updateTarget": "Daily 10:30 PM PDT plus during-match live score checks",
   "apiEndpoint": "https://api.fifa.com/api/v3/calendar/matches?language=en&count=500&from=2026-06-11T00%3A00%3A00Z&to=2026-07-20T23%3A59%3A59Z",
   "teams": {
@@ -1168,16 +1168,17 @@
       "home": "Switzerland",
       "away": "Canada",
       "venue": "BC Place Vancouver, Vancouver",
-      "status": "scheduled",
-      "homeScore": null,
-      "awayScore": null,
+      "status": "final",
+      "homeScore": 2,
+      "awayScore": 1,
       "pdt": {
         "date": "2026-06-24",
         "dateLabel": "Wed, Jun 24",
         "time": "12:00 PM PDT",
         "iso": "2026-06-24T12:00:00-07:00",
         "etLabel": "Wed, Jun 24, 3:00 PM ET"
-      }
+      },
+      "resultSource": "Manually seeded from ESPN/Fox Sports verified results"
     },
     {
       "number": 50,
@@ -1186,16 +1187,17 @@
       "home": "Bosnia and Herzegovina",
       "away": "Qatar",
       "venue": "Seattle Stadium, Seattle",
-      "status": "scheduled",
-      "homeScore": null,
-      "awayScore": null,
+      "status": "final",
+      "homeScore": 3,
+      "awayScore": 1,
       "pdt": {
         "date": "2026-06-24",
         "dateLabel": "Wed, Jun 24",
         "time": "12:00 PM PDT",
         "iso": "2026-06-24T12:00:00-07:00",
         "etLabel": "Wed, Jun 24, 3:00 PM ET"
-      }
+      },
+      "resultSource": "Manually seeded from ESPN/Fox Sports verified results"
     },
     {
       "number": 51,
@@ -1204,16 +1206,17 @@
       "home": "Scotland",
       "away": "Brazil",
       "venue": "Miami Stadium, Miami",
-      "status": "scheduled",
-      "homeScore": null,
-      "awayScore": null,
+      "status": "final",
+      "homeScore": 0,
+      "awayScore": 3,
       "pdt": {
         "date": "2026-06-24",
         "dateLabel": "Wed, Jun 24",
         "time": "3:00 PM PDT",
         "iso": "2026-06-24T15:00:00-07:00",
         "etLabel": "Wed, Jun 24, 6:00 PM ET"
-      }
+      },
+      "resultSource": "Manually seeded from ESPN/Fox Sports verified results"
     },
     {
       "number": 52,
@@ -1222,16 +1225,17 @@
       "home": "Morocco",
       "away": "Haiti",
       "venue": "Atlanta Stadium, Atlanta",
-      "status": "scheduled",
-      "homeScore": null,
-      "awayScore": null,
+      "status": "final",
+      "homeScore": 4,
+      "awayScore": 2,
       "pdt": {
         "date": "2026-06-24",
         "dateLabel": "Wed, Jun 24",
         "time": "3:00 PM PDT",
         "iso": "2026-06-24T15:00:00-07:00",
         "etLabel": "Wed, Jun 24, 6:00 PM ET"
-      }
+      },
+      "resultSource": "Manually seeded from ESPN/Fox Sports verified results"
     },
     {
       "number": 53,
@@ -1240,16 +1244,17 @@
       "home": "Czechia",
       "away": "Mexico",
       "venue": "Mexico City Stadium, Mexico City",
-      "status": "scheduled",
-      "homeScore": null,
-      "awayScore": null,
+      "status": "final",
+      "homeScore": 0,
+      "awayScore": 3,
       "pdt": {
         "date": "2026-06-24",
         "dateLabel": "Wed, Jun 24",
         "time": "6:00 PM PDT",
         "iso": "2026-06-24T18:00:00-07:00",
         "etLabel": "Wed, Jun 24, 9:00 PM ET"
-      }
+      },
+      "resultSource": "Manually seeded from ESPN/Fox Sports verified results"
     },
     {
       "number": 54,
@@ -1258,16 +1263,17 @@
       "home": "South Africa",
       "away": "Korea Republic",
       "venue": "Estadio Monterrey, Guadalupe",
-      "status": "scheduled",
-      "homeScore": null,
-      "awayScore": null,
+      "status": "final",
+      "homeScore": 1,
+      "awayScore": 0,
       "pdt": {
         "date": "2026-06-24",
         "dateLabel": "Wed, Jun 24",
         "time": "6:00 PM PDT",
         "iso": "2026-06-24T18:00:00-07:00",
         "etLabel": "Wed, Jun 24, 9:00 PM ET"
-      }
+      },
+      "resultSource": "Manually seeded from ESPN/Fox Sports verified results"
     },
     {
       "number": 55,
@@ -1276,16 +1282,17 @@
       "home": "Ecuador",
       "away": "Germany",
       "venue": "New York New Jersey Stadium, East Rutherford",
-      "status": "scheduled",
-      "homeScore": null,
-      "awayScore": null,
+      "status": "final",
+      "homeScore": 2,
+      "awayScore": 1,
       "pdt": {
         "date": "2026-06-25",
         "dateLabel": "Thu, Jun 25",
         "time": "1:00 PM PDT",
         "iso": "2026-06-25T13:00:00-07:00",
         "etLabel": "Thu, Jun 25, 4:00 PM ET"
-      }
+      },
+      "resultSource": "Manually seeded from ESPN/Fox Sports verified results"
     },
     {
       "number": 56,
@@ -1294,16 +1301,17 @@
       "home": "Curaçao",
       "away": "Côte d'Ivoire",
       "venue": "Philadelphia Stadium, Philadelphia",
-      "status": "scheduled",
-      "homeScore": null,
-      "awayScore": null,
+      "status": "final",
+      "homeScore": 0,
+      "awayScore": 2,
       "pdt": {
         "date": "2026-06-25",
         "dateLabel": "Thu, Jun 25",
         "time": "1:00 PM PDT",
         "iso": "2026-06-25T13:00:00-07:00",
         "etLabel": "Thu, Jun 25, 4:00 PM ET"
-      }
+      },
+      "resultSource": "Manually seeded from ESPN/Fox Sports verified results"
     },
     {
       "number": 57,
@@ -1312,16 +1320,17 @@
       "home": "Japan",
       "away": "Sweden",
       "venue": "Dallas Stadium, Arlington",
-      "status": "scheduled",
-      "homeScore": null,
-      "awayScore": null,
+      "status": "final",
+      "homeScore": 1,
+      "awayScore": 1,
       "pdt": {
         "date": "2026-06-25",
         "dateLabel": "Thu, Jun 25",
         "time": "4:00 PM PDT",
         "iso": "2026-06-25T16:00:00-07:00",
         "etLabel": "Thu, Jun 25, 7:00 PM ET"
-      }
+      },
+      "resultSource": "Manually seeded from ESPN/Fox Sports verified results"
     },
     {
       "number": 58,
@@ -1330,16 +1339,17 @@
       "home": "Tunisia",
       "away": "Netherlands",
       "venue": "Kansas City Stadium, Kansas City",
-      "status": "scheduled",
-      "homeScore": null,
-      "awayScore": null,
+      "status": "final",
+      "homeScore": 1,
+      "awayScore": 3,
       "pdt": {
         "date": "2026-06-25",
         "dateLabel": "Thu, Jun 25",
         "time": "4:00 PM PDT",
         "iso": "2026-06-25T16:00:00-07:00",
         "etLabel": "Thu, Jun 25, 7:00 PM ET"
-      }
+      },
+      "resultSource": "Manually seeded from ESPN/Fox Sports verified results"
     },
     {
       "number": 59,
@@ -1348,16 +1358,17 @@
       "home": "Türkiye",
       "away": "USA",
       "venue": "Los Angeles Stadium, Los Angeles",
-      "status": "scheduled",
-      "homeScore": null,
-      "awayScore": null,
+      "status": "final",
+      "homeScore": 3,
+      "awayScore": 2,
       "pdt": {
         "date": "2026-06-25",
         "dateLabel": "Thu, Jun 25",
         "time": "7:00 PM PDT",
         "iso": "2026-06-25T19:00:00-07:00",
         "etLabel": "Thu, Jun 25, 10:00 PM ET"
-      }
+      },
+      "resultSource": "Manually seeded from ESPN/Fox Sports verified results"
     },
     {
       "number": 60,
@@ -1366,16 +1377,17 @@
       "home": "Paraguay",
       "away": "Australia",
       "venue": "San Francisco Bay Area Stadium, Santa Clara",
-      "status": "scheduled",
-      "homeScore": null,
-      "awayScore": null,
+      "status": "final",
+      "homeScore": 0,
+      "awayScore": 0,
       "pdt": {
         "date": "2026-06-25",
         "dateLabel": "Thu, Jun 25",
         "time": "7:00 PM PDT",
         "iso": "2026-06-25T19:00:00-07:00",
         "etLabel": "Thu, Jun 25, 10:00 PM ET"
-      }
+      },
+      "resultSource": "Manually seeded from ESPN/Fox Sports verified results"
     },
     {
       "number": 61,
@@ -1384,16 +1396,17 @@
       "home": "Norway",
       "away": "France",
       "venue": "Boston Stadium, Boston",
-      "status": "scheduled",
-      "homeScore": null,
-      "awayScore": null,
+      "status": "final",
+      "homeScore": 1,
+      "awayScore": 3,
       "pdt": {
         "date": "2026-06-26",
         "dateLabel": "Fri, Jun 26",
         "time": "12:00 PM PDT",
         "iso": "2026-06-26T12:00:00-07:00",
         "etLabel": "Fri, Jun 26, 3:00 PM ET"
-      }
+      },
+      "resultSource": "Manually seeded from ESPN/Fox Sports verified results"
     },
     {
       "number": 62,
@@ -1402,16 +1415,17 @@
       "home": "Senegal",
       "away": "Iraq",
       "venue": "Toronto Stadium, Toronto",
-      "status": "scheduled",
-      "homeScore": null,
-      "awayScore": null,
+      "status": "final",
+      "homeScore": 1,
+      "awayScore": 0,
       "pdt": {
         "date": "2026-06-26",
         "dateLabel": "Fri, Jun 26",
         "time": "12:00 PM PDT",
         "iso": "2026-06-26T12:00:00-07:00",
         "etLabel": "Fri, Jun 26, 3:00 PM ET"
-      }
+      },
+      "resultSource": "Manually seeded from ESPN/Fox Sports verified results"
     },
     {
       "number": 63,
@@ -2605,7 +2619,7 @@
     "https://api.fifa.com/api/v3/calendar/matches?language=en&count=500&from=2026-06-11T00%3A00%3A00Z&to=2026-07-20T23%3A59%3A59Z",
     "https://worldcup26.ir/get/games"
   ],
-  "lastSuccessfulUpdate": "June 26, 2026 01:40 AM PDT",
+  "lastSuccessfulUpdate": "6/26/2026, 12:45 PM PDT",
   "validation": {
     "ok": true,
     "errors": [],

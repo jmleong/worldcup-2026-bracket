@@ -67,7 +67,7 @@ jobs:
           git push
 
       - name: Prepare site files
-        if: steps.refresh.outputs.changed == 'true' || github.event_name == 'workflow_dispatch'
+        if: steps.refresh.outputs.changed == 'true' || github.event_name == 'workflow_dispatch' || github.event_name == 'schedule'
         run: |
           mkdir -p _site
           cp index.html styles.css app.js worldcup-data.json _site/
@@ -76,7 +76,7 @@ jobs:
           find _site -maxdepth 1 -type f -printf "%f\n" | sort
 
       - name: Verify required website files
-        if: steps.refresh.outputs.changed == 'true' || github.event_name == 'workflow_dispatch'
+        if: steps.refresh.outputs.changed == 'true' || github.event_name == 'workflow_dispatch' || github.event_name == 'schedule'
         run: |
           test -s _site/index.html
           test -s _site/styles.css
@@ -84,16 +84,16 @@ jobs:
           test -s _site/worldcup-data.json
 
       - name: Configure GitHub Pages
-        if: steps.refresh.outputs.changed == 'true' || github.event_name == 'workflow_dispatch'
+        if: steps.refresh.outputs.changed == 'true' || github.event_name == 'workflow_dispatch' || github.event_name == 'schedule'
         uses: actions/configure-pages@v5
 
       - name: Upload site files
-        if: steps.refresh.outputs.changed == 'true' || github.event_name == 'workflow_dispatch'
+        if: steps.refresh.outputs.changed == 'true' || github.event_name == 'workflow_dispatch' || github.event_name == 'schedule'
         uses: actions/upload-pages-artifact@v3
         with:
           path: "_site"
 
       - name: Deploy to GitHub Pages
-        if: steps.refresh.outputs.changed == 'true' || github.event_name == 'workflow_dispatch'
+        if: steps.refresh.outputs.changed == 'true' || github.event_name == 'workflow_dispatch' || github.event_name == 'schedule'
         id: deployment
         uses: actions/deploy-pages@v4
