@@ -127,13 +127,25 @@
     return pen != null ? `${score} (${pen})` : String(score);
   }
   // statusLabel is the SINGLE place that converts match.status to display text.
-  // It also auto-derives 'Live' from kickoff time when the stored status is 'scheduled'
-  // but the match window is currently active — this handles FIFA API gaps.
+  //
+  // Rules:
+  //   Scheduled → kickoff has not happened yet (now < kickoff)
+  //   Live      → kickoff has passed AND game is not yet final
+  //               (API sets status='live', OR kickoff is in the past and status != 'final')
+  //   Final     → API says final (status='final'), OR 130 min have passed since kickoff
+  //               (90 min game + buffer for stoppage/halftime/extra time)
+  //
+  // The API never needs to confirm a game is live — if kickoff passed, it's live.
+  // 130-min auto-final is the safety net for when the API misses marking it finished.
   function statusLabel(match, now = new Date()) {
     if (match.status === 'final') return 'Final';
-    if (match.status === 'live') return 'Live';
-    // Auto-derive live status from kickoff time (covers FIFA API gaps)
-    if (match.status !== 'final' && isInLiveWindow(match, now)) return 'Live';
+    const kickoff = new Date(match.pdt?.iso);
+    if (Number.isNaN(kickoff.getTime())) return 'Scheduled';
+    const minutesSinceKickoff = (now - kickoff) / 60000;
+    // Auto-final: 130 minutes past kickoff with no final from API
+    if (minutesSinceKickoff >= 130) return 'Final';
+    // Live: kickoff has passed
+    if (minutesSinceKickoff >= 0) return 'Live';
     return 'Scheduled';
   }
   // statusClass returns the CSS class matching the effective status
