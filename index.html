@@ -45,6 +45,7 @@
       <a href="#groups">Standings</a>
       <a href="#third-place">Third-place race</a>
       <a href="#matches">Match Explorer</a>
+      <a href="#challenge">Bracket Challenge</a>
       <a href="#automation">Updates</a>
       <a href="#implemented">Implemented</a>
       <a href="#sources">Sources</a>
@@ -122,6 +123,13 @@
       </div>
     </section>
 
+    <section id="challenge">
+      <h2>Bracket Challenge</h2>
+      <div class="panel" id="challengeRoot">
+        <div class="challenge-loading">Loading challenge…</div>
+      </div>
+    </section>
+
     <section id="automation">
       <div class="section-title"><div><h2>Live updates and daily snapshot</h2><p>The automation keeps the nightly snapshot, checks after/during matches, avoids unnecessary deploys, and stops after the final cutoff.</p></div></div>
       <div class="panel status-panel">
@@ -143,6 +151,8 @@
     <footer>Built as a static GitHub Pages tracker. The default displayed time zone is PDT; use the time display control for venue or local time.</footer>
   </div>
   <div id="toast" class="toast" role="status" aria-live="polite"></div>
+  <link rel="stylesheet" href="challenge.css">
   <script src="app.js"></script>
+  <script src="challenge.js"></script>
 </body>
 </html>

@@ -1022,5 +1022,17 @@
       }
     }
   }
-  document.addEventListener('DOMContentLoaded', init);
+  // Expose decoratedMatches for challenge.js to use
+  window.decoratedMatches = decoratedMatches;
+  // Expose WC_DATA globally so challenge.js can access match data
+  Object.defineProperty(window, 'WC_DATA', {
+    get() { return WC_DATA; },
+    configurable: true,
+  });
+
+  document.addEventListener('DOMContentLoaded', () => {
+    init();
+    // Init bracket challenge after a short delay to let WC_DATA load
+    setTimeout(() => { if (window.CHALLENGE) CHALLENGE.init(); }, 500);
+  });
 })();
