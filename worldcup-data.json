@@ -1,6 +1,6 @@
 {
   "title": "FIFA World Cup 2026 Bracket Tracker",
-  "lastUpdated": "Automated live refresh: June 26, 2026 09:13 PM PDT",
+  "lastUpdated": "Automated live refresh: June 27, 2026 12:29 AM PDT",
   "updateTarget": "Daily 10:30 PM PDT plus during-match live score checks",
   "apiEndpoint": "https://api.fifa.com/api/v3/calendar/matches?language=en&count=500&from=2026-06-11T00%3A00%3A00Z&to=2026-07-20T23%3A59%3A59Z",
   "teams": {
@@ -1510,16 +1510,17 @@
       "home": "Panama",
       "away": "England",
       "venue": "New York New Jersey Stadium, East Rutherford",
-      "status": "scheduled",
-      "homeScore": null,
-      "awayScore": null,
+      "status": "live",
+      "homeScore": 0,
+      "awayScore": 0,
       "pdt": {
         "date": "2026-06-27",
         "dateLabel": "Sat, Jun 27",
         "time": "2:00 PM PDT",
         "iso": "2026-06-27T14:00:00-07:00",
         "etLabel": "Sat, Jun 27, 5:00 PM ET"
-      }
+      },
+      "resultSource": "ESPN"
     },
     {
       "number": 68,
@@ -1528,16 +1529,17 @@
       "home": "Croatia",
       "away": "Ghana",
       "venue": "Philadelphia Stadium, Philadelphia",
-      "status": "scheduled",
-      "homeScore": null,
-      "awayScore": null,
+      "status": "live",
+      "homeScore": 0,
+      "awayScore": 0,
       "pdt": {
         "date": "2026-06-27",
         "dateLabel": "Sat, Jun 27",
         "time": "2:00 PM PDT",
         "iso": "2026-06-27T14:00:00-07:00",
         "etLabel": "Sat, Jun 27, 5:00 PM ET"
-      }
+      },
+      "resultSource": "ESPN"
     },
     {
       "number": 69,
@@ -1546,16 +1548,17 @@
       "home": "Colombia",
       "away": "Portugal",
       "venue": "Miami Stadium, Miami",
-      "status": "scheduled",
-      "homeScore": null,
-      "awayScore": null,
+      "status": "live",
+      "homeScore": 0,
+      "awayScore": 0,
       "pdt": {
         "date": "2026-06-27",
         "dateLabel": "Sat, Jun 27",
         "time": "4:30 PM PDT",
         "iso": "2026-06-27T16:30:00-07:00",
         "etLabel": "Sat, Jun 27, 7:30 PM ET"
-      }
+      },
+      "resultSource": "ESPN"
     },
     {
       "number": 70,
@@ -1564,16 +1567,17 @@
       "home": "Congo DR",
       "away": "Uzbekistan",
       "venue": "Atlanta Stadium, Atlanta",
-      "status": "scheduled",
-      "homeScore": null,
-      "awayScore": null,
+      "status": "live",
+      "homeScore": 0,
+      "awayScore": 0,
       "pdt": {
         "date": "2026-06-27",
         "dateLabel": "Sat, Jun 27",
         "time": "4:30 PM PDT",
         "iso": "2026-06-27T16:30:00-07:00",
         "etLabel": "Sat, Jun 27, 7:30 PM ET"
-      }
+      },
+      "resultSource": "ESPN"
     },
     {
       "number": 71,
@@ -1582,16 +1586,17 @@
       "home": "Algeria",
       "away": "Austria",
       "venue": "Kansas City Stadium, Kansas City",
-      "status": "scheduled",
-      "homeScore": null,
-      "awayScore": null,
+      "status": "live",
+      "homeScore": 0,
+      "awayScore": 0,
       "pdt": {
         "date": "2026-06-27",
         "dateLabel": "Sat, Jun 27",
         "time": "7:00 PM PDT",
         "iso": "2026-06-27T19:00:00-07:00",
         "etLabel": "Sat, Jun 27, 10:00 PM ET"
-      }
+      },
+      "resultSource": "ESPN"
     },
     {
       "number": 72,
@@ -1600,16 +1605,17 @@
       "home": "Jordan",
       "away": "Argentina",
       "venue": "Dallas Stadium, Arlington",
-      "status": "scheduled",
-      "homeScore": null,
-      "awayScore": null,
+      "status": "live",
+      "homeScore": 0,
+      "awayScore": 0,
       "pdt": {
         "date": "2026-06-27",
         "dateLabel": "Sat, Jun 27",
         "time": "7:00 PM PDT",
         "iso": "2026-06-27T19:00:00-07:00",
         "etLabel": "Sat, Jun 27, 10:00 PM ET"
-      }
+      },
+      "resultSource": "ESPN"
     },
     {
       "number": 73,
@@ -2239,7 +2245,7 @@
       "url": "https://github.com/rezarahiminia/worldcup2026"
     }
   ],
-  "snapshotDate": "2026-06-26",
+  "snapshotDate": "2026-06-27",
   "snapshotRule": "Before 10:30 PM PDT, show today's matchday; after 10:30 PM PDT, show the next PDT matchday. After the final matchday, keep the final matchday as the snapshot.",
   "staticAfter": "2026-07-20T12:00:00-07:00",
   "liveRefreshRule": "GitHub Actions checks during match windows; open browsers check live scores every 60 seconds during active/recent match windows. Both stop after staticAfter.",
@@ -2539,6 +2545,30 @@
   ],
   "recentChanges": [
     {
+      "time": "Jun 27, 2026 12:29 AM PDT",
+      "text": "M68: Croatia 0-0 Ghana (live) - source: ESPN"
+    },
+    {
+      "time": "Jun 27, 2026 12:29 AM PDT",
+      "text": "M67: Panama 0-0 England (live) - source: ESPN"
+    },
+    {
+      "time": "Jun 27, 2026 12:29 AM PDT",
+      "text": "M69: Colombia 0-0 Portugal (live) - source: ESPN"
+    },
+    {
+      "time": "Jun 27, 2026 12:29 AM PDT",
+      "text": "M70: Congo DR 0-0 Uzbekistan (live) - source: ESPN"
+    },
+    {
+      "time": "Jun 27, 2026 12:29 AM PDT",
+      "text": "M71: Algeria 0-0 Austria (live) - source: ESPN"
+    },
+    {
+      "time": "Jun 27, 2026 12:29 AM PDT",
+      "text": "M72: Jordan 0-0 Argentina (live) - source: ESPN"
+    },
+    {
       "time": "Jun 26, 2026 9:13 PM PDT",
       "text": "M63: Cabo Verde 0-0 Saudi Arabia (final) - source: ESPN"
     },
@@ -2593,30 +2623,6 @@
     {
       "time": "Jun 26, 2026 1:08 PM PDT",
       "text": "M66: New Zealand 0-0 Belgium (live) - source: ESPN"
-    },
-    {
-      "time": "Jun 25, 2026 9:37 PM PDT",
-      "text": "M46: England 0-0 Ghana (final) - source: FIFA"
-    },
-    {
-      "time": "Jun 25, 2026 9:37 PM PDT",
-      "text": "M47: Panama 0-1 Croatia (final) - source: FIFA"
-    },
-    {
-      "time": "Jun 25, 2026 9:37 PM PDT",
-      "text": "M48: Colombia 1-0 Congo DR (final) - source: FIFA"
-    },
-    {
-      "time": "Jun 23, 2026 1:32 PM PDT",
-      "text": "M45: Portugal 5-0 Uzbekistan (final) - source: FIFA"
-    },
-    {
-      "time": "Jun 23, 2026 11:25 AM PDT",
-      "text": "M45: Portugal 4-0 Uzbekistan (live) - source: FIFA"
-    },
-    {
-      "time": "Jun 23, 2026 1:03 AM PDT",
-      "text": "M44: Jordan 1-2 Algeria (final) - source: FIFA"
     }
   ],
   "apiEndpoints": [
@@ -2624,7 +2630,7 @@
     "https://worldcup26.ir/get/games",
     "https://site.api.espn.com/apis/site/v2/sports/soccer/fifa.world/scoreboard"
   ],
-  "lastSuccessfulUpdate": "June 26, 2026 09:13 PM PDT",
+  "lastSuccessfulUpdate": "June 27, 2026 12:29 AM PDT",
   "validation": {
     "ok": true,
     "errors": [],
@@ -2633,7 +2639,8 @@
   },
   "lastRefreshSources": [
     "FIFA calendar API (48 usable records)",
+    "Fallback World Cup API (104 records)",
     "ESPN scoreboard API (6 usable records)"
   ],
-  "lastChecked": "June 26, 2026 09:13 PM PDT"
+  "lastChecked": "June 27, 2026 12:29 AM PDT"
 }
