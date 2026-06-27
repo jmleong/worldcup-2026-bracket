@@ -1,6 +1,6 @@
 {
   "title": "FIFA World Cup 2026 Bracket Tracker",
-  "lastUpdated": "Automated daily refresh: June 27, 2026 01:15 AM PDT",
+  "lastUpdated": "Automated live refresh: June 27, 2026 03:18 PM PDT",
   "updateTarget": "Daily 10:30 PM PDT plus during-match live score checks",
   "apiEndpoint": "https://api.fifa.com/api/v3/calendar/matches?language=en&count=500&from=2026-06-11T00%3A00%3A00Z&to=2026-07-20T23%3A59%3A59Z",
   "teams": {
@@ -1530,7 +1530,7 @@
       "away": "Ghana",
       "venue": "Philadelphia Stadium, Philadelphia",
       "status": "live",
-      "homeScore": 0,
+      "homeScore": 1,
       "awayScore": 0,
       "pdt": {
         "date": "2026-06-27",
@@ -2545,6 +2545,10 @@
   ],
   "recentChanges": [
     {
+      "time": "Jun 27, 2026 3:18 PM PDT",
+      "text": "M68: Croatia 1-0 Ghana (live) - source: ESPN"
+    },
+    {
       "time": "Jun 27, 2026 12:29 AM PDT",
       "text": "M68: Croatia 0-0 Ghana (live) - source: ESPN"
     },
@@ -2619,10 +2623,6 @@
     {
       "time": "Jun 26, 2026 1:08 PM PDT",
       "text": "M65: Egypt 0-0 IR Iran (live) - source: ESPN"
-    },
-    {
-      "time": "Jun 26, 2026 1:08 PM PDT",
-      "text": "M66: New Zealand 0-0 Belgium (live) - source: ESPN"
     }
   ],
   "apiEndpoints": [
@@ -2630,7 +2630,7 @@
     "https://worldcup26.ir/get/games",
     "https://site.api.espn.com/apis/site/v2/sports/soccer/fifa.world/scoreboard"
   ],
-  "lastSuccessfulUpdate": "June 27, 2026 01:15 AM PDT",
+  "lastSuccessfulUpdate": "June 27, 2026 03:18 PM PDT",
   "validation": {
     "ok": true,
     "errors": [],
@@ -2642,5 +2642,5 @@
     "Fallback World Cup API (104 records)",
     "ESPN scoreboard API (6 usable records)"
   ],
-  "lastChecked": "June 27, 2026 02:15 PM PDT"
+  "lastChecked": "June 27, 2026 03:18 PM PDT"
 }
