@@ -1,6 +1,6 @@
 {
   "title": "FIFA World Cup 2026 Bracket Tracker",
-  "lastUpdated": "Automated live refresh: June 27, 2026 03:18 PM PDT",
+  "lastUpdated": "Automated live refresh: June 27, 2026 04:32 PM PDT",
   "updateTarget": "Daily 10:30 PM PDT plus during-match live score checks",
   "apiEndpoint": "https://api.fifa.com/api/v3/calendar/matches?language=en&count=500&from=2026-06-11T00%3A00%3A00Z&to=2026-07-20T23%3A59%3A59Z",
   "teams": {
@@ -1510,9 +1510,9 @@
       "home": "Panama",
       "away": "England",
       "venue": "New York New Jersey Stadium, East Rutherford",
-      "status": "live",
+      "status": "final",
       "homeScore": 0,
-      "awayScore": 0,
+      "awayScore": 2,
       "pdt": {
         "date": "2026-06-27",
         "dateLabel": "Sat, Jun 27",
@@ -1529,9 +1529,9 @@
       "home": "Croatia",
       "away": "Ghana",
       "venue": "Philadelphia Stadium, Philadelphia",
-      "status": "live",
-      "homeScore": 1,
-      "awayScore": 0,
+      "status": "final",
+      "homeScore": 2,
+      "awayScore": 1,
       "pdt": {
         "date": "2026-06-27",
         "dateLabel": "Sat, Jun 27",
@@ -2545,6 +2545,14 @@
   ],
   "recentChanges": [
     {
+      "time": "Jun 27, 2026 4:32 PM PDT",
+      "text": "M68: Croatia 2-1 Ghana (final) - source: ESPN"
+    },
+    {
+      "time": "Jun 27, 2026 4:32 PM PDT",
+      "text": "M67: Panama 0-2 England (final) - source: ESPN"
+    },
+    {
       "time": "Jun 27, 2026 3:18 PM PDT",
       "text": "M68: Croatia 1-0 Ghana (live) - source: ESPN"
     },
@@ -2615,14 +2623,6 @@
     {
       "time": "Jun 26, 2026 1:08 PM PDT",
       "text": "M63: Cabo Verde 0-0 Saudi Arabia (live) - source: ESPN"
-    },
-    {
-      "time": "Jun 26, 2026 1:08 PM PDT",
-      "text": "M64: Uruguay 0-0 Spain (live) - source: ESPN"
-    },
-    {
-      "time": "Jun 26, 2026 1:08 PM PDT",
-      "text": "M65: Egypt 0-0 IR Iran (live) - source: ESPN"
     }
   ],
   "apiEndpoints": [
@@ -2630,7 +2630,7 @@
     "https://worldcup26.ir/get/games",
     "https://site.api.espn.com/apis/site/v2/sports/soccer/fifa.world/scoreboard"
   ],
-  "lastSuccessfulUpdate": "June 27, 2026 03:18 PM PDT",
+  "lastSuccessfulUpdate": "June 27, 2026 04:32 PM PDT",
   "validation": {
     "ok": true,
     "errors": [],
@@ -2642,5 +2642,5 @@
     "Fallback World Cup API (104 records)",
     "ESPN scoreboard API (6 usable records)"
   ],
-  "lastChecked": "June 27, 2026 03:18 PM PDT"
+  "lastChecked": "June 27, 2026 04:32 PM PDT"
 }
