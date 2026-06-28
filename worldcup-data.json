@@ -1,6 +1,6 @@
 {
   "title": "FIFA World Cup 2026 Bracket Tracker",
-  "lastUpdated": "Automated live refresh: June 27, 2026 04:32 PM PDT",
+  "lastUpdated": "Automated live refresh: June 27, 2026 06:36 PM PDT",
   "updateTarget": "Daily 10:30 PM PDT plus during-match live score checks",
   "apiEndpoint": "https://api.fifa.com/api/v3/calendar/matches?language=en&count=500&from=2026-06-11T00%3A00%3A00Z&to=2026-07-20T23%3A59%3A59Z",
   "teams": {
@@ -1568,8 +1568,8 @@
       "away": "Uzbekistan",
       "venue": "Atlanta Stadium, Atlanta",
       "status": "live",
-      "homeScore": 0,
-      "awayScore": 0,
+      "homeScore": 3,
+      "awayScore": 1,
       "pdt": {
         "date": "2026-06-27",
         "dateLabel": "Sat, Jun 27",
@@ -2545,6 +2545,10 @@
   ],
   "recentChanges": [
     {
+      "time": "Jun 27, 2026 6:36 PM PDT",
+      "text": "M70: Congo DR 3-1 Uzbekistan (live) - source: ESPN"
+    },
+    {
       "time": "Jun 27, 2026 4:32 PM PDT",
       "text": "M68: Croatia 2-1 Ghana (final) - source: ESPN"
     },
@@ -2619,10 +2623,6 @@
     {
       "time": "Jun 26, 2026 1:08 PM PDT",
       "text": "M62: Senegal 1-0 Iraq (live) - source: ESPN"
-    },
-    {
-      "time": "Jun 26, 2026 1:08 PM PDT",
-      "text": "M63: Cabo Verde 0-0 Saudi Arabia (live) - source: ESPN"
     }
   ],
   "apiEndpoints": [
@@ -2630,7 +2630,7 @@
     "https://worldcup26.ir/get/games",
     "https://site.api.espn.com/apis/site/v2/sports/soccer/fifa.world/scoreboard"
   ],
-  "lastSuccessfulUpdate": "June 27, 2026 04:32 PM PDT",
+  "lastSuccessfulUpdate": "June 27, 2026 06:36 PM PDT",
   "validation": {
     "ok": true,
     "errors": [],
@@ -2642,5 +2642,5 @@
     "Fallback World Cup API (104 records)",
     "ESPN scoreboard API (6 usable records)"
   ],
-  "lastChecked": "June 27, 2026 04:32 PM PDT"
+  "lastChecked": "June 27, 2026 06:36 PM PDT"
 }
