@@ -1,6 +1,6 @@
 {
   "title": "FIFA World Cup 2026 Bracket Tracker",
-  "lastUpdated": "Automated daily refresh: July 3, 2026 01:32 AM PDT",
+  "lastUpdated": "Automated daily refresh: July 3, 2026 01:37 AM PDT",
   "updateTarget": "Daily 10:30 PM PDT plus during-match live score checks",
   "apiEndpoint": "https://api.fifa.com/api/v3/calendar/matches?language=en&count=500&from=2026-06-11T00%3A00%3A00Z&to=2026-07-20T23%3A59%3A59Z",
   "teams": {
@@ -2630,7 +2630,7 @@
     "https://worldcup26.ir/get/games",
     "https://site.api.espn.com/apis/site/v2/sports/soccer/fifa.world/scoreboard"
   ],
-  "lastSuccessfulUpdate": "July 3, 2026 01:32 AM PDT",
+  "lastSuccessfulUpdate": "July 3, 2026 01:37 AM PDT",
   "validation": {
     "ok": true,
     "errors": [],
@@ -2642,5 +2642,5 @@
     "Fallback World Cup API (104 records)",
     "ESPN scoreboard API (3 usable records)"
   ],
-  "lastChecked": "July 3, 2026 01:32 AM PDT"
+  "lastChecked": "July 3, 2026 01:37 AM PDT"
 }
