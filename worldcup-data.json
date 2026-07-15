@@ -2245,7 +2245,7 @@
       "url": "https://github.com/rezarahiminia/worldcup2026"
     }
   ],
-  "snapshotDate": "2026-07-14",
+  "snapshotDate": "2026-07-15",
   "snapshotRule": "Before 10:30 PM PDT, show today's matchday; after 10:30 PM PDT, show the next PDT matchday. After the final matchday, keep the final matchday as the snapshot.",
   "staticAfter": "2026-07-20T12:00:00-07:00",
   "liveRefreshRule": "GitHub Actions checks during match windows; open browsers check live scores every 60 seconds during active/recent match windows. Both stop after staticAfter.",
@@ -2642,5 +2642,5 @@
     "Fallback World Cup API (104 records)",
     "ESPN scoreboard API (1 usable records)"
   ],
-  "lastChecked": "July 14, 2026 08:24 PM PDT"
+  "lastChecked": "July 14, 2026 10:51 PM PDT"
 }
